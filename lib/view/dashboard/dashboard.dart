@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:pie_chart/pie_chart.dart';
@@ -51,6 +52,7 @@ class _DashboardState extends State<Dashboard> {
       color: AppColors.bg,
       child: Column(
         children: [
+          SizedBox(height: 10,),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

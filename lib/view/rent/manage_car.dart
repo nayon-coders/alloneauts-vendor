@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:vendor/view/main_pages.dart';
 
 import '../../carImageJson.dart';
 import '../../utility/app_color.dart';
@@ -124,18 +125,18 @@ class _ManageCarState extends State<ManageCar> {
                               children: [
                                 AppIconButton(
                                   icon: Icons.remove_red_eye,
-                                  onClick: (){},
+                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))), //navigat to single view pages,,
                                 ),
                                 SizedBox(width: 5,),
                                 AppIconButton(
                                   icon: Icons.edit,
-                                  onClick: (){},
+                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 4,))), //navigat to edit pages
                                   bgColor: Colors.amber,
                                 ),
                                 SizedBox(width: 5,),
                                 AppIconButton(
                                   icon: Icons.report_gmailerrorred_rounded,
-                                  onClick: (){},
+                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))), //navigat to single view pages,
                                   bgColor: AppColors.blue,
                                 ),
                                 SizedBox(width: 5,),
