@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
 
@@ -102,16 +103,23 @@ class _ProfileState extends State<Profile> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
         children: [
-          Row(
-            children: [
-              IconButton(
-                onPressed: ()=>Navigator.pop(context),
-                icon: Icon(Icons.arrow_back),
-              ),
-              SizedBox(width: 10,),
-              BigText(text: "My Profile"),
-            ],
-          ),
+         Row(
+           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           children: [
+             Row(
+               children: [
+                 IconButton(
+                   onPressed: ()=>Navigator.pop(context),
+                   icon: Icon(Icons.arrow_back),
+                 ),
+                 SizedBox(width: 10,),
+                 BigText(text: "My Profile"),
+               ],
+             ),
+             AppButton(onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> Login())),
+                 text: "Logout", width: 100)
+           ],
+         ),
           SizedBox(height: 20,),
           
          Expanded(
