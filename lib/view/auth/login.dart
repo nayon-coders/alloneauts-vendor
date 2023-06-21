@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/utility/app_color.dart';
+import 'package:vendor/view/auth/signup.dart';
+import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
 import 'package:vendor/view_controller/bigText.dart';
@@ -59,9 +61,16 @@ class _LoginState extends State<Login> {
                   child: AppButton(
                     width: 100,
                     text: "Login",
-                    onClick: (){},
+                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage())),
                   ),
                 ),
+                SizedBox(height: 15,),
+                Center(
+                  child: TextButton(
+                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp())),
+                    child: Text("I Don't have an accout. Signup."),
+                  ),
+                )
 
 
               ],
