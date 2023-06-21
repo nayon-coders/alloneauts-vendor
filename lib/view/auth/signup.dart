@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:vendor/utility/app_color.dart';
+import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
@@ -315,10 +316,11 @@ class _SignUpState extends State<SignUp> {
                 ),
                 SizedBox(height: 20,),
                 AppInput(
-                    maxLine: 4,
+                    maxLine: 8,
                     controller: yearsBusiness,
                     title: "Brief description of the company's products/services",
-                    hintText: "Brief description of the company's products/services"
+                    hintText: "Brief description of the company's products/services",
+
                 ),
 
 
@@ -327,7 +329,7 @@ class _SignUpState extends State<SignUp> {
                   alignment: Alignment.center,
                   child: AppButton(
                     width: 100,
-                    text: "Login",
+                    text: "Send Request",
                     onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage())),
                   ),
                 ),
@@ -335,7 +337,7 @@ class _SignUpState extends State<SignUp> {
 
                 Center(
                   child: TextButton(
-                    onPressed: (){},
+                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Login())),
                     child: Text("I have an accout. Login."),
                   ),
                 )
