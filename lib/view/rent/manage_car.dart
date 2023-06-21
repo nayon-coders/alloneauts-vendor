@@ -7,6 +7,7 @@ import '../../utility/app_color.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/appIconButton.dart';
 import '../../view_controller/bigText.dart';
+import '../../view_controller/planCarManageLimit.dart';
 import '../../view_controller/richText.dart';
 
 class ManageCar extends StatefulWidget {
@@ -25,6 +26,10 @@ class _ManageCarState extends State<ManageCar> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
         children: [
+          //planing car management limitation.
+          //once vendo crossing thire limited.
+          PlaingCarManageLimite(),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
