@@ -5,15 +5,17 @@ import '../utility/app_color.dart';
 class AppInput extends StatelessWidget {
   const AppInput({
     Key? key,
-    required this.controller, required this.title, required this.prefixIcon,  this.readOnly = false,
-    required this.hintText,
+    required this.controller, required this.title,  this.prefixIcon,  this.readOnly = false,
+    required this.hintText, this.value, this.maxLine = 1
   }) : super(key: key);
 
   final TextEditingController controller;
   final String title;
   final String hintText;
-  final IconData prefixIcon;
+  final String? value;
+  final IconData? prefixIcon;
   final bool readOnly;
+  final int maxLine;
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +34,7 @@ class AppInput extends StatelessWidget {
         SizedBox(height: 10,),
         TextFormField(
 
+          maxLines: maxLine,
           readOnly: readOnly,
           controller: controller,
           decoration: InputDecoration(
@@ -40,6 +43,7 @@ class AppInput extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3))
               ),
+
               hintText: "$hintText",
               prefixIcon: Icon(prefixIcon)
           ),
