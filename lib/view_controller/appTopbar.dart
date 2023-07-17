@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:vendor/view/main_pages.dart';
 import '../utility/app_color.dart';
 
 class AppTopBar extends StatelessWidget {
@@ -105,12 +104,9 @@ class AppTopBar extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10,),
-          InkWell(
-            onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 6,))),
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: Icon(Icons.person, size: 40,)
-            ),
+          ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: Icon(Icons.person, size: 40,)
           )
 
         ],

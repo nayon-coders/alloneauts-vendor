@@ -28,7 +28,6 @@ class ExpandedMenu extends StatelessWidget {
       ),
       controller: ExpandedTileController(isExpanded:isExpand),
       title: Row(
-
         children: [
           Icon(icon, color: AppColors.green,),
           SizedBox(width: 5,),

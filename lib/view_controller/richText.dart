@@ -17,17 +17,17 @@ class RichTextWidget extends StatelessWidget {
             TextSpan(
                 text: "$leftText",
                 style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.black,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 13,
+                  color: Colors.black54,
+                  fontWeight: FontWeight.w500,
                 )
             ),
             TextSpan(
                 text: "$rightText",
                 style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.black54,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 13,
+                  color: AppColors.black,
+                  fontWeight: FontWeight.bold,
                 )
             )
           ]

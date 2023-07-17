@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:vendor/view/main_pages.dart';
 
 import '../../carImageJson.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/appIconButton.dart';
 import '../../view_controller/bigText.dart';
-import '../../view_controller/planCarManageLimit.dart';
 import '../../view_controller/richText.dart';
 
 class ManageCar extends StatefulWidget {
@@ -26,10 +24,6 @@ class _ManageCarState extends State<ManageCar> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
         children: [
-          //planing car management limitation.
-          //once vendo crossing thire limited.
-          PlaingCarManageLimite(),
-
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -89,15 +83,15 @@ class _ManageCarState extends State<ManageCar> {
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                 )),
                 DataColumn(label: Text(
-                    'Make',
+                    'Ticket',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                 )),
                 DataColumn(label: Text(
-                    'Model',
+                    'Fine',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                 )),
                 DataColumn(label: Text(
-                    'Year',
+                    'TLC Status',
                     style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                 )),
                 DataColumn(label: Text(
@@ -115,33 +109,62 @@ class _ManageCarState extends State<ManageCar> {
                         DataCell(
                             Image.network("${CarImageJson.carImageList[i]["image"]}", height: 50, width: 50,)
                         ),
-                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
+                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}', style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500
+                        ),)),
                         DataCell(Text('#48TFJC79',
                           style: TextStyle(
+                            fontSize: 10,
                             fontWeight: FontWeight.w600
                           ),
                         )),
-                        DataCell(Text('\$450')),
-                        DataCell(Text('${CarImageJson.carImageList[i]["make"]}')),
-                        DataCell(Text('${CarImageJson.carImageList[i]["model"]}')),
-                        DataCell(Text('${CarImageJson.carImageList[i]["year"]}')),
+                        DataCell(Text('\$450',style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500
+                        ),)),
+                        DataCell(Text('12 Ticket',
+                          style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.red
+                          ),
+                        )),
+                        DataCell(Text('\$650',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        )),
+                        DataCell(Container(
+                            padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                            decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Text('Active',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.white,
+                              ),
+                            ))),
                         DataCell(
                             Row(
                               children: [
                                 AppIconButton(
                                   icon: Icons.remove_red_eye,
-                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))), //navigat to single view pages,,
+                                  onClick: ()=>ShowSingleCar(CarImageJson.carImageList[i]),
                                 ),
                                 SizedBox(width: 5,),
                                 AppIconButton(
                                   icon: Icons.edit,
-                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 4,))), //navigat to edit pages
+                                  onClick: (){},
                                   bgColor: Colors.amber,
                                 ),
                                 SizedBox(width: 5,),
                                 AppIconButton(
                                   icon: Icons.report_gmailerrorred_rounded,
-                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))), //navigat to single view pages,
+                                  onClick: (){},
                                   bgColor: AppColors.blue,
                                 ),
                                 SizedBox(width: 5,),
@@ -172,93 +195,7 @@ class _ManageCarState extends State<ManageCar> {
             child: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment:MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.network(carInfo["image"], height: 100, width: 100,),
-                              RichTextWidget(
-                                leftText: "Car Name: ",
-                                rightText: "${carInfo["name"]}",
-                              ),
-                              SizedBox(height: 7,),
-                              RichTextWidget(
-                                leftText: "Plate No: ",
-                                rightText: "TC56YU7IU90",
-                              ),
-                              SizedBox(height: 7,),
-                              RichTextWidget(
-                                leftText: "Model No: ",
-                                rightText: "${carInfo["model"]}",
-                              ),
 
-                            ],
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                      Expanded(
-                        child: Container(
-                          child: Column(
-                            mainAxisAlignment:MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: Image.network("https://newprofilepic2.photo-cdn.net//assets/images/article/profile.jpg", height: 100, width: 100, fit: BoxFit.cover,)),
-                              SizedBox(height: 10,),
-                              RichTextWidget(
-                                leftText: "Driver Name: ",
-                                rightText: "Nayon Talukder",
-                              ),
-                              SizedBox(height: 7,),
-                              RichTextWidget(
-                                leftText: "Phone Number: ",
-                                rightText: "+8801814569747",
-                              ),
-                              SizedBox(height: 7,),
-                              RichTextWidget(
-                                leftText: "Email Address:",
-                                rightText: "nayon.coders@gmail.com",
-                              ),
-
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 30,),
-                  BigText(text: "Messages"),
-                  SizedBox(height: 8,),
-                  Html(
-                      data: """
-                      <p>Hello, My Name is <b>Nayon Talukder</b> and i am interested to the <b>2017 Toyota Camry SE</b>. You can reach me by <b>Email: nayon@gmail.com</b> or phone Number <b>+8801814569747</b>.<br><br>Thank You</p>
-                    """
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      AppButton(
-                        onClick: (){},
-                        width: 100,
-                        text: "Approve",
-                      ),
-                      SizedBox(width: 10,),
-                      AppButton(
-                        onClick: (){},
-                        width: 100,
-                        bgColor: Colors.transparent,
-                        text: "Reject",
-                        textColor: AppColors.red,
-                        borderColor: AppColors.red,
-                      ),
-                    ],
-                  )
                 ],
               ),
             ),

@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
@@ -16,7 +15,6 @@ import 'package:vendor/view_controller/appPoup.dart';
 
 import '../../view_controller/appInput.dart';
 import '../../view_controller/bigText.dart';
-import '../../view_controller/planCarManageLimit.dart';
 
 class AddCar extends StatefulWidget {
   const AddCar({Key? key}) : super(key: key);
@@ -26,15 +24,6 @@ class AddCar extends StatefulWidget {
 }
 
 class _AddCarState extends State<AddCar> {
-
-
-
-  List colorList = [
-    Colors.red,
-    Colors.amber,
-    Colors.green,
-  ];
-
 
   List<int>? _selectedFile;
   Uint8List? _bytesData;
@@ -96,10 +85,6 @@ class _AddCarState extends State<AddCar> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
         children: [
-          //planing car management limitation.
-          //once vendo crossing thire limited.
-          PlaingCarManageLimite(),
-
           BigText(text: "Add New Car"),
           SizedBox(height: 20,),
           Container(
@@ -368,7 +353,6 @@ class _AddCarState extends State<AddCar> {
 
 
 }
-
 
 
 

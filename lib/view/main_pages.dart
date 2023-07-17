@@ -12,7 +12,8 @@ import '../view_controller/single_menu.dart';
 
 class MainPage extends StatefulWidget {
   final int pageIndex;
-  const MainPage({Key? key, this.pageIndex=0}) : super(key: key);
+  final dynamic menuNumber;
+  const MainPage({Key? key, this.pageIndex=0, this.menuNumber}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -168,27 +169,67 @@ class _MainPageState extends State<MainPage> {
                                         buildChildMenu(
                                             size: size,
                                             menuNumber: "5-1",
-                                            title: "Create Report",
+                                            title: "Car Report's",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="5-1");
+                                              pageCount = 4; //Create Reports()
                                             }
                                         ),
+
                                         SizedBox(height: 10,),
                                         buildChildMenu(
                                             size: size,
                                             menuNumber: "5-2",
-                                            title: "View Reports",
+                                            title: "Payment Reports",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="5-2");
                                             }
                                         ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              //rent reports - id: 6
+                              ExpandedMenu(
+                                onClick: (){
+                                  setState(() {
+                                    selectedMenuNumber[0] = 6;
+                                  });
+                                },
+                                isSelected: selectedMenuNumber[0] == 6 ? true : false,
+                                onLongPress: (){},
+                                title: "Manage Ticket",
+                                icon: Icons.report_gmailerrorred,
+                                content: Row(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 2,
+                                      color: AppColors.green,
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Column(
+                                      children: [
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "${widget.menuNumber}",
+                                            title: "Ticket Management",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="${widget.menuNumber}");
+                                              pageCount = 7; //Final ticket
+                                            }
+                                        ),
+
                                         SizedBox(height: 10,),
                                         buildChildMenu(
                                             size: size,
-                                            menuNumber: "5-3",
-                                            title: "Payment Reports",
+                                            menuNumber: "6-2",
+                                            title: "Find Ticket",
                                             onClick:  (){
-                                              setState(() =>selectedChildMenuNumber[0]="5-3");
+                                              setState(() =>selectedChildMenuNumber[0]="6-2");
+                                              pageCount = 6;
                                             }
                                         ),
                                       ],
