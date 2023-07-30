@@ -131,13 +131,7 @@ class _AddCarState extends State<AddCar> {
                     Expanded(
                       child: Column(
                         children: [
-                          AppInput(
-                              controller: carName,
-                            title: "Car Name",
-                            prefixIcon: Icons.title,
-                            hintText: "Car name",
-                          ),
-                          SizedBox(height: 20,),
+
                           Row(
                             children: [
                               Expanded(
@@ -167,7 +161,15 @@ class _AddCarState extends State<AddCar> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          SizedBox(height: 20,),
+                          AppInput(
+                            controller: location,
+                            title: "Car Location",
+                            prefixIcon: Icons.location_on_outlined,
+                            hintText: "Select your location",
+                          ),
+                          SizedBox(height: 20,),
                         ],
                       )
                     ),
@@ -175,13 +177,7 @@ class _AddCarState extends State<AddCar> {
 
                   ],
                 ),
-                SizedBox(height: 20,),
-                AppInput(
-                  controller: location,
-                  title: "Car Location",
-                  prefixIcon: Icons.title,
-                  hintText: "Select your location",
-                ),
+
                 SizedBox(height: 20,),
                 Row(
                   children: [
@@ -193,7 +189,7 @@ class _AddCarState extends State<AddCar> {
                         hintText: "Car color",
                       ),
                     ),
-                    SizedBox(width: 10,),
+                    const SizedBox(width: 10,),
                     Expanded(
                       child: AppInput(
                         controller: price,

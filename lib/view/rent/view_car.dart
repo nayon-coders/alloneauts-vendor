@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/richText.dart';

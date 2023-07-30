@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:vendor/view/main_pages.dart';
 
 import '../../carImageJson.dart';
 import '../../utility/app_color.dart';
@@ -48,9 +49,8 @@ class _ManageCarState extends State<ManageCar> {
           ),
           SizedBox(height: 10,),
           Container(
-            // width: size.width*.55,
-
-            padding: EdgeInsets.all(15),
+              width: MediaQuery.of(context).size.width, //to get the width of screen
+              padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
                 color: AppColors.white,
                 borderRadius: BorderRadius.circular(10),
@@ -62,93 +62,104 @@ class _ManageCarState extends State<ManageCar> {
                   )
                 ]
             ),
-            child: DataTable(
-              dividerThickness:0,
-              sortAscending: false,
-              columns: [
-                DataColumn(label: Text(
-                    'Car',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Car Name',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Plate No.',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Price',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Ticket',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Fine',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'TLC Status',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Action',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-              ],
-              rows: [
-                for(var i=0;i<CarImageJson.carImageList.length;i++)
-                  DataRow(
-                      color: MaterialStateColor.resolveWith((states) {
-                        return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                      }),
-                      cells: [
-                        DataCell(
-                            Image.network("${CarImageJson.carImageList[i]["image"]}", height: 50, width: 50,)
-                        ),
-                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}', style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w500
-                        ),)),
-                        DataCell(Text('#48TFJC79',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600
+            child: FittedBox(
+              child: DataTable(
+                dividerThickness:0,
+                sortAscending: false,
+                columns: const [
+                  DataColumn(label: Text(
+                      'Car',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Car Name',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Plate No.',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Price',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Ticket',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Fine',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'TLC License',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'TLC Status',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Action',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                ],
+                rows: [
+                  for(var i=0;i<CarImageJson.carImageList.length;i++)
+                    DataRow(
+                        color: MaterialStateColor.resolveWith((states) {
+                          return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                        }),
+                        cells: [
+                          DataCell(
+                              Image.network("${CarImageJson.carImageList[i]["image"]}", height: 50, width: 50,)
                           ),
-                        )),
-                        DataCell(Text('\$450',style: TextStyle(
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500
-                        ),)),
-                        DataCell(Text('12 Ticket',
-                          style: TextStyle(
+                          DataCell(Text('${CarImageJson.carImageList[i]["name"]}', style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500
+                          ),)),
+                          DataCell(Text('#48TFJC79',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600
+                            ),
+                          )),
+                          DataCell(Text('\$450',style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500
+                          ),)),
+                          DataCell(Text('12 Ticket',
+                            style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600,
+                                color: AppColors.red
+                            ),
+                          )),
+                          DataCell(Text('\$650',
+                            style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600,
-                              color: AppColors.red
-                          ),
-                        )),
-                        DataCell(Text('\$650',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )),
-                        DataCell(Container(
-                            padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
-                            decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(5)
                             ),
-                            child: Text('Active',
-                              style: TextStyle(
-                                fontSize: 10,
-                                color: Colors.white,
+                          )),
+                          DataCell(Text('437847823498',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          )),
+                          DataCell(Container(
+                              padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                              decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(5)
                               ),
-                            ))),
-                        DataCell(
+                              child: Text('Active',
+                                style: TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                ),
+                              ))),
+                          DataCell(
                             Row(
                               children: [
                                 AppIconButton(
@@ -158,7 +169,7 @@ class _ManageCarState extends State<ManageCar> {
                                 SizedBox(width: 5,),
                                 AppIconButton(
                                   icon: Icons.edit,
-                                  onClick: (){},
+                                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 4,))),
                                   bgColor: Colors.amber,
                                 ),
                                 SizedBox(width: 5,),
@@ -171,11 +182,12 @@ class _ManageCarState extends State<ManageCar> {
                               ],
                             ),
 
-                        ),
-                      ]
-                  ),
+                          ),
+                        ]
+                    ),
 
-              ],
+                ],
+              ),
             ),
           ),
         ],

@@ -35,25 +35,35 @@ class _SingleTicketState extends State<SingleTicket> {
         child: Column(
           children: [
             Container(
-              child: Column(
+              child: Row(
                 children: [
-                  Image.asset("assets/images/car1.png", height: 100, width: 100,),
-                  SizedBox(height: 10,),
-                  Text("Car Name here",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                      fontSize: 12,
-                    ),
+                  Row(
+                    children: [
+                      IconButton(onPressed: ()=>Navigator.pop(context), icon: Icon(Icons.arrow_back), iconSize: 20,),
+                      SizedBox(width: 20,),
+                      Image.asset("assets/images/car1.png", height: 100, width: 100,),
+                    ],
                   ),
-                  SizedBox(height: 5,),
-                  Text("Plate No. #TC7367394",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      color: AppColors.black,
-                      fontSize: 12,
-                    ),
-                  ),
+                  SizedBox(width: 10,),
+                  Column(
+                    children: [
+                      Text("Car Name here",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                      SizedBox(height: 5,),
+                      Text("Plate No. #TC7367394",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.black,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  )
                 ],
               ),
             ),

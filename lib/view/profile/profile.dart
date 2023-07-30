@@ -121,40 +121,38 @@ class _ProfileState extends State<Profile> {
            ],
          ),
           SizedBox(height: 20,),
-          
-         Expanded(
-           child: Container(
-             height: 150,
-             child: Stack(
-               children: [
 
-                 Image.asset("assets/images/car2.jpeg",
-                   height: 150, width: size.width, fit: BoxFit.cover,),
-                 Container(
-                   width: size.width,
-                   height: 150,
-                   decoration: BoxDecoration(
-                     color: Colors.black.withOpacity(0.5),
-                   ),
-                 ),
-                 Align(
-                   alignment: Alignment.center,
-                   child: Container(
-                     decoration: BoxDecoration(
-                       color:Colors.white,
-                       borderRadius: BorderRadius.circular(100)
-                     ),
-                     child: IconButton(
-                       icon: Icon(Icons.edit, color: Colors.green,),
-                       onPressed: (){},
-                     ),
-                   ),
-                 ),
+          Container(
+            height: 150,
+            child: Stack(
+              children: [
 
-               ],
-             ),
-           ),
-         ),
+                Image.asset("assets/images/car2.jpeg",
+                  height: 150, width: size.width, fit: BoxFit.cover,),
+                Container(
+                  width: size.width,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color:Colors.white,
+                        borderRadius: BorderRadius.circular(100)
+                    ),
+                    child: IconButton(
+                      icon: Icon(Icons.edit, color: Colors.green,),
+                      onPressed: (){},
+                    ),
+                  ),
+                ),
+
+              ],
+            ),
+          ),
           Container(
             padding: EdgeInsets.all(10),
             decoration: BoxDecoration(

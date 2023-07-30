@@ -156,7 +156,7 @@ class _AllTicketState extends State<AllTicket> {
                             children: [
                               AppIconButton(
                                 icon: Icons.remove_red_eye,
-                                onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 8, menuNumber: "6-1",))),//Single Ticket page
+                                onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 11, menuNumber: "6-1",))),//Single Ticket page
                               ),
                               SizedBox(width: 5,),
 

@@ -172,7 +172,7 @@ class _MainPageState extends State<MainPage> {
                                             title: "Car Report's",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="5-1");
-                                              pageCount = 4; //Create Reports()
+                                              pageCount = 7; //Create Reports()
                                             }
                                         ),
 
@@ -218,7 +218,7 @@ class _MainPageState extends State<MainPage> {
                                             title: "Ticket Management",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="${widget.menuNumber}");
-                                              pageCount = 7; //Final ticket
+                                              pageCount = 10; //Final ticket
                                             }
                                         ),
 
@@ -229,7 +229,7 @@ class _MainPageState extends State<MainPage> {
                                             title: "Find Ticket",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="6-2");
-                                              pageCount = 6;
+                                              pageCount = 9;
                                             }
                                         ),
                                       ],
