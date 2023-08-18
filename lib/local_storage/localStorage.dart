@@ -2,7 +2,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/model/authModel/loginModel.dart';
-
+import 'package:vendor/view/globals.dart' as global;
 class LocalStorage{
 
   //login data save local storage
@@ -18,6 +18,8 @@ class LocalStorage{
     prefs.setString("userImage", loginModel["data"]["user"]["image"]);
     prefs.setString("userEmail", loginModel["data"]["user"]["email"]);
     prefs.setString("userPhone", loginModel["data"]["user"]["phone"]);
+    global.isLoggedIn= true;
+    global.token = prefs.getString("token")!;
 
     print("user name ===== ${prefs.getString("token")}");
   }
