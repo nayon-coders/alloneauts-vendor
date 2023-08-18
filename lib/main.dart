@@ -21,9 +21,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -32,7 +29,11 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
-      home: CheckingAuth(),
+      initialRoute: '/', // Set the initial route
+      routes: {
+        '/': (context) => CheckingAuth(), // Home page
+        // Define more named routes as needed
+      },
     );
   }
 }
