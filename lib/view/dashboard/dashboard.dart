@@ -4,18 +4,23 @@ import 'dart:html' as html;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:vendor/carImageJson.dart';
 import 'package:vendor/controller/dashboardController/dashboardController.dart';
 import 'package:vendor/model/dasboardModel.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/accountVerificationCenter.dart';
+import 'package:vendor/view/dashboard/dashboardController/dashboardPlanPopup.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/bigText.dart';
+import 'package:vendor/view_controller/dataError.dart';
+import 'package:vendor/view_controller/dataLoading.dart';
 import '../../app_config.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/richText.dart';
 import '../../view_controller/singleBoxes.dart';
+import 'package:vendor/view/globals.dart' as global;
 
 import 'package:http/http.dart' as http;
 class Dashboard extends StatefulWidget {
@@ -45,13 +50,19 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    dashboardController();
    getDashboardData = dashboardController();
+
   }
 
   late Future<DashboardModel> getDashboardData;
   Future<DashboardModel> dashboardController()async{
-
-    var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"));
+    var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"),
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer ${global.token}',
+      },
+    );
     print("data ==== ${response.statusCode}");
     print("data ==== ${response.body}");
     if(response.statusCode == 200){
@@ -69,73 +80,31 @@ class _DashboardState extends State<Dashboard> {
       future: getDashboardData,
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
-          return Center(
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              color: AppColors.green,
-            ),
-          );
+           return DataLoading(text: "Preparing Dashboard");
         }else if(snapshot.hasData){
+          var dashboardData = snapshot.data?.data;
           return Container(
             // height: size.height,
             // width: size.width,
             padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
             color: AppColors.bg,
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                DashboardPlanPopup(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-
-                        Container(
-                          width: size.width*.80,
-                          padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only( bottom: 10,),
-                          decoration: BoxDecoration(
-                              color: AppColors.green.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(5)
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text('You are active our "GOLD" plan.',
-                                    style: TextStyle(
-                                        fontSize: 13,
-                                        fontWeight: FontWeight.w600,
-                                        color: AppColors.green
-                                    ),
-                                  ),
-                                  Text('If you want to upgrade plan, then go to the upgrade option and upgrade your plan.',
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w400,
-                                        color: Colors.grey
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              AppButton(onClick: (){}, text: "Upgrade", width: 150)
-                            ],
-                          ),
-                        ),
-                        BigText(text: "Dashboard"),
-                        SizedBox(height: 10,),
-                        Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
-                          style: TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500,
-                              color: AppColors.greyText
-                          ),
-                        ),
-                      ],
+                    BigText(text: "Dashboard"),
+                    SizedBox(height: 10,),
+                    Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.greyText
+                      ),
                     ),
                   ],
                 ),
@@ -143,27 +112,40 @@ class _DashboardState extends State<Dashboard> {
                 Row(
                   children: [
                     SingleBoxes(
-                        title: "25",
+                        title: "${dashboardData?.numberOfTotalCar}",
                         subTitle: "Vehicles",
-                        icon: Image.asset("assets/images/car_list.png",height: 20, width: 20, fit: BoxFit.contain)
+                        icon: Image.asset("assets/images/car_list.png",height: 20, width: 20, fit: BoxFit.contain),
+                        title2: "20",
+                        subTitle2: "Total Ticket",
+                        icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
                     ),
                     SizedBox(width: 20,),
                     SingleBoxes(
-                        title: "57",
+
+                        title: "${dashboardData?.numberOfRentRequest}",
                         subTitle: "Total Request",
-                        icon: Image.asset("assets/images/request.png",height: 30, width: 30,)
+                        icon: Image.asset("assets/images/request.png",height: 30, width: 30,),
+                        title2: "${dashboardData?.numberOfPendingRequest}",
+                        subTitle2: "Today Ticket",
+                        icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
                     ),
                     SizedBox(width: 20,),
                     SingleBoxes(
-                        title: "25",
+                        title: "${dashboardData?.numberOfPendingRequest}",
                         subTitle: "Pending Request",
-                        icon: Image.asset("assets/images/p_request.png",height: 30, width: 30,)
+                        icon: Image.asset("assets/images/p_request.png",height: 30, width: 30,),
+                        title2: "${dashboardData?.numberOfPendingRequest}",
+                        subTitle2: "Today Ticket",
+                        icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
                     ),
                     SizedBox(width: 20,),
                     SingleBoxes(
-                        title: "12",
+                        title: "${dashboardData?.numberOfAssignDriver}",
                         subTitle: "Assign Drivers",
-                        icon: Image.asset("assets/images/driver.png", height: 30, width: 30,)
+                        icon: Image.asset("assets/images/driver.png", height: 30, width: 30,),
+                        title2: "${dashboardData?.numberOfPendingRequest}",
+                        subTitle2: "Today Ticket",
+                        icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
                     ),
 
                   ],
@@ -240,7 +222,7 @@ class _DashboardState extends State<Dashboard> {
                                 )),
                               ],
                               rows: [
-                                for(var i=0;i<5;i++)
+                                for(var i=0;i<dashboardData!.rentRequests!.length;i++)
                                   DataRow(
                                       color: MaterialStateColor.resolveWith((states) {
                                         return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
@@ -249,8 +231,8 @@ class _DashboardState extends State<Dashboard> {
                                         DataCell(
                                             Image.network("${CarImageJson.carImageList[i]["image"]}", height: 30, width: 30,)
                                         ),
-                                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                                        DataCell(Text('#48TFJC79')),
+                                        DataCell(Text('${dashboardData!.rentRequests![i].car.name}')),
+                                        DataCell(Text('#${dashboardData!.rentRequests![i].car.plateNo}')),
                                         DataCell(
                                             Container(
                                               padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
@@ -258,7 +240,7 @@ class _DashboardState extends State<Dashboard> {
                                                   color: i.isOdd ? AppColors.green : AppColors.blue,
                                                   borderRadius: BorderRadius.circular(4)
                                               ),
-                                              child: Text("${i.isOdd?"Approve":"Pending" }",
+                                              child: Text("${dashboardData!.rentRequests![i].status == "Pending"?"Pending": dashboardData!.rentRequests![i].status == "Approve" ? "Approve" : "Reject" }",
                                                 style: TextStyle(
                                                     fontSize: 9,
                                                     color: AppColors.white
@@ -271,7 +253,7 @@ class _DashboardState extends State<Dashboard> {
                                                 style: ButtonStyle(
                                                   backgroundColor: MaterialStatePropertyAll(Colors.amber),
                                                 ),
-                                                onPressed: ()=>ShowSingleCar(CarImageJson.carImageList[i]), child: Text("VIEW ",
+                                                onPressed: ()=>ShowSingleCar(dashboardData?.rentRequests[i]), child: Text("VIEW ",
                                               style: TextStyle(
                                                   fontSize: 12,
                                                   color: AppColors.white
@@ -346,20 +328,14 @@ class _DashboardState extends State<Dashboard> {
             ),
           );
         }else{
-          return Column(
-            children: [
-              Text("Check you internet connection or Try again."),
-              SizedBox(height: 10,),
-              TextButton(onPressed: (){}, child: Text("Try again."))
-            ],
-          );
+          return DataError();
         }
 
       }
     );
   }
 
-  Future<void> ShowSingleCar(carInfo) async {
+  Future<void> ShowSingleCar(RentRequest? carInfo) async {
     var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
@@ -379,20 +355,20 @@ class _DashboardState extends State<Dashboard> {
                             mainAxisAlignment:MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Image.network(carInfo["image"], height: 100, width: 100,),
+                              Image.network("https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTOvF74AmTuYjrklyYZ8NjDUX8RrX3SST-oh1PJpDuMhvc4Qwp-eAYtutnDb7mP2CeAsik&usqp=CAU", height: 100, width: 100,),
                               RichTextWidget(
                                 leftText: "Car Name: ",
-                                rightText: "${carInfo["name"]}",
+                                rightText: "${carInfo?.car.name}",
                               ),
                               SizedBox(height: 7,),
                               RichTextWidget(
                                 leftText: "Plate No: ",
-                                rightText: "TC56YU7IU90",
+                                rightText: "${carInfo?.car.plateNo}",
                               ),
                               SizedBox(height: 7,),
                               RichTextWidget(
                                 leftText: "Model No: ",
-                                rightText: "${carInfo["model"]}",
+                                rightText: "${carInfo?.car.vmodel}",
                               ),
 
                             ],
@@ -412,17 +388,17 @@ class _DashboardState extends State<Dashboard> {
                               SizedBox(height: 10,),
                               RichTextWidget(
                                 leftText: "Driver Name: ",
-                                rightText: "Nayon Talukder",
+                                rightText: "${carInfo?.driver.name}",
                               ),
                               SizedBox(height: 7,),
                               RichTextWidget(
                                 leftText: "Phone Number: ",
-                                rightText: "+8801814569747",
+                                rightText: "${carInfo?.driver.phone}",
                               ),
                               SizedBox(height: 7,),
                               RichTextWidget(
                                 leftText: "Email Address:",
-                                rightText: "nayon.coders@gmail.com",
+                                rightText: "${carInfo?.driver.image}",
                               ),
 
                             ],
@@ -434,10 +410,16 @@ class _DashboardState extends State<Dashboard> {
                   SizedBox(height: 30,),
                   BigText(text: "Messages"),
                   SizedBox(height: 8,),
-                  Html(
-                    data: """
-                      <p>Hello, My Name is <b>Nayon Talukder</b> and i am interested to the <b>2017 Toyota Camry SE</b>. You can reach me by <b>Email: nayon@gmail.com</b> or phone Number <b>+8801814569747</b>.<br><br>Thank You</p>
-                    """
+                  // Html(
+                  //   data: """
+                  //     <p>Hello, My Name is <b>Nayon Talukder</b> and i am interested to the <b>2017 Toyota Camry SE</b>. You can reach me by <b>Email: nayon@gmail.com</b> or phone Number <b>+8801814569747</b>.<br><br>Thank You</p>
+                  //   """
+                  // ),
+                  Text("${carInfo?.message}",
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500
+                    ),
                   ),
                   SizedBox(height: 20,),
                   Row(
