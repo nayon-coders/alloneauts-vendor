@@ -88,7 +88,7 @@ class _MainPageState extends State<MainPage> {
                                 content: Row(
                                   children: [
                                     Container(
-                                      height: 80,
+                                      height: 200,
                                       width: 2,
                                       color: AppColors.green,
                                     ),
@@ -98,7 +98,7 @@ class _MainPageState extends State<MainPage> {
                                         buildChildMenu(
                                             size: size,
                                             menuNumber: "2-1",
-                                            title: "Manage Car's",
+                                            title: "Manage Vehicle's",
                                             onClick:  (){
                                               setState((){
                                                 selectedChildMenuNumber[0]="2-1";
@@ -110,79 +110,55 @@ class _MainPageState extends State<MainPage> {
                                         buildChildMenu(
                                             size: size,
                                             menuNumber: "2-2",
-                                            title: "Add new Car",
+                                            title: "Add new Vehicle",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="2-2");
                                               pageCount = 3; //AddCar()
                                              // Add new car screen
                                             }
                                         ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              //rent request - id: 3
-                              MenuBar(
-                                title: "Rent Request",
-                                onClick: (){
-                                  setState(() {
-                                    selectedMenuNumber[0] = 3;
-                                    pageCount = 1; //rent request
-                                  });
-                                },
-                                icon: Icons.car_crash_rounded,
-                                isSelected: selectedMenuNumber[0] == 3 ? true : false,
-                              ),
-                              //Assign car - id: 4
-                              MenuBar(
-                                title: "Assign Car",
-                                onClick: (){
-                                  setState(() {
-                                    selectedMenuNumber[0] = 4;
-                                  });
-                                },
-                                icon: Icons.assignment_outlined,
-                                isSelected: selectedMenuNumber[0] == 4 ? true : false,
-                              ),
-                              //rent reports - id: 5
-                              ExpandedMenu(
-                                onClick: (){
-                                  setState(() {
-                                    selectedMenuNumber[0] = 5;
-                                  });
-                                },
-                                isSelected: selectedMenuNumber[0] == 5 ? true : false,
-                                onLongPress: (){},
-                                title: "Reports",
-                                icon: Icons.report_gmailerrorred,
-                                content: Row(
-                                  children: [
-                                    Container(
-                                      height: 100,
-                                      width: 2,
-                                      color: AppColors.green,
-                                    ),
-                                    SizedBox(width: 10,),
-                                    Column(
-                                      children: [
-                                        buildChildMenu(
-                                            size: size,
-                                            menuNumber: "5-1",
-                                            title: "Car Report's",
-                                            onClick:  (){
-                                              setState(() =>selectedChildMenuNumber[0]="5-1");
-                                              pageCount = 7; //Create Reports()
-                                            }
-                                        ),
-
                                         SizedBox(height: 10,),
                                         buildChildMenu(
                                             size: size,
-                                            menuNumber: "5-2",
-                                            title: "Payment Reports",
+                                            menuNumber: "2-3",
+                                            title: "Rent Request",
                                             onClick:  (){
-                                              setState(() =>selectedChildMenuNumber[0]="5-2");
+                                              setState(() =>selectedChildMenuNumber[0]="2-3");
+                                              //pageCount = 1; //AddCar()
+                                              // Add new car screen
+                                            }
+                                        ),
+                                        SizedBox(height: 10,),
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "2-4",
+                                            title: "Assign Vehicle",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="2-4");
+                                              //pageCount = 1; //AddCar()
+                                              // Add new car screen
+                                            }
+                                        ),
+                                        SizedBox(height: 10,),
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "2-5",
+                                            title: "Vehicle Report's",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="2-5");
+                                              pageCount = 7; //Create Reports()
+                                              // Add new car screen
+                                            }
+                                        ),
+                                        SizedBox(height: 10,),
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "2-6",
+                                            title: "Payment Report's",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="2-6");
+                                              pageCount = 7; //Create Reports()
+                                              // Add new car screen
                                             }
                                         ),
                                       ],
@@ -190,6 +166,51 @@ class _MainPageState extends State<MainPage> {
                                   ],
                                 ),
                               ),
+
+                              // ExpandedMenu(
+                              //   onClick: (){
+                              //     setState(() {
+                              //       selectedMenuNumber[0] = 5;
+                              //     });
+                              //   },
+                              //   isSelected: selectedMenuNumber[0] == 5 ? true : false,
+                              //   onLongPress: (){},
+                              //   title: "Reports",
+                              //   icon: Icons.report_gmailerrorred,
+                              //   content: Row(
+                              //     children: [
+                              //       Container(
+                              //         height: 100,
+                              //         width: 2,
+                              //         color: AppColors.green,
+                              //       ),
+                              //       SizedBox(width: 10,),
+                              //       Column(
+                              //         children: [
+                              //           buildChildMenu(
+                              //               size: size,
+                              //               menuNumber: "5-1",
+                              //               title: "Vehicle Report's",
+                              //               onClick:  (){
+                              //                 setState(() =>selectedChildMenuNumber[0]="5-1");
+                              //                 pageCount = 7; //Create Reports()
+                              //               }
+                              //           ),
+                              //
+                              //           SizedBox(height: 10,),
+                              //           buildChildMenu(
+                              //               size: size,
+                              //               menuNumber: "5-2",
+                              //               title: "Payment Reports",
+                              //               onClick:  (){
+                              //                 setState(() =>selectedChildMenuNumber[0]="5-2");
+                              //               }
+                              //           ),
+                              //         ],
+                              //       ),
+                              //     ],
+                              //   ),
+                              // ),
 
                               //rent reports - id: 6
                               ExpandedMenu(
@@ -237,6 +258,18 @@ class _MainPageState extends State<MainPage> {
                                   ],
                                 ),
                               ),
+                              //rent reports - id: 7
+                              MenuBar(
+                                title: "Employ Management",
+                                onClick: (){
+                                  setState(() {
+                                    selectedMenuNumber[0] = 7;
+                                    pageCount = 12;
+                                  });
+                                },
+                                icon: Icons.supervised_user_circle_sharp,
+                                isSelected: selectedMenuNumber[0] == 7 ? true : false,
+                              ),
                               // Spacer(),
                               // Align(
                               //   alignment: Alignment.bottomCenter,
@@ -257,13 +290,15 @@ class _MainPageState extends State<MainPage> {
               ),
               Expanded(
                 flex: 5,
+               // child: Dashboard(), //index = 0,
                 child: Container(
+                  height: size.height,
+                  width: size.width*.60,
                   color: AppColors.bg,
                   child: ListView(
                     children: [
                       AppTopBar(),
-
-                      AllPages.allPages[pageCount]
+                      Dashboard(), //index = 0
                     ],
                   ),
                 )
@@ -292,7 +327,11 @@ class _MainPageState extends State<MainPage> {
             color: selectedChildMenuNumber[0] == "$menuNumber"? AppColors.green.withOpacity(0.4) : AppColors.white,
             borderRadius: BorderRadius.circular(4)
         ),
-        child: Text("$title"),
+        child: Text("$title",
+          style: TextStyle(
+            fontSize: 12
+          ),
+        ),
       ),
     );
   }

@@ -21,6 +21,8 @@ class _ProfileState extends State<Profile> {
   final mailingAddress = TextEditingController();
   final email = TextEditingController();
   final phoneNumber = TextEditingController();
+  final secoundryName = TextEditingController();
+  final secoundryPhone = TextEditingController();
   final website = TextEditingController();
 
 
@@ -225,11 +227,19 @@ class _ProfileState extends State<Profile> {
                         ),
                         SizedBox(height: 20,),
                         AppInput(
-                            controller: email,
+                            controller: phoneNumber,
                             title: "Phone Number",
                             readOnly: true,
                             prefixIcon: Icons.phone_android,
                             hintText: "+928495893439"
+                        ),
+                        SizedBox(height: 20,),
+                        AppInput(
+                            controller: secoundryName,
+                            title: "Emergency Contact Name",
+                            readOnly: true,
+                            prefixIcon: Icons.phone_android,
+                            hintText: "Emergency Contact Name"
                         ),
                         SizedBox(height: 20,),
                       ],
@@ -377,12 +387,20 @@ class _ProfileState extends State<Profile> {
                             prefixIcon: Icons.calendar_month,
                             hintText: "Years in business (number input)"
                         ),
-                        SizedBox(height: 20,),
+                        SizedBox(height: 17,),
                         AppInput(
                           maxLine: 4,
                             controller: yearsBusiness,
                             title: "Brief description of the company's products/services",
                             hintText: "Brief description of the company's products/services"
+                        ),
+                        SizedBox(height: 20,),
+                        AppInput(
+                            controller: phoneNumber,
+                            title: "Emergency Phone Number",
+                            readOnly: true,
+                            prefixIcon: Icons.phone_android,
+                            hintText: "Emergency Pesone Phone Number"
                         ),
 
                       ],

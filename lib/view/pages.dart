@@ -11,6 +11,7 @@ import 'package:vendor/view/reports/create-reports.dart';
 import 'package:vendor/view/ticketManagement/findTicket.dart';
 import 'package:vendor/view/ticketManagement/singleTicker.dart';
 
+import 'employ/employManage.dart';
 import 'ticketManagement/allTicket.dart';
 
 class AllPages{
@@ -27,5 +28,6 @@ class AllPages{
     FindTicket(), //index = 9
     AllTicket(), //index = 10
     SingleTicket(), //index = 11
+    EmployManagement(), //index = 12
   ];
 }

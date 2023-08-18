@@ -50,8 +50,11 @@ class AppInput extends StatelessWidget {
                   borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.8))
               ),
               hintText: "$hintText",
+              hintStyle: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w400
+              ),
               prefixIcon: Icon(prefixIcon),
-
           ),
           autofocus: true,
 

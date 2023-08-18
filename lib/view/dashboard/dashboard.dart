@@ -6,15 +6,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:vendor/carImageJson.dart';
+import 'package:vendor/controller/dashboardController/dashboardController.dart';
+import 'package:vendor/model/dasboardModel.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/accountVerificationCenter.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/bigText.dart';
+import '../../app_config.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/richText.dart';
 import '../../view_controller/singleBoxes.dart';
-import 'report_charts.dart';
 
+import 'package:http/http.dart' as http;
 class Dashboard extends StatefulWidget {
   const Dashboard({Key? key}) : super(key: key);
 
@@ -42,6 +45,19 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
+   getDashboardData = dashboardController();
+  }
+
+  late Future<DashboardModel> getDashboardData;
+  Future<DashboardModel> dashboardController()async{
+
+    var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"));
+    print("data ==== ${response.statusCode}");
+    print("data ==== ${response.body}");
+    if(response.statusCode == 200){
+      return DashboardModel.fromJson(jsonDecode(response.body));
+    }
+    return DashboardModel.fromJson(jsonDecode(response.body));
   }
 
 
@@ -49,279 +65,297 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Container(
-      // height: size.height,
-      // width: size.width,
-      padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
-      color: AppColors.bg,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+    return FutureBuilder<DashboardModel>(
+      future: getDashboardData,
+      builder: (context, snapshot) {
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.green,
+            ),
+          );
+        }else if(snapshot.hasData){
+          return Container(
+            // height: size.height,
+            // width: size.width,
+            padding: EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            color: AppColors.bg,
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
 
-                 Container(
-                   width: size.width*.80,
-                   padding: EdgeInsets.all(10),
-                   margin: EdgeInsets.only( bottom: 10,),
-                   decoration: BoxDecoration(
-                     color: AppColors.green.withOpacity(0.1),
-                     borderRadius: BorderRadius.circular(5)
-                   ),
-                   child: Row(
-                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                     children: [
-                       Column(
-                         mainAxisAlignment: MainAxisAlignment.start,
-                         crossAxisAlignment: CrossAxisAlignment.start,
-                         children: [
-                           Text('You are active our "GOLD" plan.',
-                             style: TextStyle(
-                                 fontSize: 13,
-                                 fontWeight: FontWeight.w600,
-                                 color: AppColors.green
-                             ),
-                           ),
-                           Text('If you want to upgrade plan, then go to the upgrade option and upgrade your plan.',
-                            style: TextStyle(
-                              fontSize: 10,
-                              fontWeight: FontWeight.w400,
-                              color: Colors.grey
-                            ),
-                           ),
-                         ],
-                       ),
-                       AppButton(onClick: (){}, text: "Upgrade", width: 150)
-                     ],
-                   ),
-                 ),
-                  BigText(text: "Dashboard"),
-                  SizedBox(height: 10,),
-                  Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
-                    style: TextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                        color: AppColors.greyText
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 30,),
-          Row(
-            children: [
-              SingleBoxes(
-                  title: "25",
-                  subTitle: "Total Cars",
-                  icon: Image.asset("assets/images/car_list.png",height: 20, width: 20, fit: BoxFit.contain)
-              ),
-              SizedBox(width: 20,),
-              SingleBoxes(
-                  title: "57",
-                  subTitle: "Rent Request",
-                  icon: Image.asset("assets/images/request.png",height: 30, width: 30,)
-              ),
-              SizedBox(width: 20,),
-              SingleBoxes(
-                  title: "25",
-                  subTitle: "Pending Request",
-                  icon: Image.asset("assets/images/p_request.png",height: 30, width: 30,)
-              ),
-              SizedBox(width: 20,),
-              SingleBoxes(
-                  title: "12",
-                  subTitle: "Assign Drivers",
-                  icon: Image.asset("assets/images/driver.png", height: 30, width: 30,)
-              ),
-
-            ],
-          ),
-          SizedBox(height: 20,),
-          Row(
-            children: [
-              Expanded(
-                flex: 4,
-                child: Container(
-                  // width: size.width*.55,
-                   height: 380,
-                  padding: EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade300,
-                            spreadRadius: 2, blurRadius: 3,
-                            offset: Offset(0,2)
-                        )
-                      ]
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text("Recent Car Request",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 20,
-                            ),
+                        Container(
+                          width: size.width*.80,
+                          padding: EdgeInsets.all(10),
+                          margin: EdgeInsets.only( bottom: 10,),
+                          decoration: BoxDecoration(
+                              color: AppColors.green.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(5)
                           ),
-                          TextButton(
-                              style: ButtonStyle(
-                                backgroundColor: MaterialStatePropertyAll(AppColors.blue),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text('You are active our "GOLD" plan.',
+                                    style: TextStyle(
+                                        fontSize: 13,
+                                        fontWeight: FontWeight.w600,
+                                        color: AppColors.green
+                                    ),
+                                  ),
+                                  Text('If you want to upgrade plan, then go to the upgrade option and upgrade your plan.',
+                                    style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.grey
+                                    ),
+                                  ),
+                                ],
                               ),
-                              onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 1,)))
-                              , child: Text("VIEW ALL",
-                            style: TextStyle(
-                                color: AppColors.white
-                            ),
-                          ))
-                        ],
-                      ),
-                      SizedBox(height: 8,),
-                      Divider(height: 2, color: Colors.grey,),
-                      SizedBox(height: 8,),
-                      DataTable(
-                        dividerThickness:0,
-                          sortAscending: false,
-                        columns: [
-                          DataColumn(label: Text(
-                              'Car',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Car Name',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Plate No.',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Status',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Action',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                        ],
-                        rows: [
-                          for(var i=0;i<5;i++)
-                            DataRow(
-                                color: MaterialStateColor.resolveWith((states) {
-                                  return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                                }),
-                                cells: [
-                                  DataCell(
-                                      Image.network("${CarImageJson.carImageList[i]["image"]}", height: 30, width: 30,)
-                                  ),
-                                  DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                                  DataCell(Text('#48TFJC79')),
-                                  DataCell(
-                                      Container(
-                                        padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-                                        decoration: BoxDecoration(
-                                            color: i.isOdd ? AppColors.green : AppColors.blue,
-                                            borderRadius: BorderRadius.circular(4)
-                                        ),
-                                        child: Text("${i.isOdd?"Approve":"Pending" }",
-                                          style: TextStyle(
-                                              fontSize: 9,
-                                              color: AppColors.white
-                                          ),
-                                        ),
-                                      )
-                                  ),
-                                  DataCell(
-                                      TextButton(
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStatePropertyAll(Colors.amber),
-                                          ),
-                                          onPressed: ()=>ShowSingleCar(CarImageJson.carImageList[i]), child: Text("VIEW ",
-                                        style: TextStyle(
-                                            fontSize: 12,
-                                            color: AppColors.white
-                                        ),
-                                      ))
-                                  ),
-                                ]
-                            ),
-
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(width: 20,),
-              Expanded(
-                flex: 2,
-                child: Container(
-                  //width: size.width*.22,
-                    height: 380,
-                    padding: EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                        color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade300,
-                              spreadRadius: 2, blurRadius: 3,
-                              offset: Offset(0,2)
-                          )
-                        ]
-                    ),
-                    child:PieChart(
-                      dataMap: paiRentRequestReportData,
-                      animationDuration: Duration(milliseconds: 800),
-                      chartLegendSpacing: 32,
-                      chartRadius: MediaQuery.of(context).size.width / 3,
-                      colorList: [
-                        Colors.amber,
-                        Colors.green,
-                        Colors.blue
+                              AppButton(onClick: (){}, text: "Upgrade", width: 150)
+                            ],
+                          ),
+                        ),
+                        BigText(text: "Dashboard"),
+                        SizedBox(height: 10,),
+                        Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.greyText
+                          ),
+                        ),
                       ],
-                      initialAngleInDegree: 0,
-                      chartType: ChartType.ring,
-                      ringStrokeWidth: 20,
-                      centerText: "Total Request",
-                      legendOptions: LegendOptions(
-                        showLegendsInRow: true,
-                        legendPosition: LegendPosition.bottom,
-                        showLegends: true,
-                        legendShape: BoxShape.circle,
-                        legendTextStyle: TextStyle(
-                          fontWeight: FontWeight.bold,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 30,),
+                Row(
+                  children: [
+                    SingleBoxes(
+                        title: "25",
+                        subTitle: "Vehicles",
+                        icon: Image.asset("assets/images/car_list.png",height: 20, width: 20, fit: BoxFit.contain)
+                    ),
+                    SizedBox(width: 20,),
+                    SingleBoxes(
+                        title: "57",
+                        subTitle: "Total Request",
+                        icon: Image.asset("assets/images/request.png",height: 30, width: 30,)
+                    ),
+                    SizedBox(width: 20,),
+                    SingleBoxes(
+                        title: "25",
+                        subTitle: "Pending Request",
+                        icon: Image.asset("assets/images/p_request.png",height: 30, width: 30,)
+                    ),
+                    SizedBox(width: 20,),
+                    SingleBoxes(
+                        title: "12",
+                        subTitle: "Assign Drivers",
+                        icon: Image.asset("assets/images/driver.png", height: 30, width: 30,)
+                    ),
+
+                  ],
+                ),
+                SizedBox(height: 20,),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 4,
+                      child: Container(
+                        // width: size.width*.55,
+                        height: 380,
+                        padding: EdgeInsets.all(15),
+                        decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10),
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.grey.shade300,
+                                  spreadRadius: 2, blurRadius: 3,
+                                  offset: Offset(0,2)
+                              )
+                            ]
+                        ),
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Recent Car Request",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                TextButton(
+                                    style: ButtonStyle(
+                                      backgroundColor: MaterialStatePropertyAll(AppColors.blue),
+                                    ),
+                                    onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 1,)))
+                                    , child: Text("VIEW ALL",
+                                  style: TextStyle(
+                                      color: AppColors.white
+                                  ),
+                                ))
+                              ],
+                            ),
+                            SizedBox(height: 8,),
+                            Divider(height: 2, color: Colors.grey,),
+                            SizedBox(height: 8,),
+                            DataTable(
+                              dividerThickness:0,
+                              sortAscending: false,
+                              columns: [
+                                DataColumn(label: Text(
+                                    'Car',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                                )),
+                                DataColumn(label: Text(
+                                    'Car Name',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                                )),
+                                DataColumn(label: Text(
+                                    'Plate No.',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                                )),
+                                DataColumn(label: Text(
+                                    'Status',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                                )),
+                                DataColumn(label: Text(
+                                    'Action',
+                                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                                )),
+                              ],
+                              rows: [
+                                for(var i=0;i<5;i++)
+                                  DataRow(
+                                      color: MaterialStateColor.resolveWith((states) {
+                                        return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                                      }),
+                                      cells: [
+                                        DataCell(
+                                            Image.network("${CarImageJson.carImageList[i]["image"]}", height: 30, width: 30,)
+                                        ),
+                                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
+                                        DataCell(Text('#48TFJC79')),
+                                        DataCell(
+                                            Container(
+                                              padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+                                              decoration: BoxDecoration(
+                                                  color: i.isOdd ? AppColors.green : AppColors.blue,
+                                                  borderRadius: BorderRadius.circular(4)
+                                              ),
+                                              child: Text("${i.isOdd?"Approve":"Pending" }",
+                                                style: TextStyle(
+                                                    fontSize: 9,
+                                                    color: AppColors.white
+                                                ),
+                                              ),
+                                            )
+                                        ),
+                                        DataCell(
+                                            TextButton(
+                                                style: ButtonStyle(
+                                                  backgroundColor: MaterialStatePropertyAll(Colors.amber),
+                                                ),
+                                                onPressed: ()=>ShowSingleCar(CarImageJson.carImageList[i]), child: Text("VIEW ",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: AppColors.white
+                                              ),
+                                            ))
+                                        ),
+                                      ]
+                                  ),
+
+                              ],
+                            ),
+                          ],
                         ),
                       ),
-                      chartValuesOptions: ChartValuesOptions(
-                        showChartValueBackground: false,
-                        showChartValues: true,
-                        showChartValuesInPercentage: false,
-                        showChartValuesOutside: false,
-                        decimalPlaces: 1,
+                    ),
+                    SizedBox(width: 20,),
+                    Expanded(
+                      flex: 2,
+                      child: Container(
+                        //width: size.width*.22,
+                          height: 380,
+                          padding: EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                              color: AppColors.white,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: [
+                                BoxShadow(
+                                    color: Colors.grey.shade300,
+                                    spreadRadius: 2, blurRadius: 3,
+                                    offset: Offset(0,2)
+                                )
+                              ]
+                          ),
+                          child:PieChart(
+                            dataMap: paiRentRequestReportData,
+                            animationDuration: Duration(milliseconds: 800),
+                            chartLegendSpacing: 32,
+                            chartRadius: MediaQuery.of(context).size.width / 3,
+                            colorList: [
+                              Colors.amber,
+                              Colors.green,
+                              Colors.blue
+                            ],
+                            initialAngleInDegree: 0,
+                            chartType: ChartType.ring,
+                            ringStrokeWidth: 20,
+                            centerText: "Total Request",
+                            legendOptions: LegendOptions(
+                              showLegendsInRow: true,
+                              legendPosition: LegendPosition.bottom,
+                              showLegends: true,
+                              legendShape: BoxShape.circle,
+                              legendTextStyle: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            chartValuesOptions: ChartValuesOptions(
+                              showChartValueBackground: false,
+                              showChartValues: true,
+                              showChartValuesInPercentage: false,
+                              showChartValuesOutside: false,
+                              decimalPlaces: 1,
+                            ),
+                            // gradientList: ---To add gradient colors---
+                            // emptyColorGradient: ---Empty Color gradient---
+                          )
                       ),
-                      // gradientList: ---To add gradient colors---
-                      // emptyColorGradient: ---Empty Color gradient---
-                    )
-                ),
-              ),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          );
+        }else{
+          return Column(
+            children: [
+              Text("Check you internet connection or Try again."),
+              SizedBox(height: 10,),
+              TextButton(onPressed: (){}, child: Text("Try again."))
             ],
-          )
+          );
+        }
 
-
-
-
-
-        ],
-      ),
+      }
     );
   }
 

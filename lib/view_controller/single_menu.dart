@@ -27,7 +27,7 @@ class MenuBar extends StatelessWidget {
         leading: Icon(icon, color: AppColors.green,),
         title: Text("$title",
           style: TextStyle(
-              fontSize: 14,
+              fontSize: 12,
               fontWeight: FontWeight.w500,
               color: AppColors.textColor
           ),

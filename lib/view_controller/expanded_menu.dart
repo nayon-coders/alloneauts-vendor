@@ -33,7 +33,7 @@ class ExpandedMenu extends StatelessWidget {
           SizedBox(width: 5,),
           Text("$title",
             style: TextStyle(
-                fontSize: 15,
+                fontSize: 12,
                 color: AppColors.textColor,
                 fontWeight: FontWeight.w500
             ),

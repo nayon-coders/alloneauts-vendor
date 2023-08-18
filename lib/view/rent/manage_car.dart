@@ -28,7 +28,7 @@ class _ManageCarState extends State<ManageCar> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              BigText(text: "Manage Car's"),
+              const BigText(text: "Manage Vehicle's"),
               SizedBox(
                 width: size.width*.20,
                 child: TextFormField(
@@ -72,7 +72,7 @@ class _ManageCarState extends State<ManageCar> {
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                   )),
                   DataColumn(label: Text(
-                      'Car Name',
+                      'Vehicle Name',
                       style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
                   )),
                   DataColumn(label: Text(

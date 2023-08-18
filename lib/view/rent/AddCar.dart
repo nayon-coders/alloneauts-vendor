@@ -85,7 +85,7 @@ class _AddCarState extends State<AddCar> {
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
         children: [
-          BigText(text: "Add New Car"),
+          BigText(text: "Add New Vehicle"),
           SizedBox(height: 20,),
           Container(
             padding: EdgeInsets.all(15),
@@ -104,7 +104,8 @@ class _AddCarState extends State<AddCar> {
               children: [
                 Row(
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: 300,
                       child: InkWell(
                         onTap:()=>startWebFilePicker(),
                         child: Container(
@@ -119,7 +120,7 @@ class _AddCarState extends State<AddCar> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text("Upload your car image."),
+                              Text("Upload your Vehicle image."),
                               SizedBox(height: 5,),
                               Icon(Icons.add, color: Colors.black,)
                             ],
@@ -131,7 +132,6 @@ class _AddCarState extends State<AddCar> {
                     Expanded(
                       child: Column(
                         children: [
-
                           Row(
                             children: [
                               Expanded(
@@ -160,12 +160,22 @@ class _AddCarState extends State<AddCar> {
                                   hintText: "Year",
                                 ),
                               ),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: AppInput(
+                                  controller: year,
+                                  title: "Trim",
+                                  prefixIcon: Icons.car_crash_sharp,
+                                  hintText: "Trim",
+                                ),
+                              ),
+
                             ],
                           ),
                           SizedBox(height: 20,),
                           AppInput(
                             controller: location,
-                            title: "Car Location",
+                            title: "Vehicle Location",
                             prefixIcon: Icons.location_on_outlined,
                             hintText: "Select your location",
                           ),
@@ -186,7 +196,7 @@ class _AddCarState extends State<AddCar> {
                         controller: color,
                         title: "Color",
                         prefixIcon: Icons.color_lens_outlined,
-                        hintText: "Car color",
+                        hintText: "Vehicle color",
                       ),
                     ),
                     const SizedBox(width: 10,),
@@ -306,13 +316,13 @@ class _AddCarState extends State<AddCar> {
                     onClick: (){
                       AppPopup.appPopup(
                           context: context,
-                          title: "You cart added success!",
-                          body: "You new car create success. You can check it from Car rent->Manage Car's",
+                          title: "You Vehicle added success!",
+                          body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
                           dialogType: DialogType.success,
                           onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
                       );
                     },
-                    text: "Add Car",
+                    text: "Add Vehicle",
                     width: size.width*.40
                 )
 

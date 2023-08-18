@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/utility/app_color.dart';
+import 'package:vendor/view/auth/checkingAuth.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/auth/offers.dart';
 import 'package:vendor/view/auth/signup.dart';
+import 'package:vendor/view/dashboard/dashboard.dart';
 import 'package:vendor/view/main_pages.dart';
 
 void main() {
@@ -17,7 +21,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // This widget is the root of your application.
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +32,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
-      home: const Login(),
+      home: CheckingAuth(),
     );
   }
 }

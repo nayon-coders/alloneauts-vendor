@@ -12,7 +12,8 @@ import 'dart:html' as html;
 
 import 'emailVerificationCenter.dart';
 class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+  final double price;
+  const SignUp({Key? key, required this.price}) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -124,13 +125,30 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 40,),
                   const BigText(text: "Welcome to AllOneAutos"),
                   SizedBox(height: 10,),
-                  Text("Register your accout"),
-                  SizedBox(height: 40,),
-                  AppInput(
-                      controller: name,
-                      title: "Name",
-                      prefixIcon: Icons.person,
-                      hintText: "Nayon talukder"
+                  const Text("Register your accout"),
+                  const SizedBox(height: 40,),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: size.width*.16,
+                        child: AppInput(
+                            controller: name,
+                            title: "First Name",
+                            prefixIcon: Icons.person,
+                            hintText: "First Name"
+                        ),
+                      )  ,
+                      SizedBox(
+                        width: size.width*.16,
+                        child: AppInput(
+                            controller: name,
+                            title: "Last Name",
+                            prefixIcon: Icons.person,
+                            hintText: "Last Name"
+                        ),
+                      )
+                    ],
                   ),
 
                   // SizedBox(height: 20,),
