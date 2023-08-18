@@ -3,7 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/main_pages.dart';
-
+import 'package:vendor/view/globals.dart' as global;
 
 class CheckingAuth extends StatefulWidget {
   const CheckingAuth({Key? key}) : super(key: key);
@@ -20,7 +20,7 @@ class _CheckingAuthState extends State<CheckingAuth> {
     // TODO: implement initState
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 5000), () {
+    Future.delayed(Duration(milliseconds: 2000), () {
       getToken();
       // Do something
     });
@@ -28,6 +28,7 @@ class _CheckingAuthState extends State<CheckingAuth> {
 
   var token;
   bool isChecking = true;
+  bool isAuth = true;
   //get token
   Future getToken() async {
 
@@ -36,9 +37,19 @@ class _CheckingAuthState extends State<CheckingAuth> {
     token = value;
 
     if(token != null){
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainPage()), (route) => false);
+      setState(() {
+        global.isLoggedIn= true;
+        global.token = token;
+      });
+      Future.delayed(Duration(milliseconds: 1500), () {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainPage()), (route) => false);
+        // Do something
+      });
     }else{
-      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
+      Future.delayed(Duration(milliseconds: 1500), () {
+        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
+        // Do something
+      });
     }
     print("value === $token");
     setState(() {
