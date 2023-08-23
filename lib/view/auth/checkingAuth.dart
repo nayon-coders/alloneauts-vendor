@@ -34,7 +34,9 @@ class _CheckingAuthState extends State<CheckingAuth> {
 
     final prefs = await SharedPreferences.getInstance();
     final value = prefs.getString('token');
-    token = value;
+    setState(() {
+      token = value;
+    });
 
     if(token != null){
       setState(() {

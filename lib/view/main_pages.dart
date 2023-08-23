@@ -259,16 +259,51 @@ class _MainPageState extends State<MainPage> {
                                 ),
                               ),
                               //rent reports - id: 7
-                              MenuBar(
-                                title: "Employ Management",
+                              //rent reports - id: 6
+                              ExpandedMenu(
                                 onClick: (){
                                   setState(() {
                                     selectedMenuNumber[0] = 7;
-                                    pageCount = 12;
                                   });
                                 },
-                                icon: Icons.supervised_user_circle_sharp,
                                 isSelected: selectedMenuNumber[0] == 7 ? true : false,
+                                onLongPress: (){},
+                                title: "Employ Manage",
+                                icon: Icons.report_gmailerrorred,
+                                content: Row(
+                                  children: [
+                                    Container(
+                                      height: 100,
+                                      width: 2,
+                                      color: AppColors.green,
+                                    ),
+                                    SizedBox(width: 10,),
+                                    Column(
+                                      children: [
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "7-1",
+                                            title: "Create Employ",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="7-1");
+                                              pageCount = 12; //Final ticket
+                                            }
+                                        ),
+
+                                        SizedBox(height: 10,),
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "7-2",
+                                            title: "Manage",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="7-2");
+                                              pageCount = 13; //employ salary shit
+                                            }
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                               // Spacer(),
                               // Align(
@@ -298,7 +333,7 @@ class _MainPageState extends State<MainPage> {
                   child: ListView(
                     children: [
                       AppTopBar(),
-                      Dashboard(), //index = 0
+                      AllPages.allPages[pageCount], //index = 0
                     ],
                   ),
                 )
