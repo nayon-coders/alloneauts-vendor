@@ -1,7 +1,10 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_month_picker/flutter_month_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:simple_month_year_picker/simple_month_year_picker.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
 import 'dart:math' as math;
@@ -23,6 +26,17 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
     "Total Payment": 2,
     "Due Payment": 2,
   };
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // selectedDate
+    selectedDate =  DateFormat.yMMMEd().format(DateTime.now()) ;
+
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -32,14 +46,45 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
       child: ListView(
         children: [
          SizedBox(
-           height: 100,
+
            child:  Row(
              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: const [
+             children: [
                BigText(text: "Johan - Employ Salary Management"),
+               InkWell(
+                 onTap: ()=>openCalender(context),
+                 child: Container(
+
+                   padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                   decoration: BoxDecoration(
+                     color: AppColors.green,
+                     borderRadius: BorderRadius.circular(10)
+                   ),
+                   child: Row(
+                     children: [
+                       Icon(Icons.calendar_month, color: Colors.white,),
+                       Text("Select Month",
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.white
+                        ),
+                       )
+                     ],
+                   ),
+                 ),
+               )
              ],
            ),
          ),
+          SizedBox(height: 10,),
+          Text("Statement for: $selectedDate",
+            style: TextStyle(
+              fontWeight: FontWeight.w400,
+              color: AppColors.black,
+              fontSize: 17,
+            ),
+          ),
           SizedBox(height: 10,),
           Expanded(
             child: ListView.builder(
@@ -416,4 +461,24 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
       },
     );
   }
+
+  var selectedDate;
+  Future<void> openCalender(BuildContext context) async {
+    final selected =
+    await SimpleMonthYearPicker.showMonthYearPickerDialog(
+        context: context,
+        titleTextStyle: TextStyle(),
+        monthTextStyle: TextStyle(),
+        yearTextStyle: TextStyle(),
+        disableFuture:
+        true // This will disable future years. it is false by default.
+    );
+    if (SimpleMonthYearPicker != null) {
+      setState(() {
+        selectedDate = DateFormat.yMMMEd().format(selected);
+        print("print ===== ${selected}");
+      });
+    }
+  }
+
 }

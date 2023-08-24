@@ -62,6 +62,12 @@ class _EmploySalaryShitState extends State<EmploySalaryShit> {
                     'Employ Type',
                   )),
                   DataColumn(label: Text(
+                    'Total Hours',
+                  )),
+                  DataColumn(label: Text(
+                    'Hourly Rate',
+                  )),
+                  DataColumn(label: Text(
                     'Status',
                   )),
                   DataColumn(label: Text(
@@ -101,6 +107,18 @@ class _EmploySalaryShitState extends State<EmploySalaryShit> {
                                   color: Colors.white,
                                 ),
                               ))),
+                          DataCell(Text('240 Hours',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600
+                            ),
+                          )),
+                          DataCell(Text('\$12',
+                            style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600
+                            ),
+                          )),
                           DataCell(Container(
                               padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
                               decoration: BoxDecoration(
