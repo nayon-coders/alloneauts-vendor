@@ -294,10 +294,20 @@ class _MainPageState extends State<MainPage> {
                                         buildChildMenu(
                                             size: size,
                                             menuNumber: "7-2",
-                                            title: "Manage",
+                                            title: "Salary Manage",
                                             onClick:  (){
                                               setState(() =>selectedChildMenuNumber[0]="7-2");
                                               pageCount = 13; //employ salary shit
+                                            }
+                                        ),
+                                        SizedBox(height: 10,),
+                                        buildChildMenu(
+                                            size: size,
+                                            menuNumber: "7-3",
+                                            title: "Tax Manage",
+                                            onClick:  (){
+                                              setState(() =>selectedChildMenuNumber[0]="7-3");
+                                              pageCount = 15; //taxt management
                                             }
                                         ),
                                       ],

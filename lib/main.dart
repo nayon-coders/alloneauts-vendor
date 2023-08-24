@@ -29,11 +29,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
-      initialRoute: '/', // Set the initial route
-      routes: {
-        '/': (context) => CheckingAuth(), // Home page
-        // Define more named routes as needed
-      },
+     home: CheckingAuth(),
     );
   }
 }

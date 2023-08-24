@@ -26,7 +26,7 @@ class _CheckingAuthState extends State<CheckingAuth> {
     });
   }
 
-  var token;
+  String? token;
   bool isChecking = true;
   bool isAuth = true;
   //get token
@@ -38,10 +38,10 @@ class _CheckingAuthState extends State<CheckingAuth> {
       token = value;
     });
 
-    if(token != null){
+    if(value != null){
       setState(() {
         global.isLoggedIn= true;
-        global.token = token;
+        global.token = value!;
       });
       Future.delayed(Duration(milliseconds: 1500), () {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainPage()), (route) => false);

@@ -1,9 +1,12 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
+import 'package:vendor/view_controller/appPoup.dart';
 import 'dart:html' as html;
 import '../../utility/app_color.dart';
 import '../../view_controller/appIconButton.dart';
@@ -24,6 +27,11 @@ class _EmployManagementState extends State<EmployManagement> {
   final phone = TextEditingController();
   final pass = TextEditingController();
 
+
+  final hourly = TextEditingController();
+  final monthly = TextEditingController();
+  final weekly = TextEditingController();
+
   Map<String, bool> values = {
     'Manage Vehicles': true,
     'Add Vehicles': true,
@@ -32,6 +40,21 @@ class _EmployManagementState extends State<EmployManagement> {
     'Payment Reports': false,
     'Ticket Manage': false,
   };
+
+  Map<String, bool> taxList = {
+    'Federal Income Tax': true,
+    'State Income Tax': true,
+    'Medicare Tax': false,
+    'Country Tax': false,
+  };
+
+  List<String> employType = [
+    "Hourly",
+    "Weekly",
+    "Monthly"
+  ];
+  var selectEmployType;
+
 
 
   List<int>? _selectedFile;
@@ -218,6 +241,7 @@ class _EmployManagementState extends State<EmployManagement> {
             builder: (BuildContext context, StateSetter setState) {
               return Container(
                 width: size.width*.30,
+                color: Colors.grey.shade50,
                 child: SingleChildScrollView(
                   child: ListBody(
                     children:  <Widget>[
@@ -295,10 +319,75 @@ class _EmployManagementState extends State<EmployManagement> {
                         ],
                       ),
                       SizedBox(height: 20,),
-                      Text("Permission",
+                      Text("Employ Type",
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 20,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      Container(
+                        decoration: BoxDecoration(
+                            color: Colors.white
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton2<String>(
+                            isExpanded: true,
+                            hint: Text(
+                              'Select Employ Role',
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Theme.of(context).hintColor,
+                              ),
+                            ),
+                            items: employType
+                                .map((String item) => DropdownMenuItem<String>(
+                              value: item,
+                              child: Text(
+                                item,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ))
+                                .toList(),
+                            value: selectEmployType,
+                            onChanged: (String? value) {
+                              setState(() {
+                                selectEmployType = value;
+                              });
+                            },
+                            buttonStyleData: const ButtonStyleData(
+                              padding: EdgeInsets.symmetric(horizontal: 16),
+                              height: 40,
+                              width: 140,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                              ),
+                            ),
+                            menuItemStyleData: const MenuItemStyleData(
+                              height: 40,
+                            ),
+                          ),
+                        ),
+                      ),
+                      selectEmployType != null ? Column(
+                        children: [
+                          SizedBox(height: 20,),
+                          selectEmployType == "Hourly"
+                              ? AppInput(controller: hourly, title: "Hourly Rate", hintText: "12", prefixIcon: Icons.attach_money)
+                              : selectEmployType == "Weekly"
+                              ? AppInput(controller: weekly, title: "Weekly Rate", hintText: "500", prefixIcon: Icons.attach_money)
+                              : selectEmployType == "Monthly"
+                              ? AppInput(controller: monthly, title: "Monthly Rate", hintText: "2000", prefixIcon: Icons.attach_money)
+                              : SizedBox(height: 20,),
+                        ],
+                      ) : Center(),
+                      SizedBox(height: 20,),
+                      Text("Permission",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
                         ),
                       ),
                       SizedBox(height: 10,),
@@ -324,8 +413,40 @@ class _EmployManagementState extends State<EmployManagement> {
                           }).toList(),
                         ),
                       ),
+                      SizedBox(height: 20,),
+                      Text("Tax",
+                        style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 17,
+                        ),
+                      ),
+                      SizedBox(height: 10,),
+                      SizedBox(
+                        height: 50.00*taxList.length,
+                        child: ListView(
+                          physics: NeverScrollableScrollPhysics(),
+                          children: taxList.keys.map((String key) {
+                            return new CheckboxListTile(
+                              title: new Text(key,
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600
+                                ),
+                              ),
+                              value: taxList[key],
+                              onChanged: (value) {
+                                setState(() {
+                                  taxList[key] = value!;
+                                });
+                              },
+                            );
+                          }).toList(),
+                        ),
+                      ),
                       SizedBox(height: 30,),
-                      AppButton(onClick: ()=>Navigator.pop(context), text: "Create Employ", width: 100),
+                      AppButton(onClick: (){
+                        AppPopup.appPopup(context: context, title: "Success", body: "Successfully create Employ", dialogType: DialogType.success, onOkBtn: ()=>Navigator.pop(context));
+                      }, text: "Create Employ", width: 100),
 
 
                     ],

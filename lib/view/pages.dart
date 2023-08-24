@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/view/dashboard/dashboard.dart';
 import 'package:vendor/view/employ/employSalary/singleSalary.dart';
+import 'package:vendor/view/employ/tax/taxManagement.dart';
 import 'package:vendor/view/profile/profile.dart';
 import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view/rent/edit_car.dart';
@@ -33,5 +34,6 @@ class AllPages{
     EmployManagement(), //index = 12
     EmploySalaryShit(), //index = 13
     SingleEmploySalary(), //index = 14
+    TaxManagement(), //index = 15
   ];
 }
