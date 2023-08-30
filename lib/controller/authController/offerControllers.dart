@@ -10,14 +10,20 @@ import '../../model/authModel/offerModel.dart';
 class OfferControllers{
   //get api response
   
-  static Future getOfferData()async{
+  static Future<PricingModel> getOfferData()async{
 
-    var response = await http.get(Uri.parse("${AppConfig.BASE_URL+AppConfig.OFFERS}"));
-    print("data ==== ${response.statusCode}");
+    var response = await http.get(Uri.parse("${AppConfig.OFFERS}"),
+      headers: {
+        "Accept": "application/json"
+      }
+    );
+    print("data ==----== ${response.statusCode}");
     print("data ==== ${response.body}");
     if(response.statusCode == 200){
-      return OfferModels.fromJson(jsonDecode(response.body));
-    }
+      return PricingModel.fromJson(jsonDecode(response.body));
+    }else
+      return PricingModel.fromJson(jsonDecode(response.body));
+
   }
 
 }
