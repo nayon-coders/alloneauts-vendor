@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/carImageJson.dart';
 import 'package:vendor/controller/dashboardController/dashboardController.dart';
 import 'package:vendor/model/dasboardModel.dart';
@@ -57,14 +58,16 @@ class _DashboardState extends State<Dashboard> {
 
   late Future<DashboardModel> getDashboardData;
   Future<DashboardModel> dashboardController()async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    var token = pref.getString("token");
+    print("token ===== ${global.token}");
     var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"),
       headers: {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ${global.token}',
+        'Authorization': 'Bearer ${token}',
       },
     );
     print("data ==== ${response.statusCode}");
-    print("data ==== ${response.body}");
+    print("data ==------== ${response.body}");
     if(response.statusCode == 200){
       return DashboardModel.fromJson(jsonDecode(response.body));
     }
