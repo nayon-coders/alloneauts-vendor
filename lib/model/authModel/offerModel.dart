@@ -1,96 +1,44 @@
 // To parse this JSON data, do
 //
-//     final offerModels = offerModelsFromJson(jsonString);
+//     final pricingModel = pricingModelFromJson(jsonString);
 
 import 'package:meta/meta.dart';
 import 'dart:convert';
 
-OfferModels offerModelsFromJson(String str) => OfferModels.fromJson(json.decode(str));
+PricingModel pricingModelFromJson(String str) => PricingModel.fromJson(json.decode(str));
 
-String offerModelsToJson(OfferModels data) => json.encode(data.toJson());
+String pricingModelToJson(PricingModel data) => json.encode(data.toJson());
 
-class OfferModels {
-  final bool success;
-  final String status;
-  final int statusCode;
-  final String message;
-  final Api api;
-  final Data data;
+class PricingModel {
+  final List<Monthly> yearly;
+  final List<Monthly> monthly;
 
-  OfferModels({
-    required this.success,
-    required this.status,
-    required this.statusCode,
-    required this.message,
-    required this.api,
-    required this.data,
+  PricingModel({
+    required this.yearly,
+    required this.monthly,
   });
 
-  factory OfferModels.fromJson(Map<String, dynamic> json) => OfferModels(
-    success: json["success"],
-    status: json["status"],
-    statusCode: json["status_code"],
-    message: json["message"],
-    api: Api.fromJson(json["api"]),
-    data: Data.fromJson(json["data"]),
+  factory PricingModel.fromJson(Map<String, dynamic> json) => PricingModel(
+    yearly: List<Monthly>.from(json["yearly"].map((x) => Monthly.fromJson(x))),
+    monthly: List<Monthly>.from(json["monthly"].map((x) => Monthly.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "success": success,
-    "status": status,
-    "status_code": statusCode,
-    "message": message,
-    "api": api.toJson(),
-    "data": data.toJson(),
+    "yearly": List<dynamic>.from(yearly.map((x) => x.toJson())),
+    "monthly": List<dynamic>.from(monthly.map((x) => x.toJson())),
   };
 }
 
-class Api {
-  final String endpoint;
-  final String method;
-
-  Api({
-    required this.endpoint,
-    required this.method,
-  });
-
-  factory Api.fromJson(Map<String, dynamic> json) => Api(
-    endpoint: json["endpoint"],
-    method: json["method"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "endpoint": endpoint,
-    "method": method,
-  };
-}
-
-class Data {
-  final List<Pricing> pricing;
-
-  Data({
-    required this.pricing,
-  });
-
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
-    pricing: List<Pricing>.from(json["pricing"].map((x) => Pricing.fromJson(x))),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "pricing": List<dynamic>.from(pricing.map((x) => x.toJson())),
-  };
-}
-
-class Pricing {
+class Monthly {
   final int id;
   final String type;
   final int price;
   final int discount;
   final String category;
   final String short;
-  final String details;
+  final List<String> details;
 
-  Pricing({
+  Monthly({
     required this.id,
     required this.type,
     required this.price,
@@ -100,14 +48,14 @@ class Pricing {
     required this.details,
   });
 
-  factory Pricing.fromJson(Map<String, dynamic> json) => Pricing(
+  factory Monthly.fromJson(Map<String, dynamic> json) => Monthly(
     id: json["ID"],
     type: json["type"],
     price: json["price"],
     discount: json["discount"],
     category: json["category"],
     short: json["short"],
-    details: json["details"],
+    details: List<String>.from(json["details"].map((x) => x)),
   );
 
   Map<String, dynamic> toJson() => {
@@ -117,6 +65,6 @@ class Pricing {
     "discount": discount,
     "category": category,
     "short": short,
-    "details": details,
+    "details": List<dynamic>.from(details.map((x) => x)),
   };
 }
