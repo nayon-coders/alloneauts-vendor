@@ -157,8 +157,6 @@ class _LoginState extends State<Login> {
           backgroundColor: Colors.green,
         ));
 
-        print("object === ${jsonDecode(res.body)}");
-
         //store login information in local storage.
        LocalStorage.saveLoginData(loginModel: jsonDecode(res.body)!);
 
