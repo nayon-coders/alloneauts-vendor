@@ -8,4 +8,5 @@ class AppConfig{
   static String OFFERS = "$BASE_URL/pricings";
   static String LOGIN = "$BASE_URL/vendor/login";
   static String DASHBOARD = "$BASE_URL/vendor/dashboard";
+  static String RENT_CAR_LIST = "$BASE_URL/vendor/rent/cars";
 }
