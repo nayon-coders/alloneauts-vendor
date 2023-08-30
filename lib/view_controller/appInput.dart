@@ -36,25 +36,25 @@ class AppInput extends StatelessWidget {
           readOnly: readOnly,
           controller: controller,
           decoration: InputDecoration(
-              contentPadding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3))
-              ),
-              enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3))
-              ),
-              focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(5),
-                  borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.8))
-              ),
-              hintText: "$hintText",
-              hintStyle: TextStyle(
+            contentPadding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
+            border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3))
+            ),
+            enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3))
+            ),
+            focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(5),
+                borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.8))
+            ),
+            hintText: "$hintText",
+            hintStyle: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w400
-              ),
-              prefixIcon: Icon(prefixIcon),
+            ),
+            prefixIcon: Icon(prefixIcon),
           ),
           autofocus: true,
 
@@ -64,3 +64,5 @@ class AppInput extends StatelessWidget {
     );
   }
 }
+
+
