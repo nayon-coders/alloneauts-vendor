@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/view/auth/login.dart';
@@ -31,15 +32,10 @@ class _CheckingAuthState extends State<CheckingAuth> {
   //get token
   getToken() async {
 
-        final prefs = await SharedPreferences.getInstance();
-        final value = prefs.getString('token');
+    dynamic token = await SessionManager().get("token");
 
-        setState(() {
-          token = value;
-          isChecking = false;
-        });
 
-        if(value != null){
+    if(token != null){
           // ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainPage()), (route) => false);
           // Do something

@@ -2,6 +2,9 @@ import 'dart:async';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vendor/model/rentModels/singleCarRentModel.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
@@ -12,12 +15,15 @@ import 'package:http/http.dart' as http;
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appPoup.dart';
+import 'package:vendor/view_controller/dataError.dart';
+import 'package:vendor/view_controller/loadingWidget.dart';
 
+import '../../controller/rentCarController/rentCarController.dart';
 import '../../view_controller/appInput.dart';
 import '../../view_controller/bigText.dart';
-
 class EditCar extends StatefulWidget {
-  const EditCar({Key? key}) : super(key: key);
+  final dynamic? carInfo;
+  const EditCar({Key? key,  this.carInfo}) : super(key: key);
 
   @override
   State<EditCar> createState() => _EditCarState();
@@ -78,263 +84,315 @@ class _EditCarState extends State<EditCar> {
   final email = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUserInfo();
+    print("car info ==== ${widget.carInfo}");
+    //data initial
+    getSingleCarFuture = _getSingleCar();
+  }
+
+  bool isLoading = false;
+  Future<SingleRentCarModel>? getSingleCarFuture;
+  Future<SingleRentCarModel> _getSingleCar()async{
+    setState(() => isLoading = true);
+    var res = await RentCarController.singleRentCartController(widget.carInfo);
+    print("res.body === ${res.body}");
+    if(res.statusCode == 200){
+      return SingleRentCarModel.fromJson(jsonDecode(res.body));
+    }else{
+      return SingleRentCarModel.fromJson(jsonDecode(res.body));
+    }
+
+
+  }
+
+  var userEmail, userPhone;
+  getUserInfo()async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    setState(() {
+      email.text = _pref.getString("email").toString();
+      phone.text = _pref.getString("phone").toString();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return Container(
-        height: size.height,
-        margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
-        child: ListView(
-          children: [
-            Row(
-              children: [
-                IconButton(
-                  onPressed: ()=>Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back),
-                ),
-                SizedBox(width: 10,), 
-                BigText(text: "Edit #TC74857CH Car"),
-              ],
-            ),
-            SizedBox(height: 20,),
-            Container(
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(10),
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey.shade300,
-                        spreadRadius: 2, blurRadius: 3,
-                        offset: Offset(0,2)
-                    )
-                  ]
-              ),
-              child: Column(
+    return  FutureBuilder<SingleRentCarModel>(
+      future: getSingleCarFuture,
+      builder: (context, snapshot){
+        print(snapshot.error);
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Center(child: LoadingWidget(title: "Editing data loading.."),);
+        }else if(snapshot.hasData){
+          return Container(
+              height: size.height,
+              margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+              child: ListView(
                 children: [
                   Row(
                     children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap:()=>startWebFilePicker(),
-                          child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade200,
-                              ),
-                              child: _bytesData != null
-                                  ? Image.memory(_bytesData!, width: 200, height: 200)
-                                  : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Upload your car image."),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.add, color: Colors.black,)
-                                ],
-                              )
-                          ),
-                        ),
+                      IconButton(
+                        onPressed: ()=>Navigator.pop(context),
+                        icon: Icon(Icons.arrow_back),
                       ),
-                      SizedBox(width: 20,),
-                      Expanded(
-                          child: Column(
-                            children: [
-                              AppInput(
-                                controller: carName,
-                                title: "Car Name",
-                                prefixIcon: Icons.title,
-                                hintText: "Car name",
-                              ),
-                              SizedBox(height: 20,),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: AppInput(
-                                      controller: make,
-                                      title: "Make",
-                                      prefixIcon: Icons.car_repair_rounded,
-                                      hintText: "Make",
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Expanded(
-                                    child: AppInput(
-                                      controller: model,
-                                      title: "Model",
-                                      prefixIcon: Icons.model_training,
-                                      hintText: "Model",
-                                    ),
-                                  ),
-                                  SizedBox(width: 10,),
-                                  Expanded(
-                                    child: AppInput(
-                                      controller: year,
-                                      title: "Year",
-                                      prefixIcon: Icons.date_range_outlined,
-                                      hintText: "Year",
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
+                      SizedBox(width: 10,),
+                      BigText(text: "Edit #TC74857CH Car"),
+                    ],
+                  ),
+                  SizedBox(height: 20,),
+                  Container(
+                    padding: EdgeInsets.all(15),
+                    decoration: BoxDecoration(
+                        color: AppColors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                              color: Colors.grey.shade300,
+                              spreadRadius: 2, blurRadius: 3,
+                              offset: Offset(0,2)
                           )
-                      ),
-
-
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  AppInput(
-                    controller: location,
-                    title: "Car Location",
-                    prefixIcon: Icons.title,
-                    hintText: "Select your location",
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppInput(
-                          controller: color,
-                          title: "Color",
-                          prefixIcon: Icons.color_lens_outlined,
-                          hintText: "Car color",
-                        ),
-                      ),
-                      SizedBox(width: 10,),
-                      Expanded(
-                        child: AppInput(
-                          controller: price,
-                          title: "Price",
-                          prefixIcon: Icons.attach_money,
-                          hintText: "Rent Price",
-                        ),
-                      ),
-
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap:()=>startWebFilePicker(),
-                          child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade200,
+                        ]
+                    ),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 300,
+                              child: InkWell(
+                                onTap:()=>startWebFilePicker(),
+                                child: Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    child: _bytesData != null
+                                        ? Image.memory(_bytesData!, width: 200, height: 200)
+                                        : Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Upload your Vehicle image."),
+                                        SizedBox(height: 5,),
+                                        Icon(Icons.add, color: Colors.black,)
+                                      ],
+                                    )
+                                ),
                               ),
-                              child: _bytesData != null
-                                  ? Image.memory(_bytesData!, width: 200, height: 200)
-                                  : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Upload FH1."),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.add, color: Colors.black,)
-                                ],
-                              )
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                      Expanded(
-                        child: InkWell(
-                          onTap:()=>startWebFilePicker(),
-                          child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade200,
-                              ),
-                              child: _bytesData != null
-                                  ? Image.memory(_bytesData!, width: 200, height: 200)
-                                  : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Upload Cirtificate of Insurence."),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.add, color: Colors.black,)
-                                ],
-                              )
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                      Expanded(
-                        child: InkWell(
-                          onTap:()=>startWebFilePicker(),
-                          child: Container(
-                              height: 200,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.grey.shade200,
-                              ),
-                              child: _bytesData != null
-                                  ? Image.memory(_bytesData!, width: 200, height: 200)
-                                  : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Driver Diclaration"),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.add, color: Colors.black,)
-                                ],
-                              )
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 20,),
-                    ],
-                  ),
-                  SizedBox(height: 20,),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: AppInput(
-                          controller: email,
-                          title: "Email",
-                          prefixIcon: Icons.email_outlined,
-                          hintText: "nayon.coders@gmail.com",
-                        ),
-                      ),
-                      SizedBox(width: 10,),
-                      Expanded(
-                        child: AppInput(
-                          controller: phone,
-                          title: "Number",
-                          prefixIcon: Icons.phone_android,
-                          hintText: "+8801814569747",
-                        ),
-                      ),
+                            ),
+                            SizedBox(width: 20,),
+                            Expanded(
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      children: [
+                                        Expanded(
+                                          child: AppInput(
+                                            controller: make,
+                                            title: "Make",
+                                            prefixIcon: Icons.car_repair_rounded,
+                                            hintText: "Make",
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                          child: AppInput(
+                                            controller: model,
+                                            title: "Model",
+                                            prefixIcon: Icons.model_training,
+                                            hintText: "Model",
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                          child: AppInput(
+                                            controller: year,
+                                            title: "Year",
+                                            prefixIcon: Icons.date_range_outlined,
+                                            hintText: "Year",
+                                          ),
+                                        ),
+                                        SizedBox(width: 10,),
+                                        Expanded(
+                                          child: AppInput(
+                                            controller: year,
+                                            title: "Trim",
+                                            prefixIcon: Icons.car_crash_sharp,
+                                            hintText: "Trim",
+                                          ),
+                                        ),
 
-                    ],
-                  ),
-                  SizedBox(height: 30,),
-                  AppButton(
-                      onClick: (){
-                        AppPopup.appPopup(
-                          context: context,
-                          title: "You cart added success!",
-                          body: "You new car create success. You can check it from Car rent->Manage Car's",
-                          dialogType: DialogType.success,
-                          onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
-                        );
-                      },
-                      text: "Add Car",
-                      width: size.width*.40
-                  )
+                                      ],
+                                    ),
+                                    SizedBox(height: 20,),
+                                    AppInput(
+                                      controller: location,
+                                      title: "Vehicle Location",
+                                      prefixIcon: Icons.location_on_outlined,
+                                      hintText: "Select your location",
+                                    ),
+                                    SizedBox(height: 20,),
+                                  ],
+                                )
+                            ),
 
+
+                          ],
+                        ),
+
+                        SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppInput(
+                                controller: color,
+                                title: "Color",
+                                prefixIcon: Icons.color_lens_outlined,
+                                hintText: "Vehicle color",
+                              ),
+                            ),
+                            const SizedBox(width: 10,),
+                            Expanded(
+                              child: AppInput(
+                                controller: price,
+                                title: "Price",
+                                prefixIcon: Icons.attach_money,
+                                hintText: "Rent Price",
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap:()=>startWebFilePicker(),
+                                child: Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    child: _bytesData != null
+                                        ? Image.memory(_bytesData!, width: 200, height: 200)
+                                        : Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Upload FH1."),
+                                        SizedBox(height: 5,),
+                                        Icon(Icons.add, color: Colors.black,)
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20,),
+                            Expanded(
+                              child: InkWell(
+                                onTap:()=>startWebFilePicker(),
+                                child: Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    child: _bytesData != null
+                                        ? Image.memory(_bytesData!, width: 200, height: 200)
+                                        : Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Upload Cirtificate of Insurence."),
+                                        SizedBox(height: 5,),
+                                        Icon(Icons.add, color: Colors.black,)
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20,),
+                            Expanded(
+                              child: InkWell(
+                                onTap:()=>startWebFilePicker(),
+                                child: Container(
+                                    height: 200,
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    child: _bytesData != null
+                                        ? Image.memory(_bytesData!, width: 200, height: 200)
+                                        : Column(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      children: [
+                                        Text("Driver Diclaration"),
+                                        SizedBox(height: 5,),
+                                        Icon(Icons.add, color: Colors.black,)
+                                      ],
+                                    )
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 20,),
+                          ],
+                        ),
+                        SizedBox(height: 20,),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: AppInput(
+                                controller: email,
+                                title: "Email",
+                                prefixIcon: Icons.email_outlined,
+                                hintText: "nayon.coders@gmail.com",
+                              ),
+                            ),
+                            SizedBox(width: 10,),
+                            Expanded(
+                              child: AppInput(
+                                controller: phone,
+                                title: "Number",
+                                prefixIcon: Icons.phone_android,
+                                hintText: "+8801814569747",
+                              ),
+                            ),
+
+                          ],
+                        ),
+                        SizedBox(height: 30,),
+                        AppButton(
+                            onClick: (){
+                              AppPopup.appPopup(
+                                context: context,
+                                title: "You cart added success!",
+                                body: "You new car create success. You can check it from Car rent->Manage Car's",
+                                dialogType: DialogType.success,
+                                onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
+                              );
+                            },
+                            text: "Add Car",
+                            width: size.width*.40
+                        )
+
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 50,),
                 ],
-              ),
-            ),
-            SizedBox(height: 50,),
-          ],
-        )
+              )
+          );
+        }else{
+          return Center(child: DataError(onClick: (){}),);
+        }
+      },
     );
   }
 

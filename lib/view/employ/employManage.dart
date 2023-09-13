@@ -26,6 +26,7 @@ class _EmployManagementState extends State<EmployManagement> {
   final email = TextEditingController();
   final phone = TextEditingController();
   final pass = TextEditingController();
+  final callNo = TextEditingController();
 
 
   final hourly = TextEditingController();
@@ -41,6 +42,9 @@ class _EmployManagementState extends State<EmployManagement> {
     'Ticket Manage': false,
   };
 
+  List<String> gender=["Male","Female","Other"];
+  String? select;
+
   Map<String, bool> taxList = {
     'Federal Income Tax': true,
     'State Income Tax': true,
@@ -55,6 +59,7 @@ class _EmployManagementState extends State<EmployManagement> {
   ];
   var selectEmployType;
 
+  bool genderCheck = false;
 
 
   List<int>? _selectedFile;
@@ -236,235 +241,381 @@ class _EmployManagementState extends State<EmployManagement> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return AlertDialog(
-          content:  StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                width: size.width*.30,
-                color: Colors.grey.shade50,
-                child: SingleChildScrollView(
-                  child: ListBody(
-                    children:  <Widget>[
-                      BigText(text: "Create Epmloy"),
-                      SizedBox(height: 10,),
-                      Text("You can create Employ. You can control the user accessibility.",
-                        style: TextStyle(
-                          fontSize: 10,
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Divider(height: 1, color: AppColors.grey,),
-                      SizedBox(height: 30,),
-                      AppInput(controller: firstName, title: "First Name", hintText: "First Name", prefixIcon: Icons.person,),
-                      SizedBox(height: 20,),
-                      AppInput(controller: lastName, title: "Last Name", hintText: "Last Name", prefixIcon: Icons.person),
-                      SizedBox(height: 20,),
-                      AppInput(controller: email, title: "Email", hintText: "jhon@gmail.com", prefixIcon: Icons.email_outlined),
-                      SizedBox(height: 20,),
-                      AppInput(controller: phone, title: "Phone Number", hintText: "+1 938*******", prefixIcon: Icons.phone_android),
-                      SizedBox(height: 20,),
-                      AppInput(controller: pass, title: "Password", hintText: "Password", prefixIcon: Icons.key),
-                      SizedBox(height: 20,),
-                      AppInput(controller: pass, title: "Confirm Password", hintText: "Confirm Password", prefixIcon: Icons.key),
-                      SizedBox(height: 20,),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Upload Profile",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
-                                ],
-                              ),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              content:  StatefulBuilder(
+                builder: (BuildContext context, StateSetter setState) {
+                  return Container(
+                    width: size.width*.30,
+                    color: Colors.grey.shade50,
+                    child: SingleChildScrollView(
+                      child: ListBody(
+                        children:  <Widget>[
+                          BigText(text: "Create Epmloy"),
+                          SizedBox(height: 10,),
+                          Text("You can create Employ. You can control the user accessibility.",
+                            style: TextStyle(
+                              fontSize: 10,
                             ),
                           ),
-                          SizedBox(width: 10,),
-                          Expanded(
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Text("Upload Documents",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
-                                ],
-                              ),
+                          SizedBox(height: 10,),
+                          Text("Personal Information",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
                             ),
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 20,),
-                      Text("Employ Type",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Container(
-                        decoration: BoxDecoration(
-                            color: Colors.white
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton2<String>(
-                            isExpanded: true,
-                            hint: Text(
-                              'Select Employ Role',
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Theme.of(context).hintColor,
-                              ),
-                            ),
-                            items: employType
-                                .map((String item) => DropdownMenuItem<String>(
-                              value: item,
-                              child: Text(
-                                item,
-                                style: const TextStyle(
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ))
-                                .toList(),
-                            value: selectEmployType,
-                            onChanged: (String? value) {
-                              setState(() {
-                                selectEmployType = value;
-                              });
-                            },
-                            buttonStyleData: const ButtonStyleData(
-                              padding: EdgeInsets.symmetric(horizontal: 16),
-                              height: 40,
-                              width: 140,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                              ),
-                            ),
-                            menuItemStyleData: const MenuItemStyleData(
-                              height: 40,
-                            ),
-                          ),
-                        ),
-                      ),
-                      selectEmployType != null ? Column(
-                        children: [
                           SizedBox(height: 20,),
-                          selectEmployType == "Hourly"
-                              ? AppInput(controller: hourly, title: "Hourly Rate", hintText: "12", prefixIcon: Icons.attach_money)
-                              : selectEmployType == "Weekly"
-                              ? AppInput(controller: weekly, title: "Weekly Rate", hintText: "500", prefixIcon: Icons.attach_money)
-                              : selectEmployType == "Monthly"
-                              ? AppInput(controller: monthly, title: "Monthly Rate", hintText: "2000", prefixIcon: Icons.attach_money)
-                              : SizedBox(height: 20,),
+                          AppInput(controller: firstName, title: "First Name", hintText: "First Name", prefixIcon: Icons.person,),
+                          SizedBox(height: 20,),
+                          AppInput(controller: lastName, title: "Last Name", hintText: "Last Name", prefixIcon: Icons.person),
+
+                          SizedBox(height: 20,),
+                          Text("Gender",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Gender',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: gender
+                                    .map((String item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                                    .toList(),
+                                value: select,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    select = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          AppInput(controller: email, title: "Email", hintText: "jhon@gmail.com", prefixIcon: Icons.email_outlined),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Phone Number", hintText: "+1 938*******", prefixIcon: Icons.phone_android),
+                          SizedBox(height: 20,),
+                          AppInput(controller: pass, title: "Password", hintText: "Password", prefixIcon: Icons.key),
+                          SizedBox(height: 20,),
+                          AppInput(controller: pass, title: "Confirm Password", hintText: "Confirm Password", prefixIcon: Icons.key),
+                          SizedBox(height: 20,),
+                          Divider(height: 1, color: AppColors.grey,),
+                          SizedBox(height: 10,),
+                          Text("Upload Documents",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text("Upload Profile",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5,),
+                                      Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(width: 10,),
+                              Expanded(
+                                child: Container(
+                                  height: 150,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
+                                  ),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: const [
+                                      Text("Upload Documents",
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5,),
+                                      Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: 20,),
+                          Text("Employ Type",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 20,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          Container(
+                            decoration: BoxDecoration(
+                                color: Colors.white
+                            ),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton2<String>(
+                                isExpanded: true,
+                                hint: Text(
+                                  'Select Employ Role',
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Theme.of(context).hintColor,
+                                  ),
+                                ),
+                                items: employType
+                                    .map((String item) => DropdownMenuItem<String>(
+                                  value: item,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                ))
+                                    .toList(),
+                                value: selectEmployType,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    selectEmployType = value;
+                                  });
+                                },
+                                buttonStyleData: const ButtonStyleData(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  height: 40,
+                                  width: 140,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                                menuItemStyleData: const MenuItemStyleData(
+                                  height: 40,
+                                ),
+                              ),
+                            ),
+                          ),
+                          selectEmployType != null ? Column(
+                            children: [
+                              SizedBox(height: 20,),
+                              selectEmployType == "Hourly"
+                                  ? AppInput(controller: hourly, title: "Hourly Rate", hintText: "12", prefixIcon: Icons.attach_money)
+                                  : selectEmployType == "Weekly"
+                                  ? AppInput(controller: weekly, title: "Weekly Rate", hintText: "500", prefixIcon: Icons.attach_money)
+                                  : selectEmployType == "Monthly"
+                                  ? AppInput(controller: monthly, title: "Monthly Rate", hintText: "2000", prefixIcon: Icons.attach_money)
+                                  : SizedBox(height: 20,),
+                            ],
+                          ) : Center(),
+                          SizedBox(height: 20,),
+                          Text("Job Information",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          AppInput(controller: pass, title: "Start Date", hintText: "Start Date", prefixIcon: Icons.calendar_month),
+                          SizedBox(height: 20,),
+
+                          SizedBox(
+                            height: 50.00*values.length,
+                            child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: values.keys.map((String key) {
+                                return new CheckboxListTile(
+                                  title: new Text(key,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  value: values[key],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      values[key] = value!;
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          Text("Tax",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          SizedBox(
+                            height: 50.00*taxList.length,
+                            child: ListView(
+                              physics: NeverScrollableScrollPhysics(),
+                              children: taxList.keys.map((String key) {
+                                return new CheckboxListTile(
+                                  title: new Text(key,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600
+                                    ),
+                                  ),
+                                  value: taxList[key],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      taxList[key] = value!;
+                                    });
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                          SizedBox(height: 20,),
+                          Text("Adddress",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          AppInput(controller: phone, title: "Street Address:", hintText: "First Name", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Apartment: ", hintText: "Apartment", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "City", hintText: "City", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "State", hintText: "State", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "ZIP COde", hintText: "ZIP Code", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Home Phone", hintText: "Home Phone", prefixIcon: Icons.phone),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Call Phone", hintText: "Call Phone", prefixIcon: Icons.apartment),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Social Security number", hintText: "Social Security Number", prefixIcon: Icons.keyboard),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Birth Date", hintText: "Birth Date", prefixIcon: Icons.calendar_month),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Marital Status", hintText: "Marital Status", prefixIcon: Icons.man_rounded),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Spouse's", hintText: "Spouse's", prefixIcon: Icons.person),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Spouse's number", hintText: "Spouse's number", prefixIcon: Icons.phone),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Spouse's name", hintText: "Spouse's Name", prefixIcon: Icons.apartment),
+
+                          SizedBox(height: 20,),
+                          Text("Emergency Contact Information",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
+                          ),
+                          SizedBox(height: 10,),
+                          AppInput(controller: phone, title: "First Name:", hintText: "First Name", prefixIcon: Icons.person),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Last Name:", hintText: "Last Name", prefixIcon: Icons.person),
+                          SizedBox(height: 20,),
+                          AppInput(controller: phone, title: "Phone Number", hintText: "+1*** *** ** ", prefixIcon: Icons.phone_android),
+
+
+                          SizedBox(height: 30,),
+                          AppButton(onClick: (){
+                            AppPopup.appPopup(context: context, title: "Success", body: "Successfully create Employ", dialogType: DialogType.success, onOkBtn: ()=>Navigator.pop(context));
+                          }, text: "Create Employ", width: 100),
+
+
                         ],
-                      ) : Center(),
-                      SizedBox(height: 20,),
-                      Text("Permission",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
                       ),
-                      SizedBox(height: 10,),
-                      SizedBox(
-                        height: 50.00*values.length,
-                        child: ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: values.keys.map((String key) {
-                            return new CheckboxListTile(
-                              title: new Text(key,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              value: values[key],
-                              onChanged: (value) {
-                                setState(() {
-                                  values[key] = value!;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      SizedBox(height: 20,),
-                      Text("Tax",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 17,
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      SizedBox(
-                        height: 50.00*taxList.length,
-                        child: ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: taxList.keys.map((String key) {
-                            return new CheckboxListTile(
-                              title: new Text(key,
-                                style: TextStyle(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              value: taxList[key],
-                              onChanged: (value) {
-                                setState(() {
-                                  taxList[key] = value!;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      SizedBox(height: 30,),
-                      AppButton(onClick: (){
-                        AppPopup.appPopup(context: context, title: "Success", body: "Successfully create Employ", dialogType: DialogType.success, onOkBtn: ()=>Navigator.pop(context));
-                      }, text: "Create Employ", width: 100),
-
-
-                    ],
-                  ),
+                    ),
+                  );
+                }
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: const Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
                 ),
-              );
-            }
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+              ],
+            );
+          }
         );
       },
+    );
+  }
+
+
+
+  Row addRadioButton(int btnValue, String title) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        Radio(
+          activeColor: AppColors.green,
+          value: gender[btnValue],
+          groupValue: select,
+          onChanged: (value){
+            setState(() {
+              print(value);
+              select=value;
+            });
+          },
+        ),
+        Text(title)
+      ],
     );
   }
 }

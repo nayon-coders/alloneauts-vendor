@@ -8,7 +8,6 @@ class DashboardController{
   //get api response
 
   static Future dashboardController()async{
-
     var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"));
     print("data ==== ${response.statusCode}");
     print("data ==== ${response.body}");

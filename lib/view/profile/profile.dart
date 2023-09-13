@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'dart:html' as html;
 import 'package:flutter/material.dart';
+import 'package:vendor/controller/authController/authController.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
@@ -118,7 +119,7 @@ class _ProfileState extends State<Profile> {
                  BigText(text: "My Profile"),
                ],
              ),
-             AppButton(onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> Login())),
+             AppButton(onClick: ()=>LoginController.logout(context),
                  text: "Logout", width: 100)
            ],
          ),

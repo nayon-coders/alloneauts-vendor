@@ -60,10 +60,10 @@ class _DashboardState extends State<Dashboard> {
   Future<DashboardModel> dashboardController()async{
     SharedPreferences pref = await SharedPreferences.getInstance();
     var token = pref.getString("token");
-    print("token ===== ${global.token}");
+    print("token ===== ${token}");
     var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"),
       headers: {
-        'Authorization': 'Bearer ${token}',
+        'Authorization': 'Bearer $token',
       },
     );
     print("data ==== ${response.statusCode}");
@@ -331,7 +331,7 @@ class _DashboardState extends State<Dashboard> {
             ),
           );
         }else{
-          return DataError();
+          return DataError(onClick:  ()=>  getDashboardData = dashboardController(),);
         }
 
       }
