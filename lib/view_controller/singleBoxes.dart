@@ -52,7 +52,7 @@ class SingleBoxes extends StatelessWidget {
                   children: [
                     Text("$title",
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: AppColors.black
                       ),
@@ -60,7 +60,7 @@ class SingleBoxes extends StatelessWidget {
                     SizedBox(height: 3,),
                     Text("$subTitle",
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w500,
                           color: AppColors.black
                       ),
@@ -92,7 +92,7 @@ class SingleBoxes extends StatelessWidget {
                   children: [
                     Text("$title2",
                       style: TextStyle(
-                          fontSize: 20,
+                          fontSize: 15,
                           fontWeight: FontWeight.bold,
                           color: AppColors.black
                       ),
@@ -100,7 +100,7 @@ class SingleBoxes extends StatelessWidget {
                     SizedBox(height: 3,),
                     Text("$subTitle2",
                       style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 10,
                           fontWeight: FontWeight.w500,
                           color: AppColors.black
                       ),

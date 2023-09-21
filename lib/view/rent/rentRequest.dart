@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 
 import '../../carImageJson.dart';
+import '../../response.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/bigText.dart';
@@ -28,18 +29,21 @@ class _RentRequestListState extends State<RentRequestList> {
             children: [
               BigText(text: "Rent Request List"),
               SizedBox(
-                width: size.width*.20,
+                width: Responsive.isDesktop(context) ? size.width*.20 : size.width*.40,
                 child: TextFormField(
                   decoration: InputDecoration(
                       hintText: "Search...",
                       fillColor: AppColors.white,
+                      hintStyle: TextStyle(
+                        fontSize: 15,
+                      ),
                       filled: true,
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3)),
-                          borderRadius: BorderRadius.circular(10)
+                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(5)
                       ),
-                      contentPadding: EdgeInsets.only(left: 20,right: 20, top: 7, bottom: 7),
-                      prefixIcon: Icon(Icons.search)
+                      contentPadding: EdgeInsets.only(left: 10,right: 10, top: 0, bottom: 0),
+                      prefixIcon: Icon(Icons.search, size: 20,)
                   ),
                 ),
               )
@@ -48,7 +52,7 @@ class _RentRequestListState extends State<RentRequestList> {
           SizedBox(height: 10,),
           Container(
             // width: size.width*.55,
-
+            width: MediaQuery.of(context).size.width, //to get the width of screen
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
                 color: AppColors.white,
@@ -61,79 +65,81 @@ class _RentRequestListState extends State<RentRequestList> {
                   )
                 ]
             ),
-            child: DataTable(
-              dividerThickness:0,
-              sortAscending: false,
-              columns: [
-                DataColumn(label: Text(
-                    'Car',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Car Name',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Plate No.',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Status',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Date',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Action',
-                    style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                )),
-              ],
-              rows: [
-                for(var i=0;i<CarImageJson.carImageList.length;i++)
-                  DataRow(
-                      color: MaterialStateColor.resolveWith((states) {
-                        return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                      }),
-                      cells: [
-                        DataCell(
-                            Image.network("${CarImageJson.carImageList[i]["image"]}", height: 50, width: 50,)
-                        ),
-                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                        DataCell(Text('#48TFJC79')),
-                        DataCell(
-                            Container(
-                              padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-                              decoration: BoxDecoration(
-                                  color: i.isOdd ? AppColors.green : AppColors.blue,
-                                  borderRadius: BorderRadius.circular(4)
-                              ),
-                              child: Text("${i.isOdd?"Approve":"Pending" }",
+            child: FittedBox(
+              child: DataTable(
+                dividerThickness:0,
+                sortAscending: false,
+                columns: [
+                  DataColumn(label: Text(
+                      'Car',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Car Name',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Plate No.',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Status',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Date',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Action',
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  )),
+                ],
+                rows: [
+                  for(var i=0;i<CarImageJson.carImageList.length;i++)
+                    DataRow(
+                        color: MaterialStateColor.resolveWith((states) {
+                          return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                        }),
+                        cells: [
+                          DataCell(
+                              Image.network("${CarImageJson.carImageList[i]["image"]}", height: 50, width: 50,)
+                          ),
+                          DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
+                          DataCell(Text('#48TFJC79')),
+                          DataCell(
+                              Container(
+                                padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
+                                decoration: BoxDecoration(
+                                    color: i.isOdd ? AppColors.green : AppColors.blue,
+                                    borderRadius: BorderRadius.circular(4)
+                                ),
+                                child: Text("${i.isOdd?"Approve":"Pending" }",
+                                  style: TextStyle(
+                                      fontSize: 12,
+                                      color: AppColors.white
+                                  ),
+                                ),
+                              )
+                          ),
+                          DataCell(Text('25 March, 2023')),
+                          DataCell(
+                              TextButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: MaterialStatePropertyAll(AppColors.green),
+                                  ),
+                                  onPressed: ()=>ShowSingleCar(CarImageJson.carImageList[i]), child: Text("VIEW ",
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: AppColors.white
                                 ),
-                              ),
-                            )
-                        ),
-                        DataCell(Text('25 March, 2023')),
-                        DataCell(
-                            TextButton(
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStatePropertyAll(AppColors.green),
-                                ),
-                                onPressed: ()=>ShowSingleCar(CarImageJson.carImageList[i]), child: Text("VIEW ",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: AppColors.white
-                              ),
-                            ))
-                        ),
-                      ]
-                  ),
+                              ))
+                          ),
+                        ]
+                    ),
 
-              ],
+                ],
+              ),
             ),
           ),
         ],

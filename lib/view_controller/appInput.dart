@@ -32,6 +32,7 @@ class AppInput extends StatelessWidget {
         ),
         SizedBox(height: 10,),
         TextFormField(
+          autocorrect: true,
           maxLines: maxLine,
           readOnly: readOnly,
           controller: controller,
@@ -54,7 +55,7 @@ class AppInput extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w400
             ),
-            prefixIcon: Icon(prefixIcon),
+           // prefixIcon: Icon(prefixIcon),
           ),
           autofocus: true,
 

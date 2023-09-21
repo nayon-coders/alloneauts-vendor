@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
@@ -39,7 +40,7 @@ class _CreateReportsState extends State<CreateReports> {
                 Row(
                   children: [
                     IconButton(
-                      onPressed: (){},
+                      onPressed: ()=>Get.back(),
                       icon: Icon(Icons.arrow_back, color: AppColors.green,),
                     ),
                     Container(

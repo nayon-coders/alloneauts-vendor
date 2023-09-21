@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:vendor/response.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/bigText.dart';
 
@@ -29,7 +31,7 @@ class _CarReportsState extends State<CarReports> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                BigText(text: "Car Report's"),
+                const BigText(text: "Car Report's"),
                 Row(
                   children: [
                     AppButton(
@@ -65,7 +67,7 @@ class _CarReportsState extends State<CarReports> {
                     ),
                   ],
                 ),
-                SizedBox(
+               Responsive.isDesktop(context) ?  SizedBox(
                   width: size.width*.20,
                   child: TextFormField(
                     decoration: InputDecoration(
@@ -80,12 +82,12 @@ class _CarReportsState extends State<CarReports> {
                         prefixIcon: Icon(Icons.search)
                     ),
                   ),
-                ),
+                ) : Center(),
               ],
             ),
             SizedBox(height: 20,),
             Container(
-              width: size.width*.80,
+              width: size.width,
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
                   color: AppColors.white,
@@ -107,135 +109,139 @@ class _CarReportsState extends State<CarReports> {
     );
   }
 
-  DataTable allCarMethod() {
-    return DataTable(
-              dividerThickness:0,
-              sortAscending: false,
-              columns: const [
-                DataColumn(
-                    label: Text(
-                    'Car',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Car Name',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-                )),
-                DataColumn(label: Text(
-                    'Plate No.',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-                )),
+  FittedBox allCarMethod() {
+    return FittedBox(
+      child: DataTable(
+                dividerThickness:0,
+                sortAscending: false,
+                columns: const [
+                  DataColumn(
+                      label: Text(
+                      'Car',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Car Name',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  )),
+                  DataColumn(label: Text(
+                      'Plate No.',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  )),
 
-                DataColumn(label: Text(
-                    'Action',
-                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-                )),
-              ],
-              rows: [
-                for(var i=0;i<CarImageJson.carImageList.length;i++)
-                  DataRow(
-                      color: MaterialStateColor.resolveWith((states) {
-                        return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                      }),
-                      cells: [
-                        DataCell(
-                            Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
-                        ),
-                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                        DataCell(Text('#48TFJC79',
-                          style: TextStyle(
-                              fontWeight: FontWeight.w600
+                  DataColumn(label: Text(
+                      'Action',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                  )),
+                ],
+                rows: [
+                  for(var i=0;i<CarImageJson.carImageList.length;i++)
+                    DataRow(
+                        color: MaterialStateColor.resolveWith((states) {
+                          return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                        }),
+                        cells: [
+                          DataCell(
+                              Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
                           ),
-                        )),
+                          DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
+                          DataCell(Text('#48TFJC79',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600
+                            ),
+                          )),
 
-                        DataCell(
-                          Row(
-                            children: [
-                              AppIconButton(
-                                icon: Icons.remove_red_eye,
-                                onClick: (){},
-                              ),
-                              SizedBox(width: 5,),
-                              AppIconButton(
-                                icon: Icons.edit,
-                                onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))),
-                                bgColor: Colors.amber,
-                              ),
-                              SizedBox(width: 5,),
+                          DataCell(
+                            Row(
+                              children: [
+                                AppIconButton(
+                                  icon: Icons.remove_red_eye,
+                                  onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
+                                ),
+                                SizedBox(width: 5,),
+                                AppIconButton(
+                                  icon: Icons.edit,
+                                  onClick: ()=>Get.to(MainPage(pageIndex: 8,), transition: Transition.fadeIn),
+                                  bgColor: Colors.amber,
+                                ),
+                                SizedBox(width: 5,),
 
-                            ],
+                              ],
+                            ),
+
                           ),
-
-                        ),
-                      ]
-                  ),
-              ],
-            );
+                        ]
+                    ),
+                ],
+              ),
+    );
   }
 
-  DataTable assignCarMethod() {
-    return DataTable(
-      dividerThickness:0,
-      sortAscending: false,
-      columns: const [
-        DataColumn(
-            label: Text(
-                'Car',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-            )),
-        DataColumn(label: Text(
-            'Car Name',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
-        DataColumn(label: Text(
-            'Plate No.',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
+  FittedBox assignCarMethod() {
+    return FittedBox(
+      child: DataTable(
+        dividerThickness:0,
+        sortAscending: false,
+        columns: const [
+          DataColumn(
+              label: Text(
+                  'Car',
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+              )),
+          DataColumn(label: Text(
+              'Car Name',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+          )),
+          DataColumn(label: Text(
+              'Plate No.',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+          )),
 
-        DataColumn(label: Text(
-            'Action',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
-      ],
-      rows: [
-        for(var i=0;i<3;i++)
-          DataRow(
-              color: MaterialStateColor.resolveWith((states) {
-                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-              }),
-              cells: [
-                DataCell(
-                    Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
-                ),
-                DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                DataCell(Text('#48TFJC79',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600
+          DataColumn(label: Text(
+              'Action',
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+          )),
+        ],
+        rows: [
+          for(var i=0;i<3;i++)
+            DataRow(
+                color: MaterialStateColor.resolveWith((states) {
+                  return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                }),
+                cells: [
+                  DataCell(
+                      Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
                   ),
-                )),
+                  DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
+                  DataCell(Text('#48TFJC79',
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600
+                    ),
+                  )),
 
-                DataCell(
-                  Row(
-                    children: [
-                      AppIconButton(
-                        icon: Icons.remove_red_eye,
-                        onClick: (){},
-                      ),
-                      SizedBox(width: 5,),
-                      AppIconButton(
-                        icon: Icons.edit,
-                        onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 5,))),
-                        bgColor: Colors.amber,
-                      ),
-                      SizedBox(width: 5,),
+                  DataCell(
+                    Row(
+                      children: [
+                        AppIconButton(
+                          icon: Icons.remove_red_eye,
+                          onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
+                        ),
+                        SizedBox(width: 5,),
+                        AppIconButton(
+                          icon: Icons.create_outlined,
+                          onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
+                          bgColor: Colors.amber,
+                        ),
+                        SizedBox(width: 5,),
 
-                    ],
+                      ],
+                    ),
+
                   ),
-
-                ),
-              ]
-          ),
-      ],
+                ]
+            ),
+        ],
+      ),
     );
   }
 

@@ -59,6 +59,8 @@ dependencies:
   simple_month_year_picker: ^1.0.5
   intl:
   flutter_session_manager: ^1.0.3
+  cached_network_image: ^3.2.3
+  get: ^4.6.5
 
 
 

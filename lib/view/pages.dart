@@ -23,7 +23,7 @@ class AllPages{
     RentRequestList(), //index = 1
     ManageCar(), //index = 2
     AddCar(), //index = 3
-    EditCar(), //index = 4
+   // EditCar(), //index = 4
     ViewSingleCar(), //index = 5
     Profile(), //index = 6
     CarReports(), //index = 7

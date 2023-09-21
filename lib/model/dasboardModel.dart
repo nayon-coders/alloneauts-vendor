@@ -2,7 +2,6 @@
 //
 //     final dashboardModel = dashboardModelFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 DashboardModel dashboardModelFromJson(String str) => DashboardModel.fromJson(json.decode(str));
@@ -10,18 +9,20 @@ DashboardModel dashboardModelFromJson(String str) => DashboardModel.fromJson(jso
 String dashboardModelToJson(DashboardModel data) => json.encode(data.toJson());
 
 class DashboardModel {
-  final bool success;
-  final String status;
-  final int statusCode;
-  final String message;
-  final Data data;
+  final bool? success;
+  final String? status;
+  final int? statusCode;
+  final String? message;
+  final Api? api;
+  final Data? data;
 
   DashboardModel({
-    required this.success,
-    required this.status,
-    required this.statusCode,
-    required this.message,
-    required this.data,
+    this.success,
+    this.status,
+    this.statusCode,
+    this.message,
+    this.api,
+    this.data,
   });
 
   factory DashboardModel.fromJson(Map<String, dynamic> json) => DashboardModel(
@@ -29,6 +30,7 @@ class DashboardModel {
     status: json["status"],
     statusCode: json["status_code"],
     message: json["message"],
+    api: Api.fromJson(json["api"]),
     data: Data.fromJson(json["data"]),
   );
 
@@ -37,24 +39,45 @@ class DashboardModel {
     "status": status,
     "status_code": statusCode,
     "message": message,
-    "data": data.toJson(),
+    "api": api?.toJson(),
+    "data": data?.toJson(),
+  };
+}
+
+class Api {
+  final String? endpoint;
+  final String? method;
+
+  Api({
+    this.endpoint,
+    this.method,
+  });
+
+  factory Api.fromJson(Map<String, dynamic> json) => Api(
+    endpoint: json["endpoint"],
+    method: json["method"],
+  );
+
+  Map<String, dynamic> toJson() => {
+    "endpoint": endpoint,
+    "method": method,
   };
 }
 
 class Data {
-  final int numberOfTotalCar;
-  final int numberOfRentRequest;
-  final int numberOfPendingRequest;
-  final int numberOfRejectRequest;
-  final int numberOfAssignDriver;
+  final int? numberOfTotalCar;
+  final int? numberOfRentRequest;
+  final int? numberOfPendingRequest;
+  final int? numberOfRejectRequest;
+  final int? numberOfAssignDriver;
   final List<RentRequest> rentRequests;
 
   Data({
-    required this.numberOfTotalCar,
-    required this.numberOfRentRequest,
-    required this.numberOfPendingRequest,
-    required this.numberOfRejectRequest,
-    required this.numberOfAssignDriver,
+    this.numberOfTotalCar,
+    this.numberOfRentRequest,
+    this.numberOfPendingRequest,
+    this.numberOfRejectRequest,
+    this.numberOfAssignDriver,
     required this.rentRequests,
   });
 
@@ -78,18 +101,18 @@ class Data {
 }
 
 class RentRequest {
-  final int requestId;
-  final String message;
-  final String status;
-  final Car car;
-  final Driver driver;
+  final int? requestId;
+  final String? message;
+  final String? status;
+  final Car? car;
+  final Driver? driver;
 
   RentRequest({
-    required this.requestId,
-    required this.message,
-    required this.status,
-    required this.car,
-    required this.driver,
+    this.requestId,
+    this.message,
+    this.status,
+    this.car,
+    this.driver,
   });
 
   factory RentRequest.fromJson(Map<String, dynamic> json) => RentRequest(
@@ -104,36 +127,36 @@ class RentRequest {
     "request_id": requestId,
     "message": message,
     "status": status,
-    "car": car.toJson(),
-    "driver": driver.toJson(),
+    "car": car?.toJson(),
+    "driver": driver?.toJson(),
   };
 }
 
 class Car {
-  final int carId;
-  final String name;
-  final int price;
-  final dynamic mileage;
-  final String plateNo;
-  final String vyear;
-  final String vcolor;
-  final String vmodel;
-  final String vmake;
-  final String image;
-  final Location location;
+  final int? carId;
+  final String? name;
+  final int? price;
+  final String? mileage;
+  final String? plateNo;
+  final String? vyear;
+  final String? vcolor;
+  final String? vmodel;
+  final String? vmake;
+  final String? image;
+  final Location? location;
 
   Car({
-    required this.carId,
-    required this.name,
-    required this.price,
-    required this.mileage,
-    required this.plateNo,
-    required this.vyear,
-    required this.vcolor,
-    required this.vmodel,
-    required this.vmake,
-    required this.image,
-    required this.location,
+    this.carId,
+    this.name,
+    this.price,
+    this.mileage,
+    this.plateNo,
+    this.vyear,
+    this.vcolor,
+    this.vmodel,
+    this.vmake,
+    this.image,
+    this.location,
   });
 
   factory Car.fromJson(Map<String, dynamic> json) => Car(
@@ -161,19 +184,19 @@ class Car {
     "vmodel": vmodel,
     "vmake": vmake,
     "image": image,
-    "location": location.toJson(),
+    "location": location?.toJson(),
   };
 }
 
 class Location {
-  final String place;
-  final dynamic longitude;
-  final dynamic latitude;
+  final String? place;
+  final String? longitude;
+  final String? latitude;
 
   Location({
-    required this.place,
-    required this.longitude,
-    required this.latitude,
+    this.place,
+    this.longitude,
+    this.latitude,
   });
 
   factory Location.fromJson(Map<String, dynamic> json) => Location(
@@ -190,16 +213,16 @@ class Location {
 }
 
 class Driver {
-  final String name;
+  final dynamic name;
   final dynamic image;
-  final String phone;
-  final String email;
+  final String? phone;
+  final String? email;
 
   Driver({
-    required this.name,
-    required this.image,
-    required this.phone,
-    required this.email,
+    this.name,
+    this.image,
+    this.phone,
+    this.email,
   });
 
   factory Driver.fromJson(Map<String, dynamic> json) => Driver(

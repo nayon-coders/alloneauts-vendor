@@ -12,6 +12,14 @@ class AppConfig{
   static String RENT_CAR_LIST = "$BASE_URL/vendor/rent/cars";
   static String DELETE_RENT_CAR = "$BASE_URL/vendor/rent/car/"; //END POINT IS SHARED
   static String ADD_CAR_FOR_RENT = "$BASE_URL/vendor/rent/car";
-  static String UPDATE_RENT_CAR = "$BASE_URL/vendor/rent/car/15/update"; //END POINT IS SHARED
+  static String UPDATE_RENT_CAR = "$BASE_URL/vendor/rent/car/"; //END POINT IS CAR ID
   static String SINGLE_RENT_CAR = "$BASE_URL/vendor/rent/car/"; //END POINT IS SHARED
+
+
+
+  //employee management
+  static String CREATE_VENDOR_PROFILE = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
+
+
+
 }

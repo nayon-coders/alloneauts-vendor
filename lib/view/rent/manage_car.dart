@@ -1,11 +1,13 @@
 import 'dart:convert';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/response.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appPoup.dart';
 import 'package:vendor/view_controller/dataError.dart';
@@ -17,6 +19,7 @@ import '../../model/rentModels/rentCarListModel.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/appIconButton.dart';
+import '../../view_controller/appNetworkImage.dart';
 import '../../view_controller/bigText.dart';
 import '../../view_controller/richText.dart';
 
@@ -53,18 +56,21 @@ class _ManageCarState extends State<ManageCar> {
             children: [
               const BigText(text: "Manage Vehicle's"),
               SizedBox(
-                width: size.width*.20,
+                width: Responsive.isDesktop(context) ? size.width*.20 : size.width*.40,
                 child: TextFormField(
                   decoration: InputDecoration(
                       hintText: "Search...",
                       fillColor: AppColors.white,
+                      hintStyle: TextStyle(
+                        fontSize: 15,
+                      ),
                       filled: true,
                       border: OutlineInputBorder(
-                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.3)),
-                          borderRadius: BorderRadius.circular(10)
+                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(5)
                       ),
-                      contentPadding: EdgeInsets.only(left: 20,right: 20, top: 7, bottom: 7),
-                      prefixIcon: Icon(Icons.search)
+                      contentPadding: EdgeInsets.only(left: 10,right: 10, top: 0, bottom: 0),
+                      prefixIcon: Icon(Icons.search, size: 20,)
                   ),
                 ),
               )
@@ -73,7 +79,8 @@ class _ManageCarState extends State<ManageCar> {
           SizedBox(height: 10,),
           FutureBuilder<RentCarModel>(
               future: _getRentCarFuture,
-              builder: (context, AsyncSnapshot<RentCarModel>snapshot) {
+              builder: (context, snapshot) {
+                print(snapshot.data);
 
                 if(snapshot.connectionState == ConnectionState.waiting){
                   return Padding(padding: EdgeInsets.all(100), child: SizedBox(
@@ -137,26 +144,29 @@ class _ManageCarState extends State<ManageCar> {
                           )),
                         ],
                         rows: [
-                          for(var i=0;i<snapshot.data!.data.cars.length; i++)
+                          for(var i=0;i<snapshot.data!.data!.cars!.length; i++)
                             DataRow(
                                 color: MaterialStateColor.resolveWith((states) {
                                   return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
                                 }),
                                 cells: [
                                   DataCell(
-                                      Image.network("${AppConfig.DOMAIN}/${snapshot.data!.data.cars[i].images[0]}", height: 50, width: 50,)
+                                      AppNetworkImage(
+                                        url: "${AppConfig.DOMAIN}/${snapshot.data!.data!.cars![i].images![0]}",
+                                        width: 50, height: 50, boxFit: BoxFit.contain,
+                                      ),
                                   ),
-                                  DataCell(Text('${snapshot.data!.data.cars[i].details.vmake} ${snapshot.data!.data.cars[i].details.vmodel}, ${snapshot.data!.data.cars[i].details.vyear}', style: TextStyle(
+                                  DataCell(Text('${snapshot.data!.data!.cars![i].details!.vmake} ${snapshot.data!.data!.cars![i].details!.vmodel}, ${snapshot.data!.data!.cars![i].details!.vyear}', style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w500
                                   ),)),
-                                  DataCell(Text('#${snapshot.data!.data.cars[i].details.plateNo}',
+                                  DataCell(Text('#${snapshot.data!.data!.cars![i].details!.plateNo}',
                                     style: TextStyle(
                                         fontSize: 10,
                                         fontWeight: FontWeight.w600
                                     ),
                                   )),
-                                  DataCell(Text('\$${snapshot.data!.data.cars[i].details.price}',style: TextStyle(
+                                  DataCell(Text('\$${snapshot.data!.data!.cars![i].details!.price}',style: TextStyle(
                                       fontSize: 10,
                                       fontWeight: FontWeight.w500
                                   ),)),
@@ -202,16 +212,16 @@ class _ManageCarState extends State<ManageCar> {
                                         SizedBox(width: 5,),
                                         AppIconButton(
                                           icon: Icons.edit,
-                                          onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 4, constructorData: snapshot.data!.data.cars[i].id,))),
+                                          onClick: ()=>Get.to(MainPage(pageIndex: 4, constructorData: snapshot.data!.data!.cars![i],), transition: Transition.fadeIn),
                                           bgColor: Colors.amber,
                                         ),
-                                        SizedBox(width: 5,),
+                                        const SizedBox(width: 5,),
                                         AppIconButton(
                                           icon: Icons.report_gmailerrorred_rounded,
                                           onClick: (){},
                                           bgColor: AppColors.blue,
                                         ),
-                                        SizedBox(width: 5,),
+                                        const SizedBox(width: 5,),
                                       ],
                                     ),
 
@@ -244,7 +254,8 @@ class _ManageCarState extends State<ManageCar> {
       builder: (BuildContext context) {
         return AlertDialog(
           content:  Container(
-            width: size.width*.50,
+            width: Responsive.isDesktop(context) ? size.width*.80 : size.width,
+            //height: Responsive.isDesktop(context) ? size.width*.80 : size.width*.90,
             child: SingleChildScrollView(
               child: ListBody(
                 children: <Widget>[
@@ -264,7 +275,7 @@ class _ManageCarState extends State<ManageCar> {
                                     color:AppColors.green
                                 ),
                                 child: Center(
-                                  child: Text("\$${carInfo.data.cars[i].details.price}/month*",
+                                  child: Text("\$${carInfo.data!.cars![i].details!.price}/month*",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontWeight: FontWeight.w600,
@@ -276,31 +287,31 @@ class _ManageCarState extends State<ManageCar> {
 
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Plate No: ", rightText: "#${carInfo.data.cars[i].details.plateNo}"),
+                              RichTextWidget(leftText: "Plate No: ", rightText: "#${carInfo.data!.cars![i].details!.plateNo}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Make: ", rightText: "${carInfo.data.cars[i].details.vmake}"),
+                              RichTextWidget(leftText: "Make: ", rightText: "${carInfo.data!.cars![i].details!.vmake}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Model: ", rightText: "${carInfo.data.cars[i].details.vmodel}"),
+                              RichTextWidget(leftText: "Model: ", rightText: "${carInfo.data!.cars![i].details!.vmodel}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Year: ", rightText: "${carInfo.data.cars[i].details.vyear}"),
+                              RichTextWidget(leftText: "Year: ", rightText: "${carInfo.data!.cars![i].details!.vyear}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
-                              RichTextWidget(leftText: "Color: ", rightText: "${carInfo.data.cars[i].details.vcolor}"),
+                              RichTextWidget(leftText: "Color: ", rightText: "${carInfo.data!.cars![i].details!.vcolor}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Location: ", rightText: "${carInfo.data.cars[i].details.location}"),
+                              RichTextWidget(leftText: "Location: ", rightText: "${carInfo.data!.cars![i].details!.location}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
@@ -317,7 +328,13 @@ class _ManageCarState extends State<ManageCar> {
                             Container(
                               height: 200,
                               padding: EdgeInsets.all(10),
-                              child: Image.network("${AppConfig.DOMAIN}/${carInfo.data.cars[i].images[0]}", height: 220, width: 300,),
+                              child: ListView.builder(
+                                itemCount: carInfo.data!.cars![i].images!.length,
+                                itemBuilder: (context, index) {
+                                  return AppNetworkImage(
+                                      url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].images![index]}", width: 220, height: 220);
+                                }
+                              )
                             ),
                             SizedBox(height: 10,),
                             const Text("Documents",
@@ -332,7 +349,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      Image.network("${AppConfig.DOMAIN}/${carInfo.data.cars[i].images[0]}", height: 100,),
+                                     AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.fh![0]}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("FH",
                                         style: TextStyle(
@@ -347,7 +364,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      Image.network("${AppConfig.DOMAIN}/${carInfo.data.cars[i].images[0]}", height: 100),
+                                      AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.insurance![0]}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("Insurance",
                                         style: TextStyle(
@@ -362,7 +379,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      Image.network("${AppConfig.DOMAIN}/${carInfo.data.cars[i].images[0]}", height: 100),
+                                      AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.diclaration![0]}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("Diclaration",
                                         style: TextStyle(
@@ -392,7 +409,7 @@ class _ManageCarState extends State<ManageCar> {
                       InkWell(
                         onTap: ()async{
                           AppPopup.appPopup(context: context, title: "You want to delete this car?", body: "Do you want to delete this car?. Remember, it never recovery..", dialogType: DialogType.warning, onOkBtn: ()async{
-                            deleteCar(carInfo.data.cars[i].id.toString());
+                            deleteCar(carInfo.data!.cars![i].id.toString());
                           });
                         },
                         child: Container(
