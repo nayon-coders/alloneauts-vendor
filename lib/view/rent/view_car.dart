@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/richText.dart';
 
@@ -8,7 +9,8 @@ import '../../view_controller/bigText.dart';
 import '../main_pages.dart';
 
 class ViewSingleCar extends StatefulWidget {
-  const ViewSingleCar({Key? key}) : super(key: key);
+  final dynamic cardId;
+  const ViewSingleCar({Key? key, this.cardId}) : super(key: key);
 
   @override
   State<ViewSingleCar> createState() => _ViewSingleCarState();
@@ -25,11 +27,16 @@ class _ViewSingleCarState extends State<ViewSingleCar> {
             Row(
               children: [
                 IconButton(
-                  onPressed: ()=>Navigator.pop(context),
-                  icon: Icon(Icons.arrow_back),
+                  onPressed: ()=>Get.back(),
+                  icon: Icon(Icons.arrow_back, color: AppColors.menuColor,),
+                ),
+                Container(
+                  width: 10,
+                  height: 25,
+                  color: AppColors.green,
                 ),
                 SizedBox(width: 10,),
-                BigText(text: "View #TC74857CH Car"),
+                const BigText(text: "View #TC74857CH Car"),
               ],
             ),
            Padding(

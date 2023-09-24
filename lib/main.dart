@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/checkingAuth.dart';
@@ -23,17 +24,13 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
-      initialRoute: '/', // Set the initial route
-      routes: {
-        '/': (context) => CheckingAuth(), // Home page
-        // Define more named routes as needed
-      },
+     home: CheckingAuth(),
     );
   }
 }

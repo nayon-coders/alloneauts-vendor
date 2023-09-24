@@ -1,12 +1,17 @@
-import 'dart:convert';
-import 'dart:typed_data';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_downloader_web/image_downloader_web.dart';
+import 'package:vendor/app_config.dart';
+import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
-import 'package:vendor/view_controller/appInput.dart';
 import 'dart:html' as html;
+import '../../controller/EmployeeController/employeeController.dart';
+import '../../model/employeeModel/employeeModel.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appIconButton.dart';
+import '../../view_controller/appNetworkImage.dart';
 import '../../view_controller/bigText.dart';
 
 class EmployManagement extends StatefulWidget {
@@ -18,47 +23,17 @@ class EmployManagement extends StatefulWidget {
 
 class _EmployManagementState extends State<EmployManagement> {
 
-  final firstName = TextEditingController();
-  final lastName = TextEditingController();
-  final email = TextEditingController();
-  final phone = TextEditingController();
-  final pass = TextEditingController();
 
-  Map<String, bool> values = {
-    'Manage Vehicles': true,
-    'Add Vehicles': true,
-    'Rent Request': false,
-    'Vehicles Reports': false,
-    'Payment Reports': false,
-    'Ticket Manage': false,
-  };
-
-
-  List<int>? _selectedFile;
-  Uint8List? _bytesData;
-
-  startWebFilePicker() async {
-    html.FileUploadInputElement uploadInput = html.FileUploadInputElement();
-    uploadInput.multiple = true;
-    uploadInput.draggable = true;
-    uploadInput.click();
-
-    uploadInput.onChange.listen((event) {
-      final files = uploadInput.files;
-      print("this is files === $files");
-      final file = files![0];
-      final reader = html.FileReader();
-
-      reader.onLoadEnd.listen((event) {
-        setState(() {
-          _bytesData =
-              Base64Decoder().convert(reader.result.toString().split(",").last);
-          _selectedFile = _bytesData;
-        });
-      });
-      reader.readAsDataUrl(file);
-    });
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getDataFuture = EmployeeController.employeeList();
   }
+
+  Future<EmployeeListModel>? _getDataFuture;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +50,7 @@ class _EmployManagementState extends State<EmployManagement> {
               SizedBox(
                 width: size.width*.20,
                 child: AppButton(
-                  onClick: ()=>addEmploy(),
+                  onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 16,))),
                   text: "Add Employ",
                   bgColor: AppColors.green,
                   width: 100,
@@ -98,252 +73,153 @@ class _EmployManagementState extends State<EmployManagement> {
                   )
                 ]
             ),
-            child: FittedBox(
-              child: DataTable(
-                dividerThickness:0,
-                sortAscending: false,
-                columns: const [
-                  DataColumn(label: Text(
-                      'Profile',
-                  )),
+            child: FutureBuilder<EmployeeListModel>(
+              future: _getDataFuture,
+              builder: (BuildContext context, AsyncSnapshot<EmployeeListModel> snapshot) {
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return Text("data is loading");
+                }else if(snapshot.hasData){
+                  return FittedBox(
+                    child: DataTable(
+                      dividerThickness:0,
+                      sortAscending: false,
+                      columns: const [
+                        DataColumn(label: Text(
+                          'Profile',
+                        )),
 
-                  DataColumn(label: Text(
-                      'Employ Name',
-                  )),
-                  DataColumn(label: Text(
-                      'Email',
-                  )),
-                  DataColumn(label: Text(
-                      'Phone',
-                  )),
-                  DataColumn(label: Text(
-                      'Documents',
-                  )),
-                  DataColumn(label: Text(
-                    'Staus',
-                  )),
-                  DataColumn(label: Text(
-                      'Action',
-                  )),
-                ],
-                rows: [
-                  for(var i=0;i<5;i++)
-                    DataRow(
-                        color: MaterialStateColor.resolveWith((states) {
-                          return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                        }),
-                        cells: [
-                          DataCell(
-                              Image.network("https://newprofilepic.photo-cdn.net//assets/images/article/profile.jpg?4d355bd", height: 50, width: 50,)
+                        DataColumn(label: Text(
+                          'Employ Name',
+                        )),
+                        DataColumn(label: Text(
+                          'Email',
+                        )),
+                        DataColumn(label: Text(
+                          'Phone',
+                        )),
+                        DataColumn(label: Text(
+                          'Documents',
+                        )),
+                        DataColumn(label: Text(
+                          'Staus',
+                        )),
+                        DataColumn(label: Text(
+                          'Action',
+                        )),
+                      ],
+                      rows: [
+                        for(var i=0;i<snapshot!.data!.data!.length;i++)
+                          DataRow(
+                              color: MaterialStateColor.resolveWith((states) {
+                                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                              }),
+                              cells: [
+                                DataCell(
+                                    AppNetworkImage(
+                                      url: '${AppConfig.DOMAIN}/${snapshot.data!.data![i].details!.avatar}',
+                                      width: 50,
+                                      height: 50,
+
+                                    )
+                                ),
+                                DataCell(Text('${snapshot.data!.data![i].details!.firstName} ${snapshot.data!.data![i].details!.lastName}', style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500
+                                ),)),
+                                DataCell(Text('${snapshot.data!.data![i].details!.email}',
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )),
+                                DataCell(Text('${snapshot.data!.data![i].details!.phone}',style: TextStyle(
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w500
+                                ),)),
+
+                                DataCell(Container(
+                                    padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    child: Text('${snapshot.data!.data![i].status == 1 ? "Active" : "Deactive"}',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ))),
+                                DataCell(InkWell(
+                                  onTap:()=>viewDocument("${AppConfig.DOMAIN}/${snapshot.data!.data![i].details!.document}"),
+                                  child: Container(
+                                      padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                                      decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius: BorderRadius.circular(5)
+                                      ),
+                                      child: Text('View Documnets',
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.white,
+                                        ),
+                                      )),
+                                )),
+                                DataCell(
+                                  Row(
+                                    children: [
+                                      SizedBox(width: 5,),
+                                      AppIconButton(
+                                        icon: Icons.edit,
+                                        onClick: (){},
+                                        bgColor: Colors.amber,
+                                      ),
+                                      SizedBox(width: 5,),
+                                      AppIconButton(
+                                        icon: Icons.delete_outline_outlined,
+                                        onClick: (){},
+                                        bgColor: AppColors.red,
+                                      ),
+                                      SizedBox(width: 5,),
+                                    ],
+                                  ),
+
+                                ),
+                              ]
                           ),
-                          DataCell(Text('Johan Due', style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500
-                          ),)),
-                          DataCell(Text('jhona@gmail.com',
-                            style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600
-                            ),
-                          )),
-                          DataCell(Text('+1 9840 ******',style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w500
-                          ),)),
 
-                          DataCell(Container(
-                              padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child: Text('Active',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ))),
-                          DataCell(Container(
-                              padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(5)
-                              ),
-                              child: Text('View Documnets',
-                                style: TextStyle(
-                                  fontSize: 10,
-                                  color: Colors.white,
-                                ),
-                              ))),
-                          DataCell(
-                            Row(
-                              children: [
-                                SizedBox(width: 5,),
-                                AppIconButton(
-                                  icon: Icons.edit,
-                                  onClick: (){},
-                                  bgColor: Colors.amber,
-                                ),
-                                SizedBox(width: 5,),
-                                AppIconButton(
-                                  icon: Icons.delete_outline_outlined,
-                                  onClick: (){},
-                                  bgColor: AppColors.red,
-                                ),
-                                SizedBox(width: 5,),
-                              ],
-                            ),
-
-                          ),
-                        ]
+                      ],
                     ),
+                  );
+                }else{
+                  return Text("something web wrong");
+                }
+              },
 
-                ],
-              ),
-            ),
+            )
           ),
         ],
       ),
     );
   }
 
-  addEmploy() {
-    var size = MediaQuery.of(context).size;
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: false, // user must tap button!
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content:  StatefulBuilder(
-            builder: (BuildContext context, StateSetter setState) {
-              return Container(
-                width: size.width*.30,
-                child: SingleChildScrollView(
-                  child: ListBody(
-                    children:  <Widget>[
-                      BigText(text: "Create Epmloy"),
-                      SizedBox(height: 10,),
-                      Text("You can create Employ. You can control the user accessibility.",
-                        style: TextStyle(
-                          fontSize: 10,
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      Divider(height: 1, color: AppColors.grey,),
-                      SizedBox(height: 30,),
-                      AppInput(controller: firstName, title: "First Name", hintText: "First Name", prefixIcon: Icons.person,),
-                      SizedBox(height: 20,),
-                      AppInput(controller: lastName, title: "Last Name", hintText: "Last Name", prefixIcon: Icons.person),
-                      SizedBox(height: 20,),
-                      AppInput(controller: email, title: "Email", hintText: "jhon@gmail.com", prefixIcon: Icons.email_outlined),
-                      SizedBox(height: 20,),
-                      AppInput(controller: phone, title: "Phone Number", hintText: "+1 938*******", prefixIcon: Icons.phone_android),
-                      SizedBox(height: 20,),
-                      AppInput(controller: pass, title: "Password", hintText: "Password", prefixIcon: Icons.key),
-                      SizedBox(height: 20,),
-                      AppInput(controller: pass, title: "Confirm Password", hintText: "Confirm Password", prefixIcon: Icons.key),
-                      SizedBox(height: 20,),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(5),
-                                border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text("Upload Profile",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
-                                ],
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 10,),
-                          Expanded(
-                            child: Container(
-                              height: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(width: 1, color: AppColors.green.withOpacity(0.3))
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: const [
-                                  Text("Upload Documents",
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  ),
-                                  SizedBox(height: 5,),
-                                  Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20,),
-                      Text("Permission",
-                        style: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          fontSize: 20,
-                        ),
-                      ),
-                      SizedBox(height: 10,),
-                      SizedBox(
-                        height: 50.00*values.length,
-                        child: ListView(
-                          physics: NeverScrollableScrollPhysics(),
-                          children: values.keys.map((String key) {
-                            return new CheckboxListTile(
-                              title: new Text(key,
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600
-                                ),
-                              ),
-                              value: values[key],
-                              onChanged: (value) {
-                                setState(() {
-                                  values[key] = value!;
-                                });
-                              },
-                            );
-                          }).toList(),
-                        ),
-                      ),
-                      SizedBox(height: 30,),
-                      AppButton(onClick: ()=>Navigator.pop(context), text: "Create Employ", width: 100),
-
-
-                    ],
-                  ),
-                ),
-              );
-            }
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Cancel'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
+  viewDocument(String? document) {
+    Get.defaultDialog(
+      title: "Documents",
+      contentPadding: EdgeInsets.all(10),
+      content: AppNetworkImage(url: "$document", width: 100, height: 200),
+      onConfirm: ()=>downloadDocument(document),
+      
+      onCancel: ()=>Get.back(), 
     );
   }
+
+  downloadDocument(url) async{
+    await WebImageDownloader.downloadImageFromWeb(url);
+    Get.snackbar("Download Complete", "Document download complete.");
+  }
+
+
+
+
+
 }

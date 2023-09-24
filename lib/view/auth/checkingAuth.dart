@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/main_pages.dart';
-import 'package:vendor/view/globals.dart' as global;
 
 class CheckingAuth extends StatefulWidget {
   const CheckingAuth({Key? key}) : super(key: key);
@@ -20,43 +22,29 @@ class _CheckingAuthState extends State<CheckingAuth> {
     // TODO: implement initState
     super.initState();
 
-    Future.delayed(Duration(milliseconds: 2000), () {
-      getToken();
-      // Do something
-    });
+    getToken();
+
   }
 
-  var token;
+  String? token;
   bool isChecking = true;
   bool isAuth = true;
   //get token
-  Future getToken() async {
+  getToken() async {
 
-    final prefs = await SharedPreferences.getInstance();
-    final value = prefs.getString('token');
-    setState(() {
-      token = value;
-    });
+    dynamic token = await SessionManager().get("token");
+
 
     if(token != null){
-      setState(() {
-        global.isLoggedIn= true;
-        global.token = token;
-      });
-      Future.delayed(Duration(milliseconds: 1500), () {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>MainPage()), (route) => false);
-        // Do something
-      });
-    }else{
-      Future.delayed(Duration(milliseconds: 1500), () {
-        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>Login()), (route) => false);
-        // Do something
-      });
-    }
-    print("value === $token");
-    setState(() {
-      isChecking = false;
-    });
+          // ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainPage()), (route) => false);
+          // Do something
+        }else{
+          // ignore: use_build_context_synchronously
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const Login()), (route) => false);
+          // Do something
+        }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -66,18 +54,18 @@ class _CheckingAuthState extends State<CheckingAuth> {
         child: Container(
           width: 300,
           height: 200,
-          decoration: new BoxDecoration(
+          decoration: const BoxDecoration(
             shape: BoxShape.rectangle,
             color: const Color(0xFFFFFF),
             borderRadius:
-            new BorderRadius.all(new Radius.circular(32.0)),
+            BorderRadius.all( Radius.circular(32.0)),
           ),
           child: isChecking
               ?  Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text('Checking authontication.',
+            children: const [
+              Text('Checking authentication.',
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w400,

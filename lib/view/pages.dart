@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/view/dashboard/dashboard.dart';
 import 'package:vendor/view/employ/employSalary/singleSalary.dart';
+import 'package:vendor/view/employ/tax/taxManagement.dart';
 import 'package:vendor/view/profile/profile.dart';
 import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view/rent/edit_car.dart';
@@ -22,7 +23,7 @@ class AllPages{
     RentRequestList(), //index = 1
     ManageCar(), //index = 2
     AddCar(), //index = 3
-    EditCar(), //index = 4
+   // EditCar(), //index = 4
     ViewSingleCar(), //index = 5
     Profile(), //index = 6
     CarReports(), //index = 7
@@ -33,5 +34,6 @@ class AllPages{
     EmployManagement(), //index = 12
     EmploySalaryShit(), //index = 13
     SingleEmploySalary(), //index = 14
+    TaxManagement(), //index = 15
   ];
 }

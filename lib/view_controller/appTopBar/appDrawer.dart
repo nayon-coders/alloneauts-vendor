@@ -3,8 +3,8 @@ import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view_controller/single_menu.dart';
 
-import '../utility/app_color.dart';
-import 'expanded_menu.dart';
+import '../../utility/app_color.dart';
+import '../expanded_menu.dart';
 
 class AppDrawer extends StatefulWidget {
   const AppDrawer({Key? key}) : super(key: key);

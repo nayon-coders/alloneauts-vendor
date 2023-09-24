@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:vendor/controller/authController/login.dart';
 import 'package:vendor/model/authModel/loginModel.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/offers.dart';
@@ -13,6 +13,7 @@ import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
 import 'package:vendor/view_controller/bigText.dart';
 
+import '../../controller/authController/authController.dart';
 import '../../local_storage/localStorage.dart';
 
 class Login extends StatefulWidget {
@@ -32,8 +33,8 @@ class _LoginState extends State<Login> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    email.text = "contact.shahidul@gmail.com";
-    pass.text = "abcdabcd";
+    email.text = "nayon.coders@gmail.com";
+    pass.text = "12345678";
   }
 
 
@@ -157,7 +158,6 @@ class _LoginState extends State<Login> {
           backgroundColor: Colors.green,
         ));
 
-        print("object === ${jsonDecode(res.body)}");
 
         //store login information in local storage.
        LocalStorage.saveLoginData(loginModel: jsonDecode(res.body)!);

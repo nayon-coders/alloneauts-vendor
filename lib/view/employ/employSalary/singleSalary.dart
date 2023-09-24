@@ -167,7 +167,7 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
                                Expanded(
                                  flex: 3,
                                  child: Container(
-                                   height: 370,
+                                  // height: 370,
                                    width: size.width*.50,
                                    padding: EdgeInsets.all(20),
                                    decoration: BoxDecoration(
@@ -199,6 +199,38 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
                                            leftText: "Per Hour",
                                            rightTxt: "\$12",
                                            rightTextColor: Colors.black87
+                                       ),
+                                       buildDetailsTableText(
+                                           size: size,
+                                           leftText: "Federal Income Tax",
+                                           rightTxt: "12%",
+                                           rightTextColor: Colors.red,
+                                           rightTextSize: 16,
+                                           rightTextWeight: FontWeight.w600
+                                       ),
+                                       buildDetailsTableText(
+                                           size: size,
+                                           leftText: "State Income Tax",
+                                           rightTxt: "15%",
+                                           rightTextColor: Colors.red,
+                                           rightTextSize: 16,
+                                           rightTextWeight: FontWeight.w600
+                                       ),
+                                       buildDetailsTableText(
+                                           size: size,
+                                           leftText: "Medicare Tax",
+                                           rightTxt: "7.8%",
+                                           rightTextColor: Colors.red,
+                                           rightTextSize: 16,
+                                           rightTextWeight: FontWeight.w600
+                                       ),
+                                       buildDetailsTableText(
+                                           size: size,
+                                           leftText: "Country",
+                                           rightTxt: "8.8%",
+                                           rightTextColor: Colors.red,
+                                           rightTextSize: 16,
+                                           rightTextWeight: FontWeight.w600
                                        ),
                                        buildDetailsTableText(
                                            size: size,

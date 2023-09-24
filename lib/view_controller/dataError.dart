@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class DataError extends StatelessWidget {
-  const DataError({Key? key}) : super(key: key);
+  final VoidCallback onClick;
+  const DataError({Key? key, required this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class DataError extends StatelessWidget {
         children: [
           Text("Check your internet connection or Try again."),
           SizedBox(height: 10,),
-          TextButton(onPressed: (){}, child: Text("Try again."))
+          TextButton(onPressed: onClick, child: Text("Try again."))
         ],
       ),
     );
