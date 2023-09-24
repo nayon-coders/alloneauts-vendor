@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../app_config.dart';
 import '../../controller/EmployeeController/employeeController.dart';
+import '../../model/employeeModel/employeeModel.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appButton.dart';
 import '../../view_controller/appInput.dart';
@@ -18,7 +19,8 @@ import '../../view_controller/appPoup.dart';
 import '../../view_controller/bigText.dart';
 
 class CreateEmployee extends StatefulWidget {
-  const CreateEmployee({Key? key}) : super(key: key);
+  final EmployeeListModel employeeListModel;
+  const CreateEmployee({Key? key, required this.employeeListModel}) : super(key: key);
 
   @override
   State<CreateEmployee> createState() => _CreateEmployeeState();
@@ -133,7 +135,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
     setState(() {
       isLoading = true;
     });
-    
+
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token = _pref.getString("token");
     var header = {
@@ -177,11 +179,11 @@ class _CreateEmployeeState extends State<CreateEmployee> {
       } else {
         print('file upload failed');
         AppPopup.appPopup(
-          context: context,
-          title: "Something went wrong !",
-          body: "You new Employee create success. You can check it from Vehicle rent->Manage Vehicle's",
-          dialogType: DialogType.error,
-          onOkBtn: (){}
+            context: context,
+            title: "Something went wrong !",
+            body: "You new Employee create success. You can check it from Vehicle rent->Manage Vehicle's",
+            dialogType: DialogType.error,
+            onOkBtn: (){}
         );
       }
       setState(() {
@@ -190,50 +192,12 @@ class _CreateEmployeeState extends State<CreateEmployee> {
     });
   }
 
-
-  // void createEmploye() async{
-  //   var res = await EmployeeController.createNewEmployee(
-  //       first_name: first_name.text,
-  //       last_name: last_name.text,
-  //       email: email.text,
-  //       phone: phone.text,
-  //       password: password.text,
-  //       confirm_password: confirm_password.text,
-  //       avatar: avatar,
-  //       document: document.text,
-  //       street_address: street_address.text,
-  //       apartment: apartment.text,
-  //       city: city.text,
-  //       state: state.text,
-  //       zipcode: zipcode.text,
-  //       home_phone: home_phone.text,
-  //       call_phone: call_phone.text,
-  //       social_security_number: social_security_number.text,
-  //       birth_date: birth_date.text,
-  //       marital_status: marital_status.text,
-  //       spouseHas: spouseHas.text,
-  //       spouseName: spouseName.text,
-  //       spouseNumber: spouseNumber.text,
-  //       emergencyFirstName: emergencyFirstName.text,
-  //       emergencyLastName: emergencyLastName.text,
-  //       emergencyNumber: emergencyNumber.text,
-  //       taxFederalIncome: taxList.values.elementAt(0),
-  //       taxStateIncome: taxList.values.elementAt(1),
-  //       taxCountryIncome: taxList.values.elementAt(2),
-  //       taxMedicareIncome: taxList.values.elementAt(3),
-  //       employee_type: selectEmployType,
-  //       start_date: start_date.text,
-  //       permissionManageVehicle: employeePermission.values.elementAt(0),
-  //       permissionAddVehicle: employeePermission.values.elementAt(1),
-  //       permissionRentRequest: employeePermission.values.elementAt(2),
-  //       permissionVehicleReport: employeePermission.values.elementAt(3),
-  //       permissionPaymentReport: employeePermission.values.elementAt(4),
-  //       permissionTicketManagement: employeePermission.values.elementAt(5)
-  //   );
-  //
-  //   print("this is data === ${res.body}");
-  // }
-
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // first_name.text = widget.employeeListModel.data.
+  }
 
 
   @override
@@ -357,19 +321,19 @@ class _CreateEmployeeState extends State<CreateEmployee> {
                     child: _uploadProfile != null
                         ? Image.memory(_uploadProfile!, width: 200, height: 200)
                         : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text("Upload Profile",
-                              style: TextStyle(
-                                fontSize: 10,
-                                fontWeight: FontWeight.w400,
-                              ),
-                            ),
-                            SizedBox(height: 5,),
-                            Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
-                          ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text("Upload Profile",
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w400,
+                          ),
                         ),
+                        SizedBox(height: 5,),
+                        Icon(Icons.upload_outlined, color: AppColors.green, size: 30,)
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -590,7 +554,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
 
           SizedBox(height: 30,),
           AppButton(onClick: (){
-    Map<String, String> employeeInfo = {
+            Map<String, String> employeeInfo = {
               "first_name" : first_name.text,
               "last_name" : last_name.text,
               "email" : email.text,

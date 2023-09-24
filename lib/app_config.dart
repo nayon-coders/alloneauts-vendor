@@ -18,7 +18,8 @@ class AppConfig{
 
 
   //employee management
-  static String CREATE_VENDOR_PROFILE = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
+  static String CREATE_EMPLOYEE_PROFILE = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
+  static String EMPLOYEE_LIST = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
 
 
 

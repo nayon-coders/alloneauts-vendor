@@ -5,7 +5,6 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vendor/app_config.dart';
-import 'package:vendor/controller/rentCarController/rentCarController.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';

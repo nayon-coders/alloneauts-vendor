@@ -1,6 +1,10 @@
+import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/app_config.dart';
+
+import '../../model/employeeModel/employeeModel.dart';
 
 class EmployeeController{
 
@@ -46,7 +50,7 @@ class EmployeeController{
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token = _pref.getString("token");
     print("token === ${token}");
-    var res = await http.post(Uri.parse(AppConfig.CREATE_VENDOR_PROFILE),
+    var res = await http.post(Uri.parse(AppConfig.CREATE_EMPLOYEE_PROFILE),
       headers: {
         "Authorization" : "Bearer $token"
       },
@@ -98,6 +102,21 @@ class EmployeeController{
     return res;
 
   }
+
+
+  static Future<EmployeeListModel> employeeList()async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+
+    var res = await http.get(Uri.parse(AppConfig.EMPLOYEE_LIST),
+      headers: {
+        "Authorization": "Bearer $token",
+      }
+    );
+    return EmployeeListModel.fromJson(jsonDecode(res.body));
+  }
+
+
 
 
 }
