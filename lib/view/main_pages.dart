@@ -4,6 +4,7 @@ import 'package:vendor/response.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/dashboard/dashboard.dart';
 import 'package:vendor/view/employ/createEmployee.dart';
+import 'package:vendor/view/employ/employeeClocking.dart';
 import 'package:vendor/view/pages.dart';
 import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view_controller/appTopBar/appDrawer.dart';
@@ -26,6 +27,7 @@ import 'package:vendor/view/ticketManagement/singleTicker.dart';
 
 import 'employ/employManage.dart';
 import 'employ/employSalaryShit.dart';
+import 'employ/monthlySatement.dart';
 import 'ticketManagement/allTicket.dart';
 class MainPage extends StatefulWidget {
   final int pageIndex;
@@ -80,6 +82,8 @@ class _MainPageState extends State<MainPage> {
     SingleEmploySalary(), //index = 14
     TaxManagement(), //index = 15
     CreateEmployee(), //index = 16
+    MonthlyStatement(), //index = 17
+    EmployeeClocking(), //index = 18
   ];
 
 
@@ -381,6 +385,16 @@ class _MainPageState extends State<MainPage> {
                                     pageCount = 13; //Final ticket
                                   }
                               ),
+                              SizedBox(height: 5,),
+                              buildChildMenu(
+                                  size: size,
+                                  menuNumber: "5-3",
+                                  title: "Employee Clocking",
+                                  onClick:  (){
+                                    setState(() =>selectedChildMenuNumber[0]="5-3");
+                                    pageCount = 18; //Final ticket
+                                  }
+                              ),
                             ],
                           ),
                         ],
@@ -648,6 +662,16 @@ class _MainPageState extends State<MainPage> {
                           onClick:  (){
                             setState(() =>selectedChildMenuNumber[0]="5-2");
                             pageCount = 13; //Final ticket
+                          }
+                      ),
+                      SizedBox(height: 5,),
+                      buildChildMenu(
+                          size: size,
+                          menuNumber: "5-3",
+                          title: "Employee Clocking",
+                          onClick:  (){
+                            setState(() =>selectedChildMenuNumber[0]="5-3");
+                            pageCount = 18; //Final ticket
                           }
                       ),
                     ],

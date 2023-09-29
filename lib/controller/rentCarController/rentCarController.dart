@@ -98,5 +98,23 @@ class RentCarController{
     var json = jsonDecode(res.body);
     return res;
   }
-  
+
+
+
+
+  //////assign car
+  static Future<http.Response> acceptRentRequest(id)async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+    var res = await http.post(Uri.parse("${AppConfig.BASE_URL}/vendor/rent/requests/$id/status/accept"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization" : "Bearer ${token}"
+        }
+    ); //  return jsonDecode(res.body)["data"]["cars"];
+    var json = jsonDecode(res.body);
+    return res;
+  }
+
+
 }

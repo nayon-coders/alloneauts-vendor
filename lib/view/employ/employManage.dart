@@ -1,17 +1,22 @@
 import 'dart:io';
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/response.dart';
+import 'package:vendor/view/employ/editEmployee.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
+import 'package:vendor/view_controller/dataLoading.dart';
 import 'dart:html' as html;
 import '../../controller/EmployeeController/employeeController.dart';
 import '../../model/employeeModel/employeeModel.dart';
 import '../../utility/app_color.dart';
 import '../../view_controller/appIconButton.dart';
 import '../../view_controller/appNetworkImage.dart';
+import '../../view_controller/appPoup.dart';
 import '../../view_controller/bigText.dart';
 
 class EmployManagement extends StatefulWidget {
@@ -77,7 +82,7 @@ class _EmployManagementState extends State<EmployManagement> {
               future: _getDataFuture,
               builder: (BuildContext context, AsyncSnapshot<EmployeeListModel> snapshot) {
                 if(snapshot.connectionState == ConnectionState.waiting){
-                  return Text("data is loading");
+                  return DataLoading(text: "Locading...");
                 }else if(snapshot.hasData){
                   return FittedBox(
                     child: DataTable(
@@ -116,11 +121,12 @@ class _EmployManagementState extends State<EmployManagement> {
                               cells: [
                                 DataCell(
                                     AppNetworkImage(
-                                      url: '${AppConfig.DOMAIN}/${snapshot.data!.data![i].details!.avatar}',
+                                      url: 'https://alloneautos.com/documents/230923222807_nayon_document.jpg',
                                       width: 50,
                                       height: 50,
 
                                     )
+
                                 ),
                                 DataCell(Text('${snapshot.data!.data![i].details!.firstName} ${snapshot.data!.data![i].details!.lastName}', style: TextStyle(
                                     fontSize: 14,
@@ -170,13 +176,13 @@ class _EmployManagementState extends State<EmployManagement> {
                                       SizedBox(width: 5,),
                                       AppIconButton(
                                         icon: Icons.edit,
-                                        onClick: (){},
+                                        onClick: (){}, //=>Get.to(EditEmployee(employeeid: snapshot.data!.data![i]!.id.toString())),
                                         bgColor: Colors.amber,
                                       ),
                                       SizedBox(width: 5,),
                                       AppIconButton(
                                         icon: Icons.delete_outline_outlined,
-                                        onClick: (){},
+                                        onClick: ()=>openDilog(snapshot.data!.data![i]!.id.toString()),
                                         bgColor: AppColors.red,
                                       ),
                                       SizedBox(width: 5,),
@@ -203,19 +209,81 @@ class _EmployManagementState extends State<EmployManagement> {
   }
 
   viewDocument(String? document) {
+    print("document === $document");
     Get.defaultDialog(
       title: "Documents",
       contentPadding: EdgeInsets.all(10),
-      content: AppNetworkImage(url: "$document", width: 100, height: 200),
-      onConfirm: ()=>downloadDocument(document),
-      
-      onCancel: ()=>Get.back(), 
+      content: AppNetworkImage(url: "https://alloneautos.com/documents/230923222807_nayon_document.jpg", width: 100, height: 200),
+      onConfirm: ()=>_downloadDocument(document),
+      onCancel: (){},
+      confirm: Container(
+        padding: EdgeInsets.all(5),
+        decoration: BoxDecoration(
+          color: AppColors.green,
+          borderRadius: BorderRadius.circular(100)
+        ),
+        child: Text("Download"),
+      )
     );
   }
 
-  downloadDocument(url) async{
+  bool isDownload = false;
+  void _downloadDocument(url) async{
+    setState(() {
+      isDownload = true;
+    });
     await WebImageDownloader.downloadImageFromWeb(url);
     Get.snackbar("Download Complete", "Document download complete.");
+    setState(() {
+      isDownload = false;
+    });
+  }
+
+  openDilog(String id) {
+    var size = MediaQuery.of(context).size;
+    Get.defaultDialog(
+      title: "Are you sure?",
+      content: Container(
+            width: Responsive.isDesktop(context) ? size.width*.40 : size.width*.90,
+          child: Text("Are you sure? You want to delete this employee. or Temporary block? If you delete, you can not recovery the data.")),
+      confirm: isLoading ? CircularProgressIndicator(strokeWidth: 1, color:AppColors.black,): TextButton(onPressed: ()=>deleteEmployee(id), child: Text("Permanently Delete")),
+      cancel: TextButton(onPressed: (){}, child: Text("Temporary Block",
+        style: TextStyle(
+          color: Colors.redAccent
+        ),
+      ),
+
+      ),
+    );
+  }
+
+  bool isLoading = false;
+  //delete employee
+  deleteEmployee(id) async{
+    setState(() {
+      isLoading = true;
+    });
+    var res = await EmployeeController.deleteEmployee(id);
+    if(res.statusCode == 200){
+      AppPopup.appPopup(
+        context: context,
+        title: "Employee information is Removed.",
+        body: "This Employee is deleted successfully. It can not back. ",
+        dialogType: DialogType.success,
+        onOkBtn: ()=>Get.to(MainPage(pageIndex: 12,)),
+      );
+    }else{
+      AppPopup.appPopup(
+        context: context,
+        title: "Something went wrong.",
+        body: "Something went wrong while deleting employee.",
+        dialogType: DialogType.error,
+        onOkBtn: (){},
+      );
+    }
+    setState(() {
+      isLoading = false;
+    });
   }
 
 
