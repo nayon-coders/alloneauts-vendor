@@ -3,9 +3,7 @@ import 'dart:typed_data';
 import 'dart:html' as html;
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:pie_chart/pie_chart.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:vendor/carImageJson.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 import 'package:vendor/controller/dashboardController/dashboardController.dart';
 import 'package:vendor/model/dasboardModel.dart';
 import 'package:vendor/response.dart';
@@ -69,26 +67,51 @@ class _DashboardState extends State<Dashboard> {
           return Container(
             // height: size.height,
             // width: size.width,
-            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+            padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
             color: AppColors.bg,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 const DashboardPlanPopup(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    BigText(text: "Dashboard"),
-                    SizedBox(height: 10,),
-                    Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.greyText
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        BigText(text: "Dashboard"),
+                        SizedBox(height: 5,),
+                        Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
+                          style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                              color: AppColors.greyText
+                          ),
+                        ),
+                      ],
                     ),
+                    Container(
+                      padding: EdgeInsets.all(10),
+                      decoration: BoxDecoration(
+                        color: AppColors.green.withOpacity(0.2)
+                      ),
+                      child: Row(
+
+                        children: [
+                          Icon(Icons.download,size: 20,  color: AppColors.green),
+                          SizedBox(width: 8,),
+                          Text("Download",
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 12,
+                                color: AppColors.green
+                            ),
+                          )
+                        ],
+                      ),
+                    )
                   ],
                 ),
                 SizedBox(height: 30,),
@@ -892,58 +915,58 @@ class TabDashboardBox extends StatelessWidget {
               ),
             ),
             SizedBox(width: 20,),
-            Expanded(
-              flex: 2,
-              child: Container(
-                //width: size.width*.22,
-                  height: 380,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade300,
-                            spreadRadius: 2, blurRadius: 3,
-                            offset: Offset(0,2)
-                        )
-                      ]
-                  ),
-                  child:PieChart(
-                    dataMap: paiRentRequestReportData,
-                    animationDuration: Duration(milliseconds: 800),
-                    chartLegendSpacing: 32,
-                    chartRadius: MediaQuery.of(context).size.width / 3,
-                    colorList: [
-                      Colors.amber,
-                      Colors.green,
-                      Colors.blue
-                    ],
-                    initialAngleInDegree: 0,
-                    chartType: ChartType.ring,
-                    ringStrokeWidth: 20,
-                    centerText: "Total Request",
-                    legendOptions: LegendOptions(
-                      showLegendsInRow: true,
-                      legendPosition: LegendPosition.bottom,
-                      showLegends: true,
-                      legendShape: BoxShape.circle,
-                      legendTextStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    chartValuesOptions: ChartValuesOptions(
-                      showChartValueBackground: false,
-                      showChartValues: true,
-                      showChartValuesInPercentage: false,
-                      showChartValuesOutside: false,
-                      decimalPlaces: 1,
-                    ),
-                    // gradientList: ---To add gradient colors---
-                    // emptyColorGradient: ---Empty Color gradient---
-                  )
-              ),
-            ),
+            // Expanded(
+            //   flex: 2,
+            //   child: Container(
+            //     //width: size.width*.22,
+            //       height: 380,
+            //       padding: EdgeInsets.all(20),
+            //       decoration: BoxDecoration(
+            //           color: AppColors.white,
+            //           borderRadius: BorderRadius.circular(10),
+            //           boxShadow: [
+            //             BoxShadow(
+            //                 color: Colors.grey.shade300,
+            //                 spreadRadius: 2, blurRadius: 3,
+            //                 offset: Offset(0,2)
+            //             )
+            //           ]
+            //       ),
+            //       child:PieChart(
+            //         dataMap: paiRentRequestReportData,
+            //         animationDuration: Duration(milliseconds: 800),
+            //         chartLegendSpacing: 32,
+            //         chartRadius: MediaQuery.of(context).size.width / 3,
+            //         colorList: [
+            //           Colors.amber,
+            //           Colors.green,
+            //           Colors.blue
+            //         ],
+            //         initialAngleInDegree: 0,
+            //         chartType: ChartType.ring,
+            //         ringStrokeWidth: 20,
+            //         centerText: "Total Request",
+            //         legendOptions: LegendOptions(
+            //           showLegendsInRow: true,
+            //           legendPosition: LegendPosition.bottom,
+            //           showLegends: true,
+            //           legendShape: BoxShape.circle,
+            //           legendTextStyle: TextStyle(
+            //             fontWeight: FontWeight.bold,
+            //           ),
+            //         ),
+            //         chartValuesOptions: ChartValuesOptions(
+            //           showChartValueBackground: false,
+            //           showChartValues: true,
+            //           showChartValuesInPercentage: false,
+            //           showChartValuesOutside: false,
+            //           decimalPlaces: 1,
+            //         ),
+            //         // gradientList: ---To add gradient colors---
+            //         // emptyColorGradient: ---Empty Color gradient---
+            //       )
+            //   ),
+            // ),
           ],
         )
 
@@ -1102,221 +1125,274 @@ class DasktopDashboardBox extends StatelessWidget {
       children: [
         Row(
           children: [
-            SingleBoxes(
-                title: "${dashboardData?.numberOfTotalCar}",
-                subTitle: "Vehicles",
-                icon: Image.asset("assets/images/car_list.png",height: 20, width: 20, fit: BoxFit.contain),
-                title2: "20",
-                subTitle2: "Total Ticket",
-                icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
-            ),
-            SizedBox(width: 20,),
-            SingleBoxes(
-
-                title: "${dashboardData?.numberOfRentRequest}",
-                subTitle: "Total Request",
-                icon: Image.asset("assets/images/request.png",height: 30, width: 30,),
-                title2: "${dashboardData?.numberOfPendingRequest}",
-                subTitle2: "Today Ticket",
-                icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
-            ),
-            SizedBox(width: 20,),
-            SingleBoxes(
-                title: "${dashboardData?.numberOfPendingRequest}",
-                subTitle: "Pending Request",
-                icon: Image.asset("assets/images/p_request.png",height: 30, width: 30,),
-                title2: "${dashboardData?.numberOfPendingRequest}",
-                subTitle2: "Today Ticket",
-                icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
-            ),
-            SizedBox(width: 20,),
-            SingleBoxes(
-                title: "${dashboardData?.numberOfAssignDriver}",
-                subTitle: "Assign Drivers",
-                icon: Image.asset("assets/images/driver.png", height: 30, width: 30,),
-                title2: "${dashboardData?.numberOfPendingRequest}",
-                subTitle2: "Today Ticket",
-                icon2: Image.asset("assets/images/request.png",height: 20, width: 20, fit: BoxFit.contain)
-            ),
-          ],
-        ),
-        SizedBox(height: 20,),
-        Row(
-          children: [
             Expanded(
-              flex: 4,
-              child: Container(
-                // width: size.width*.55,
-                height: 380,
-                padding: EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                    color: AppColors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.grey.shade300,
-                          spreadRadius: 2, blurRadius: 3,
-                          offset: Offset(0,2)
-                      )
-                    ]
-                ),
                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text("Vehicles Reports",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
+                    ),
+                    SizedBox(height: 10,),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text("Recent Car Request",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 20,
-                          ),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Total Vehicles",
+                          amount: "45",
+                          amount2: "50"
                         ),
-                        TextButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStatePropertyAll(AppColors.blue),
-                            ),
-                            onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 1,)))
-                            , child: Text("VIEW ALL",
-                          style: TextStyle(
-                              color: AppColors.white
-                          ),
-                        ))
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Pending Request",
+                          amount: "120",
+                          amount2: "200",
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Assign Vehicles",
+                          amount: "21",
+                        ),
                       ],
                     ),
-                    SizedBox(height: 8,),
-                    Divider(height: 2, color: Colors.grey,),
-                    SizedBox(height: 8,),
-                    DataTable(
-                      dividerThickness:0,
-                      sortAscending: false,
-                      columns: [
-                        DataColumn(label: Text(
-                            'Car',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Car Name',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Plate No.',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Status',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Action',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                      ],
-                      rows: [
-                        for(var i=0;i<dashboardData!.rentRequests!.length;i++)
-                          DataRow(
-                              color: MaterialStateColor.resolveWith((states) {
-                                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                              }),
-                              cells: [
-                                DataCell(
-                                    AppNetworkImage(
-                                      url: "${AppConfig.DOMAIN}/${dashboardData!.rentRequests![i].car!.image!}",
-                                      width: 30, height: 30,
-                                    )
-                                ),
-                                DataCell(Text('${dashboardData!.rentRequests![i].car?.name}')),
-                                DataCell(Text('#${dashboardData!.rentRequests![i].car?.plateNo}')),
-                                DataCell(
-                                    Container(
-                                      padding: EdgeInsets.only(left: 10, right: 10, top: 2, bottom: 2),
-                                      decoration: BoxDecoration(
-                                          color: i.isOdd ? AppColors.green : AppColors.blue,
-                                          borderRadius: BorderRadius.circular(4)
-                                      ),
-                                      child: Text("${dashboardData!.rentRequests![i].status == "Pending"?"Pending": dashboardData!.rentRequests![i].status == "Approve" ? "Approve" : "Reject" }",
-                                        style: TextStyle(
-                                            fontSize: 9,
-                                            color: AppColors.white
-                                        ),
-                                      ),
-                                    )
-                                ),
-                                DataCell(
-                                    TextButton(
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStatePropertyAll(Colors.amber),
-                                        ),
-                                        onPressed: ()=>ShowSingleCar(dashboardData?.rentRequests[i], context), child: Text("VIEW ",
-                                      style: TextStyle(
-                                          fontSize: 12,
-                                          color: AppColors.white
-                                      ),
-                                    ))
-                                ),
-                              ]
-                          ),
-
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        DashboardBox(
+                            onClick: (){},
+                            amount: "12",
+                            title: "Driver List",
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Total Ticket",
+                          amount: "23",
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          title: "Coming Soon",
+                          onClick: (){},
+                          amount: "00",
+                        ),
                       ],
                     ),
                   ],
-                ),
-              ),
+                )
             ),
-            SizedBox(width: 20,),
+            SizedBox(width: 30,),
             Expanded(
-              flex: 2,
-              child: Container(
-                //width: size.width*.22,
-                  height: 380,
-                  padding: EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                      color: AppColors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                        BoxShadow(
-                            color: Colors.grey.shade300,
-                            spreadRadius: 2, blurRadius: 3,
-                            offset: Offset(0,2)
-                        )
-                      ]
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text("Vehicles analysis",
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black,
+                      fontSize: 15,
+                    ),
                   ),
-                  child:PieChart(
-                    dataMap: paiRentRequestReportData,
-                    animationDuration: Duration(milliseconds: 800),
-                    chartLegendSpacing: 32,
-                    chartRadius: MediaQuery.of(context).size.width / 3,
-                    colorList: [
-                      Colors.amber,
-                      Colors.green,
-                      Colors.blue
-                    ],
-                    initialAngleInDegree: 0,
-                    chartType: ChartType.ring,
-                    ringStrokeWidth: 20,
-                    centerText: "Total Request",
-                    legendOptions: LegendOptions(
-                      showLegendsInRow: true,
-                      legendPosition: LegendPosition.bottom,
-                      showLegends: true,
-                      legendShape: BoxShape.circle,
-                      legendTextStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
+                  SizedBox(height: 10,),
+                  Container(
+                    height: 230,
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: SfCartesianChart(
+
+                        primaryXAxis: CategoryAxis(),
+                        // Chart title
+                        title: ChartTitle(text: 'Last year Vehicles analysis'),
+                        // Enable legend
+                        legend: Legend(isVisible: true),
+                        // Enable tooltip
+                        tooltipBehavior: TooltipBehavior(enable: true),
+
+                        series: <LineSeries<VechicleData, String>>[
+                          LineSeries<VechicleData, String>(
+                              dataSource:  <VechicleData>[
+                                VechicleData('Jan', 35),
+                                VechicleData('Feb', 28),
+                                VechicleData('Mar', 34),
+                                VechicleData('Apr', 32),
+                                VechicleData('May', 40),
+                                VechicleData('Jun', 32),
+                                VechicleData('July', 12),
+                                VechicleData('Aug', 20),
+                                VechicleData('Sept', 10),
+                                VechicleData('Nov', 17),
+                                VechicleData('Dec', 0),
+                              ],
+                              xValueMapper: (VechicleData sales, _) => sales.year,
+                              yValueMapper: (VechicleData sales, _) => sales.sales,
+                              // Enable data label
+                              dataLabelSettings: DataLabelSettings(isVisible: true)
+                          )
+                        ]
+                    )
+
+                  ),
+                ],
+              )
+            )
+          ],
+        ),
+
+        SizedBox(height: 50,),
+        Row(
+          children: [
+            Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: const [
+                        Text("Payment analysis",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.black,
+                            fontSize: 15,
+                          ),
+                        ),
+                        Text("Revenue",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            color: Colors.green,
+                            fontSize: 15,
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(height: 10,),
+                    Container(
+                        height: 240,
+                        decoration: BoxDecoration(
+                            color: AppColors.white,
+                            borderRadius: BorderRadius.circular(10)
+                        ),
+                        child: SfCartesianChart(
+
+                            primaryXAxis: CategoryAxis(),
+                            // Chart title
+                            title: ChartTitle(text: 'Last year Payment analysis'),
+                            // Enable legend
+                            legend: Legend(isVisible: true),
+                            // Enable tooltip
+                            tooltipBehavior: TooltipBehavior(enable: true),
+
+                            series: <LineSeries<VechicleData, String>>[
+                              LineSeries<VechicleData, String>(
+                                  dataSource:  <VechicleData>[
+                                    VechicleData('Jan', 12000),
+                                    VechicleData('Feb', 20000),
+                                    VechicleData('Mar', 15000),
+                                    VechicleData('Apr', 18888),
+                                    VechicleData('May', 13500),
+                                    VechicleData('Jun', 12500),
+                                    VechicleData('July', 16000),
+                                    VechicleData('Aug', 12900),
+                                    VechicleData('Sept', 14000),
+                                    VechicleData('Nov', 19000),
+                                    VechicleData('Dec', 17865),
+                                  ],
+                                  xValueMapper: (VechicleData sales, _) => sales.year,
+                                  yValueMapper: (VechicleData sales, _) => sales.sales,
+                                  // Enable data label
+                                  dataLabelSettings: DataLabelSettings(isVisible: true)
+                              )
+                            ]
+                        )
+
+                    ),
+                  ],
+                )
+            ),
+            SizedBox(width: 30,),
+            Expanded(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Payment Reports",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.black,
+                        fontSize: 15,
                       ),
                     ),
-                    chartValuesOptions: ChartValuesOptions(
-                      showChartValueBackground: false,
-                      showChartValues: true,
-                      showChartValuesInPercentage: false,
-                      showChartValuesOutside: false,
-                      decimalPlaces: 1,
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Total Review",
+                          amount: "\$2000.98",
+                            fontSize: 20,
+                            textColor: Colors.green
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                            onClick: (){},
+                            title: "Total Income",
+                            amount: "\$8900.98",
+                          fontSize: 20,
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Total Expanse",
+                          amount: "\$7000.98",
+                          fontSize: 20,
+                        ),
+
+
+                      ],
                     ),
-                    // gradientList: ---To add gradient colors---
-                    // emptyColorGradient: ---Empty Color gradient---
-                  )
-              ),
+                    SizedBox(height: 10,),
+                    Row(
+                      children: [
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Up-coming Pay",
+                          amount: "\$900.00",
+                            textColor: Colors.black,
+                          fontSize: 20,
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          onClick: (){},
+                          title: "Deus Payments",
+                          amount: "\$1200.00",
+                            fontSize: 20,
+                            textColor: Colors.red
+                        ),
+                        SizedBox(width: 10,),
+                        DashboardBox(
+                          title: "Coming Soon",
+                          onClick: (){},
+                          fontSize: 20,
+                          amount: "00",
+                        ),
+                      ],
+                    ),
+                  ],
+                )
             ),
+
+
           ],
-        )
+        ),
       ],
     );
   }
@@ -1458,6 +1534,80 @@ class DasktopDashboardBox extends StatelessWidget {
   //////////////////////// view rent request with popup ///////////////////////
 
 
+}
+
+class DashboardBox extends StatelessWidget {
+  const DashboardBox({
+    super.key, required this.amount, this.amount2 = "0", this.fontSize = 28,  this.textColor = Colors.black, required this.title, required this.onClick,
+  });
+
+  final String amount;
+  final String? amount2;
+  final String title;
+  final Color? textColor;
+  final double fontSize;
+  final VoidCallback onClick;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: onClick,
+        child: Container(
+          height: 110,
+          //width: MediaQuery.of(context).size.width*.10,
+          padding: EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: AppColors.white,
+            borderRadius: BorderRadius.circular(10)
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("$title",
+                style: TextStyle(
+                  fontSize: 11,
+                  fontWeight: FontWeight.w500
+                ),
+              ),
+              SizedBox(height: 10,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("$amount",
+                    style: TextStyle(
+                        fontSize: fontSize,
+                        fontWeight: FontWeight.w600,
+                      color: textColor
+                    ),
+                  ),
+                  amount2!="0"? Text("/$amount2",
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      color: Colors.black54
+                    ),
+                  ) : Center(),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+
+
+
+
+class VechicleData {
+  VechicleData(this.year, this.sales);
+
+  final String year;
+  final double sales;
 }
 
 

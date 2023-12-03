@@ -9,8 +9,10 @@ class DashboardController{
   //get api response
 
   static Future<DashboardModel> dashboardController()async{
+
     SharedPreferences _pres = await SharedPreferences.getInstance();
     var token = _pres.getString("token");
+    print("token == ${token}");
     var response = await http.get(Uri.parse("${AppConfig.DASHBOARD}"),
       headers: {
         "Authorization" : "Bearer $token"

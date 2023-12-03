@@ -7,14 +7,14 @@ import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view/rent/edit_car.dart';
 import 'package:vendor/view/rent/manage_car.dart';
 import 'package:vendor/view/rent/rentRequest.dart';
+import 'package:vendor/view/rent/reports/car-reports.dart';
 import 'package:vendor/view/rent/view_car.dart';
-import 'package:vendor/view/reports/car-reports.dart';
-import 'package:vendor/view/reports/create-reports.dart';
 import 'package:vendor/view/ticketManagement/findTicket.dart';
 import 'package:vendor/view/ticketManagement/singleTicker.dart';
 
 import 'employ/employManage.dart';
 import 'employ/employSalaryShit.dart';
+import 'rent/reports/create-reports.dart';
 import 'ticketManagement/allTicket.dart';
 
 class AllPages{

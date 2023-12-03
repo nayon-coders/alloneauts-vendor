@@ -70,6 +70,10 @@ class _TaxManagementState extends State<TaxManagement> {
                       AppInput(controller: medicareTax, title: "Medicare Tax", hintText: "10%", prefixIcon: Icons.percent,),
                       SizedBox(height: 15,),
                       AppInput(controller: country, title: "Country", hintText: "10%", prefixIcon: Icons.percent,),
+                      SizedBox(height: 15,),
+                      AppInput(controller: country, title: "Health Text", hintText: "10%", prefixIcon: Icons.percent,),
+                      SizedBox(height: 15,),
+                      AppInput(controller: country, title: "Health Text", hintText: "10%", prefixIcon: Icons.percent,),
                       SizedBox(height: 30,),
                       AppButton(onClick: (){
                         AppPopup.appPopup(context: context, title: "Save Changes", body: "Data successfully Saved", dialogType: DialogType.success, onOkBtn: (){});

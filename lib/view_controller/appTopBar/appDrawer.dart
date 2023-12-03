@@ -38,7 +38,7 @@ class _AppDrawerState extends State<AppDrawer> {
                 SizedBox(height: 20,),
                 Divider(height: 1,),
                 SizedBox(height: 30,),
-                MenuBar(
+                AppMenuBar(
                   title: "Dashboard",
                   onClick: (){
                     setState(() {
@@ -94,7 +94,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   ),
                 ),
                 //rent request - id: 3
-                MenuBar(
+                AppMenuBar(
                   title: "Rent Request",
                   onClick: (){
                     setState(() {
@@ -105,7 +105,7 @@ class _AppDrawerState extends State<AppDrawer> {
                   isSelected: selectedMenuNumber[0] == 3 ? true : false,
                 ),
                 //Assign car - id: 4
-                MenuBar(
+                AppMenuBar(
                   title: "Assign Car",
                   onClick: (){
                     setState(() {

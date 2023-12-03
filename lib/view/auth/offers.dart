@@ -454,7 +454,7 @@ class _OffersState extends State<Offers> {
           onPressed: (){
             launchUrl(Uri.parse('https://wa.me/17187373202'));
           },
-          child: Icon(Icons.whatsapp, size: 30, color: Colors.white,),
+          child: Icon(Icons.support, size: 30, color: Colors.white,),
           backgroundColor: Colors.green,
         ),
       ),

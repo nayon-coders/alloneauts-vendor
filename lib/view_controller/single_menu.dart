@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../utility/app_color.dart';
 
-class MenuBar extends StatelessWidget {
-  const MenuBar({
+class AppMenuBar extends StatelessWidget {
+  const AppMenuBar({
     Key? key, required this.title, required this.onClick, required this.icon, this.isSelected = false
   }) : super(key: key);
 

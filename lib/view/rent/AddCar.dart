@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
@@ -56,7 +57,9 @@ class _AddCarState extends State<AddCar> {
             _unitCarImage =
                 Base64Decoder().convert(reader.result.toString().split(",").last);
             _carImage = _unitCarImage;
+            print("_carImage ==== ${_carImage}");
           });
+
         }
 
         if(index == 2){
@@ -97,47 +100,49 @@ class _AddCarState extends State<AddCar> {
       "Accept" : "Application/json",
       "Authorization" : "Bearer $token"
     };
+
     var url = Uri.parse(AppConfig.ADD_CAR_FOR_RENT);
     var request = http.MultipartRequest("POST", url);
     request.headers.addAll(header);
-      request.files.add(await http.MultipartFile.fromBytes('car_images', _carImage!.toList()!,
+      request.files.add(http.MultipartFile.fromBytes('car_images[]',_carImage!.toList(),
           contentType: MediaType('application', 'json'), filename: "car_image"));
 
-      request.files.add(await http.MultipartFile.fromBytes('fh', _fh1Image!,
+      request.files.add(http.MultipartFile.fromBytes('fh', _fh1Image!,
           contentType: MediaType('application', 'json'), filename: "fh1_image"));
 
-      request.files.add(await http.MultipartFile.fromBytes('insurance', _insuranceImage!,
+      request.files.add(http.MultipartFile.fromBytes('insurance', _insuranceImage!,
           contentType: MediaType('application', 'json'), filename: "insurance"));
-      request.files.add(await http.MultipartFile.fromBytes('diclaration', _driverLicenceImage!,
+      request.files.add(http.MultipartFile.fromBytes('diclaration', _driverLicenceImage!,
           contentType: MediaType('application', 'json'), filename: "diclaration"));
 
       request.fields.addAll(carInfo);
-      print("Car info ==== ${carInfo}");
 
-    request.send().then((response) {
-      if (response.statusCode == 200) {
-        print("File uploaded successfully");
-        AppPopup.appPopup(
-          context: context,
-          title: "You Vehicle added success!",
-          body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
-          dialogType: DialogType.success,
-          onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
-        );
-      } else {
-        print('file upload failed');
-        AppPopup.appPopup(
-          context: context,
-          title: "Something went wrong !",
-          body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
-          dialogType: DialogType.error,
-          onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
-        );
-      }
+
+     var response = await request.send();
+     print("response  === ${await response.stream.bytesToString()}");
+    if (response.statusCode == 200) {
+      print("File uploaded successfully");
+      AppPopup.appPopup(
+        context: context,
+        title: "You Vehicle added success!",
+        body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
+        dialogType: DialogType.success,
+        onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
+      );
+    } else {
+      print('file upload failed');
+      AppPopup.appPopup(
+        context: context,
+        title: "Something went wrong !",
+        body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
+        dialogType: DialogType.error,
+        onOkBtn: ()=>Get.back()
+        //onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
+      );
+    }
       setState(() {
         isLoading = false;
       });
-    });
   }
 
   final carName = TextEditingController();
@@ -157,16 +162,16 @@ class _AddCarState extends State<AddCar> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Container(
-      height: size.height,
-      margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+        height: size.height,
+        margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+        padding: EdgeInsets.all(15),
+        decoration: BoxDecoration(
+            color: Colors.white
+        ),
       child: ListView(
         children: [
           Row(
             children: [
-              IconButton(
-                onPressed: ()=>Get.back(),
-                icon: Icon(Icons.arrow_back, color: AppColors.green,),
-              ),
               Container(
                 width: 10,
                 height: 25,
@@ -435,7 +440,7 @@ class _AddCarState extends State<AddCar> {
                 ) : AppButton(
                     onClick: ()async{
                       var carInfo = {
-                        "name" : "Car Name",
+                        "name" : "${make.text}, ${model.text}, ${year.text}",
                         "plate_no" : platNo.text,
                         "price" : price.text,
                         "vmake" : make.text.toString(),

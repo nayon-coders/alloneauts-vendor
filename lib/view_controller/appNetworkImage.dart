@@ -15,15 +15,6 @@ class AppNetworkImage extends StatelessWidget {
       width: width,
       height: height,
       imageUrl: "$url",
-      imageBuilder: (context, imageProvider) => Container(
-        decoration: BoxDecoration(
-          image: DecorationImage(
-              image: imageProvider,
-              fit: boxFit,
-              colorFilter:
-              ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
-        ),
-      ),
       placeholder: (context, url) => CircularProgressIndicator(strokeWidth: 1, color: AppColors.menuColor,),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );

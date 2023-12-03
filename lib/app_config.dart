@@ -14,6 +14,8 @@ class AppConfig{
   static String ADD_CAR_FOR_RENT = "$BASE_URL/vendor/rent/car";
   static String UPDATE_RENT_CAR = "$BASE_URL/vendor/rent/car/"; //END POINT IS CAR ID
   static String SINGLE_RENT_CAR = "$BASE_URL/vendor/rent/car/"; //END POINT IS SHARED
+  static String RENT_REQUEST = "$BASE_URL/vendor/rent/requests"; //END POINT IS SHARED
+  static String RENT_REQUEST_APPROVE = "$BASE_URL/vendor/rent/requests/"; //END POINT IS SHARED
 
 
 

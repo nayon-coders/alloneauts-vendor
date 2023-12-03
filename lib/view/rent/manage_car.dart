@@ -48,13 +48,27 @@ class _ManageCarState extends State<ManageCar> {
     var size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
-      margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
+      margin: EdgeInsets.only(left: 10, right: 10, bottom: 10),
+      padding: EdgeInsets.all(15),
+      decoration: BoxDecoration(
+        color: Colors.white
+      ),
       child: ListView(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const BigText(text: "Manage Vehicle's"),
+              Row(
+                children: [
+                  Container(
+                    width: 10,
+                    height: 25,
+                    color: AppColors.green,
+                  ),
+                  SizedBox(width: 10,),
+                  const BigText(text: "Manage Vehicle's"),
+                ],
+              ),
               SizedBox(
                 width: Responsive.isDesktop(context) ? size.width*.20 : size.width*.40,
                 child: TextFormField(
@@ -66,6 +80,14 @@ class _ManageCarState extends State<ManageCar> {
                       ),
                       filled: true,
                       border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.2)),
+                          borderRadius: BorderRadius.circular(5)
+                      ),
+                      focusedBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1, color: AppColors.green.withOpacity(0.2)),
                           borderRadius: BorderRadius.circular(5)
                       ),
@@ -92,144 +114,140 @@ class _ManageCarState extends State<ManageCar> {
                     padding: EdgeInsets.all(15),
                     decoration: BoxDecoration(
                         color: AppColors.white,
-                        borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.grey.shade300,
-                              spreadRadius: 2, blurRadius: 3,
-                              offset: Offset(0,2)
-                          )
-                        ]
                     ),
-                    child: FittedBox(
-                      child: DataTable(
-                        dividerThickness:0,
-                        sortAscending: false,
-                        columns: const [
-                          DataColumn(label: Text(
-                              'Car',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Vehicle Name',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Plate No.',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Price',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Ticket',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Fine',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'TLC License',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'TLC Status',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                          DataColumn(label: Text(
-                              'Action',
-                              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                          )),
-                        ],
-                        rows: [
-                          for(var i=0;i<snapshot.data!.data!.cars!.length; i++)
-                            DataRow(
-                                color: MaterialStateColor.resolveWith((states) {
-                                  return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                                }),
-                                cells: [
-                                  DataCell(
-                                      AppNetworkImage(
-                                        url: "${AppConfig.DOMAIN}/${snapshot.data!.data!.cars![i].images![0]}",
-                                        width: 50, height: 50, boxFit: BoxFit.contain,
-                                      ),
-                                  ),
-                                  DataCell(Text('${snapshot.data!.data!.cars![i].details!.vmake} ${snapshot.data!.data!.cars![i].details!.vmodel}, ${snapshot.data!.data!.cars![i].details!.vyear}', style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500
-                                  ),)),
-                                  DataCell(Text('#${snapshot.data!.data!.cars![i].details!.plateNo}',
-                                    style: TextStyle(
-                                        fontSize: 10,
-                                        fontWeight: FontWeight.w600
-                                    ),
-                                  )),
-                                  DataCell(Text('\$${snapshot.data!.data!.cars![i].details!.price}',style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500
-                                  ),)),
-                                  DataCell(
-                                      Text('0 Ticket',
-                                        style: TextStyle(
-                                            fontSize: 10,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.red
-                                        ),
-                                      )),
-                                  DataCell(Text('\$0 Fine',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  )),
-                                  DataCell(Text('437847823498',
-                                    style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w400,
-                                    ),
-                                  )),
-                                  DataCell(Container(
-                                      padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
-                                      decoration: BoxDecoration(
-                                          color: Colors.green,
-                                          borderRadius: BorderRadius.circular(5)
-                                      ),
-                                      child: Text('Active',
-                                        style: TextStyle(
-                                          fontSize: 10,
-                                          color: Colors.white,
-                                        ),
-                                      ))),
-                                  DataCell(
-                                    Row(
-                                      children: [
-                                        AppIconButton(
-                                          icon: Icons.remove_red_eye,
-                                          onClick: ()=>ShowSingleCar(snapshot.data!, i),
-                                        ),
-                                        SizedBox(width: 5,),
-                                        AppIconButton(
-                                          icon: Icons.edit,
-                                          onClick: ()=>Get.to(MainPage(pageIndex: 4, constructorData: snapshot.data!.data!.cars![i],), transition: Transition.fadeIn),
-                                          bgColor: Colors.amber,
-                                        ),
-                                        const SizedBox(width: 5,),
-                                        AppIconButton(
-                                          icon: Icons.report_gmailerrorred_rounded,
-                                          onClick: (){},
-                                          bgColor: AppColors.blue,
-                                        ),
-                                        const SizedBox(width: 5,),
-                                      ],
-                                    ),
-
-                                  ),
-                                ]
-                            ),
-                        ],
+                    child: DataTable(
+                      dividerThickness:0,
+                      sortAscending: false,
+                      headingRowColor: MaterialStateProperty.all(Colors.green) ,
+                      headingTextStyle: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.white
                       ),
+                      columns: const [
+                        DataColumn(label: Text(
+                            'Car',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Vehicle Name',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Plate No.',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Price',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Ticket',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Fine',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'TLC License',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'TLC Status',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                        DataColumn(label: Text(
+                            'Action',
+                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                        )),
+                      ],
+                      rows: [
+                        for(var i=0;i<snapshot.data!.data!.cars!.length; i++)
+                          DataRow(
+                              color: MaterialStateColor.resolveWith((states) {
+                                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                              }),
+                              cells: [
+                                DataCell(
+                                    AppNetworkImage(
+                                      url: "${AppConfig.DOMAIN}/${snapshot.data!.data!.cars![i].images![0]}",
+                                      width: 50, height: 50, boxFit: BoxFit.contain,
+                                    ),
+                                ),
+                                DataCell(Text('${snapshot.data!.data!.cars![i].details!.vmake} ${snapshot.data!.data!.cars![i].details!.vmodel}, ${snapshot.data!.data!.cars![i].details!.vyear}', style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500
+                                ),)),
+                                DataCell(Text('#${snapshot.data!.data!.cars![i].details!.plateNo}',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                )),
+                                DataCell(Text('\$${snapshot.data!.data!.cars![i].details!.price}',style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w500
+                                ),)),
+                                DataCell(
+                                    Text('0 Ticket',
+                                      style: TextStyle(
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w600,
+                                          color: AppColors.red
+                                      ),
+                                    )),
+                                DataCell(Text('\$0 Fine',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )),
+                                DataCell(Text('437847823498',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                )),
+                                DataCell(Container(
+                                    padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                                    decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(5)
+                                    ),
+                                    child: Text('Active',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        color: Colors.white,
+                                      ),
+                                    ))),
+                                DataCell(
+                                  Row(
+                                    children: [
+                                      AppIconButton(
+                                        icon: Icons.remove_red_eye,
+                                        onClick: ()=>ShowSingleCar(snapshot.data!, i),
+                                      ),
+                                      SizedBox(width: 5,),
+                                      AppIconButton(
+                                        icon: Icons.edit,
+                                        onClick: ()=>Get.to(MainPage(pageIndex: 4, constructorData: snapshot.data!.data!.cars![i],), transition: Transition.fadeIn),
+                                        bgColor: Colors.amber,
+                                      ),
+                                      const SizedBox(width: 5,),
+                                      AppIconButton(
+                                        icon: Icons.report_gmailerrorred_rounded,
+                                        onClick: (){},
+                                        bgColor: AppColors.blue,
+                                      ),
+                                      const SizedBox(width: 5,),
+                                    ],
+                                  ),
+
+                                ),
+                              ]
+                          ),
+                      ],
                     ),
                   );
                 }else{

@@ -30,7 +30,7 @@ class ExpandedMenu extends StatelessWidget {
       title: Row(
         children: [
           Icon(icon, color: AppColors.green,),
-          SizedBox(width: 5,),
+          SizedBox(width: 3,),
           Text("$title",
             style: TextStyle(
                 fontSize: 12,

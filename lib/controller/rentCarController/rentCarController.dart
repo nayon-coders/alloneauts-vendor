@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/model/rentModels/rest_request_model.dart';
 import 'package:vendor/view/globals.dart' as global;
 import '../../model/rentModels/rentCarListModel.dart';
 
@@ -97,6 +98,34 @@ class RentCarController{
     ); //  return jsonDecode(res.body)["data"]["cars"];
     var json = jsonDecode(res.body);
     return res;
+  }
+  
+  
+  
+  //request list
+  static Future<RentRequestListModel> getRentRequest()async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+    var res = await http.get(Uri.parse(AppConfig.RENT_REQUEST),
+      headers: {
+        "Authorization" : "Bearer $token"
+      }
+    );
+
+    return RentRequestListModel.fromJson(jsonDecode(res.body));
+  }
+  //rent request accept
+  static Future<http.Response> approveRentRequest(url)async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token =  _pref.getString("token");
+    var res = await http.post(Uri.parse(AppConfig.RENT_REQUEST_APPROVE+"$url"),
+      headers: {
+        "Authorization": "Bearer $token"
+      }
+    );
+    return res;
+
+
   }
   
 }

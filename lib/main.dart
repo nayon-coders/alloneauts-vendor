@@ -30,6 +30,7 @@ class _MyAppState extends State<MyApp> {
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
+     //home:MainPage(pageIndex: 8,),
      home: CheckingAuth(),
     );
   }
