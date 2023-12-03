@@ -2,9 +2,13 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_month_picker/flutter_month_picker.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/intl.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'package:simple_month_year_picker/simple_month_year_picker.dart';
+import 'package:vendor/response.dart';
+import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
 import 'dart:math' as math;
@@ -47,36 +51,129 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
         children: [
          SizedBox(
 
-           child:  Row(
-             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-             children: [
-               BigText(text: "Johan - Employ Salary Management"),
-               InkWell(
-                 onTap: ()=>openCalender(context),
-                 child: Container(
-
-                   padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
-                   decoration: BoxDecoration(
-                     color: AppColors.green,
-                     borderRadius: BorderRadius.circular(10)
-                   ),
-                   child: Row(
+           child: Responsive.isDesktop(context)
+               ?  Row(
+                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                 children: [
+                   Row(
                      children: [
-                       Icon(Icons.calendar_month, color: Colors.white,),
-                       Text("Select Month",
-                        style: TextStyle(
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.white
-                        ),
-                       )
+                       IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back)),
+                       BigText(text: "Johan - Employ Salary Management"),
                      ],
                    ),
-                 ),
+                   Row(
+                      children: [
+                        InkWell(
+                          onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 17,))),
+                          child: Container(
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                                color: AppColors.blue,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_month, color: Colors.white,),
+                                Text("Monthly Statement",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: 20,),
+                        InkWell(
+                          onTap: ()=>openCalender(context),
+                          child: Container(
+
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                            decoration: BoxDecoration(
+                                color: AppColors.green,
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(Icons.calendar_month, color: Colors.white,),
+                                Text("Select Month",
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w400,
+                                      color: Colors.white
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    )
+                 ],
                )
-             ],
-           ),
-         ),
+               : Column(
+                 children: [
+                   Row(
+                     children: [
+                       IconButton(onPressed: ()=>Get.back(), icon: Icon(Icons.arrow_back)),
+                       BigText(text: "Johan - Employ Salary Management"),
+                     ],
+                   ),
+                   Row(
+                     children: [
+                       InkWell(
+                         onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 17,))),
+                         child: Container(
+                           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                           decoration: BoxDecoration(
+                               color: AppColors.blue,
+                               borderRadius: BorderRadius.circular(10)
+                           ),
+                           child: Row(
+                             children: [
+                               Icon(Icons.calendar_month, color: Colors.white,),
+                               Text("Monthly Statement",
+                                 style: TextStyle(
+                                     fontSize: 15,
+                                     fontWeight: FontWeight.w400,
+                                     color: Colors.white
+                                 ),
+                               )
+                             ],
+                           ),
+                         ),
+                       ),
+                       SizedBox(width: 20,),
+                       InkWell(
+                         onTap: ()=>openCalender(context),
+                         child: Container(
+
+                           padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                           decoration: BoxDecoration(
+                               color: AppColors.green,
+                               borderRadius: BorderRadius.circular(10)
+                           ),
+                           child: Row(
+                             children: [
+                               Icon(Icons.calendar_month, color: Colors.white,),
+                               Text("Select Month",
+                                 style: TextStyle(
+                                     fontSize: 15,
+                                     fontWeight: FontWeight.w400,
+                                     color: Colors.white
+                                 ),
+                               )
+                             ],
+                           ),
+                         ),
+                       )
+                     ],
+                   )
+                 ],
+               ),
+             ),
           SizedBox(height: 10,),
           Text("Statement for: $selectedDate",
             style: TextStyle(
@@ -86,19 +183,18 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
             ),
           ),
           SizedBox(height: 10,),
-          Expanded(
-            child: ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: 6,
-              itemBuilder: (_, index){
-                return ExpandableNotifier(
-                  child: ExpandableTheme(
-                    data: ExpandableThemeData(
-                        iconColor: Colors.red,
-                        animationDuration: const Duration(milliseconds: 500)
-                    ),
-                    child: ExpandablePanel(
+          ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: 6,
+            itemBuilder: (_, index){
+              return ExpandableNotifier(
+                child: ExpandableTheme(
+                  data: ExpandableThemeData(
+                      iconColor: Colors.red,
+                      animationDuration: const Duration(milliseconds: 500)
+                  ),
+                  child: ExpandablePanel(
                       theme: const ExpandableThemeData(
                         headerAlignment: ExpandablePanelHeaderAlignment.center,
                         tapBodyToExpand: true,
@@ -140,7 +236,7 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
                       expanded: Container(
                         padding: const EdgeInsets.all(20),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1)
+                            color: Colors.green.withOpacity(0.1)
                         ),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -148,9 +244,9 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
                           children: [
                             const Text("Salary Banding for (Aug 13 - Aug 20)",
                               style: TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w400,
-                                color: Colors.black
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.black
                               ),
                             ),
                             SizedBox(height: 10,),
@@ -162,174 +258,173 @@ class _SingleEmploySalaryState extends State<SingleEmploySalary> {
                               ),
                             ),
                             SizedBox(height: 30,),
-                           Row(
-                             children: [
-                               Expanded(
-                                 flex: 3,
-                                 child: Container(
-                                  // height: 370,
-                                   width: size.width*.50,
-                                   padding: EdgeInsets.all(20),
-                                   decoration: BoxDecoration(
-                                     color: Colors.white,
-                                     borderRadius: BorderRadius.circular(10),
-                                   ),
-                                   child: Column(
-                                     children: [
-                                       Text("History",
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.w600,
-                                          fontSize: 18,
+                            Row(
+                              children: [
+                                Expanded(
+                                  flex: 3,
+                                  child: Container(
+                                    // height: 370,
+                                    width:Responsive.isDesktop(context) ? size.width*.50 : size.width*.90,
+                                    padding: EdgeInsets.all(20),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Text("History",
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 18,
+                                          ),
                                         ),
-                                       ),
-                                       SizedBox(height: 20,),
-                                       buildDetailsTableText(
-                                         size: size,
-                                         leftText: "Employ Name",
-                                         rightTxt: "Nayon Talukder",
-                                       ),
-                                       buildDetailsTableText(
-                                         size: size,
-                                         leftText: "Employ Type",
-                                         rightTxt: "Hourly",
-                                         rightTextColor: Colors.red
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Per Hour",
-                                           rightTxt: "\$12",
-                                           rightTextColor: Colors.black87
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Federal Income Tax",
-                                           rightTxt: "12%",
-                                           rightTextColor: Colors.red,
-                                           rightTextSize: 16,
-                                           rightTextWeight: FontWeight.w600
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "State Income Tax",
-                                           rightTxt: "15%",
-                                           rightTextColor: Colors.red,
-                                           rightTextSize: 16,
-                                           rightTextWeight: FontWeight.w600
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Medicare Tax",
-                                           rightTxt: "7.8%",
-                                           rightTextColor: Colors.red,
-                                           rightTextSize: 16,
-                                           rightTextWeight: FontWeight.w600
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Country",
-                                           rightTxt: "8.8%",
-                                           rightTextColor: Colors.red,
-                                           rightTextSize: 16,
-                                           rightTextWeight: FontWeight.w600
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Payment Status",
-                                           rightTxt: "Pending",
-                                           rightTextColor: Colors.blue,
-                                         rightTextSize: 16,
-                                         rightTextWeight: FontWeight.w600
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Total day of week",
-                                           rightTxt: "6 Days",
-                                           rightTextColor: Colors.redAccent
-                                       ),
-                                       buildDetailsTableText(
-                                           size: size,
-                                           leftText: "Total pay for this week",
-                                           rightTxt: "\$460",
-                                           rightTextColor: Colors.indigo,
-                                         rightTextSize: 16,
-                                         rightTextWeight: FontWeight.bold
-                                       ),
+                                        SizedBox(height: 20,),
+                                        buildDetailsTableText(
+                                          size: size,
+                                          leftText: "Employ Name",
+                                          rightTxt: "Nayon Talukder",
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Employ Type",
+                                            rightTxt: "Hourly",
+                                            rightTextColor: Colors.red
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Per Hour",
+                                            rightTxt: "\$12",
+                                            rightTextColor: Colors.black87
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Federal Income Tax",
+                                            rightTxt: "12%",
+                                            rightTextColor: Colors.red,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.w600
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "State Income Tax",
+                                            rightTxt: "15%",
+                                            rightTextColor: Colors.red,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.w600
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Medicare Tax",
+                                            rightTxt: "7.8%",
+                                            rightTextColor: Colors.red,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.w600
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Country",
+                                            rightTxt: "8.8%",
+                                            rightTextColor: Colors.red,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.w600
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Payment Status",
+                                            rightTxt: "Pending",
+                                            rightTextColor: Colors.blue,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.w600
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Total day of week",
+                                            rightTxt: "6 Days",
+                                            rightTextColor: Colors.redAccent
+                                        ),
+                                        buildDetailsTableText(
+                                            size: size,
+                                            leftText: "Total pay for this week",
+                                            rightTxt: "\$460",
+                                            rightTextColor: Colors.indigo,
+                                            rightTextSize: 16,
+                                            rightTextWeight: FontWeight.bold
+                                        ),
 
-                                       SizedBox(height: 20,),
-                                       AppButton(onClick: ()=>_showMyDialog(size), text: "Pay Now", width: size.width*.10)
+                                        SizedBox(height: 20,),
+                                        AppButton(onClick: ()=>_showMyDialog(size), text: "Pay Now", width: size.width*.10)
 
 
-                                     ],
-                                   ),
-                                 ),
-                               ),
-                               SizedBox(width: 20,),
-                               Expanded(
-                                 child: Container(
-                                   height: 370,
-                                   padding: EdgeInsets.all(20),
-                                   decoration: BoxDecoration(
-                                     color: Colors.white,
-                                     borderRadius: BorderRadius.circular(10),
-                                   ),
-                                   child: Column(
-                                     children: [
-                                       Text("Chart",
-                                         style: TextStyle(
-                                           fontWeight: FontWeight.w600,
-                                           fontSize: 18,
-                                         ),
-                                       ),
-                                       SizedBox(height: 20,),
-                                       PieChart(
-                                         dataMap: dataMap,
-                                         animationDuration: Duration(milliseconds: 800),
-                                         chartLegendSpacing: 25,
-                                         chartRadius: MediaQuery.of(context).size.width / 1,
-                                         colorList: [
-                                           Colors.red,
-                                           Colors.green,
-                                           Colors.indigo,
-                                           Colors.pink
-                                         ],
-                                         initialAngleInDegree: 0,
-                                         chartType: ChartType.ring,
-                                         ringStrokeWidth: 15,
-                                         centerText: "Chart",
-                                         legendOptions: LegendOptions(
-                                           showLegendsInRow: true,
-                                           legendPosition: LegendPosition.bottom,
-                                           showLegends: true,
-                                           legendTextStyle: TextStyle(
-                                             fontWeight: FontWeight.w400,
-                                             fontSize: 8
-                                           ),
-                                         ),
-                                         chartValuesOptions: ChartValuesOptions(
-                                           showChartValueBackground: false,
-                                           showChartValues: true,
-                                           showChartValuesInPercentage: false,
-                                           showChartValuesOutside: true,
-                                           decimalPlaces: 1,
-                                         ),
-                                         // gradientList: ---To add gradient colors---
-                                         // emptyColorGradient: ---Empty Color gradient---
-                                       ),
-                                     ],
-                                   )
-                                 ),
-                               )
-                             ],
-                           )
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 20,),
+                                Responsive.isDesktop(context) ? Expanded(
+                                  child: Container(
+                                      height: 370,
+                                      padding: EdgeInsets.all(20),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          Text("Chart",
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: 18,
+                                            ),
+                                          ),
+                                          SizedBox(height: 20,),
+                                          PieChart(
+                                            dataMap: dataMap,
+                                            animationDuration: Duration(milliseconds: 800),
+                                            chartLegendSpacing: 25,
+                                            chartRadius: MediaQuery.of(context).size.width / 1,
+                                            colorList: [
+                                              Colors.red,
+                                              Colors.green,
+                                              Colors.indigo,
+                                              Colors.pink
+                                            ],
+                                            initialAngleInDegree: 0,
+                                            chartType: ChartType.ring,
+                                            ringStrokeWidth: 15,
+                                            centerText: "Chart",
+                                            legendOptions: LegendOptions(
+                                              showLegendsInRow: true,
+                                              legendPosition: LegendPosition.bottom,
+                                              showLegends: true,
+                                              legendTextStyle: TextStyle(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 8
+                                              ),
+                                            ),
+                                            chartValuesOptions: ChartValuesOptions(
+                                              showChartValueBackground: false,
+                                              showChartValues: true,
+                                              showChartValuesInPercentage: false,
+                                              showChartValuesOutside: true,
+                                              decimalPlaces: 1,
+                                            ),
+                                            // gradientList: ---To add gradient colors---
+                                            // emptyColorGradient: ---Empty Color gradient---
+                                          ),
+                                        ],
+                                      )
+                                  ),
+                                ) : Center()
+                              ],
+                            )
                           ],
                         ),
                       )
-                    ),
                   ),
-                );
-              },
-            ),
-          )
+                ),
+              );
+            },
+          ),
 
         ],
       ),

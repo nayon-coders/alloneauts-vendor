@@ -34,7 +34,6 @@ class _CheckingAuthState extends State<CheckingAuth> {
 
     dynamic token = await SessionManager().get("token");
 
-
     if(token != null){
           // ignore: use_build_context_synchronously
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainPage()), (route) => false);
@@ -60,58 +59,8 @@ class _CheckingAuthState extends State<CheckingAuth> {
             borderRadius:
             BorderRadius.all( Radius.circular(32.0)),
           ),
-          child: isChecking
-              ?  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Text('Checking authentication.',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              SizedBox(height: 20,),
-              SpinKitWave(
-                color: Colors.green,
-                size: 30.0,
-              )
-            ],
-          )
-              : token != null
-              ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Icon(Icons.check_circle, size: 50, color: Colors.green,),
-              SizedBox(height: 20,),
-              Text('Redirecting to dashboard...',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-            ],
-          )
-              :  Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
-              Icon(Icons.cancel, size: 50, color: Colors.red,),
-              SizedBox(height: 20,),
-              Text('Authentication Failed.',
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
-                ),
-              ),
-              Text(' Redirecting to login...',
-                style: TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
+          child: Center(
+            child: Image.asset("assets/images/logo.png"),
           )
         ),
       ),

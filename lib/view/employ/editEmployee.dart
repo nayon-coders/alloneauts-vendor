@@ -18,15 +18,15 @@ import '../../view_controller/appInput.dart';
 import '../../view_controller/appPoup.dart';
 import '../../view_controller/bigText.dart';
 
-class CreateEmployee extends StatefulWidget {
-  final EmployeeListModel employeeListModel;
-  const CreateEmployee({Key? key, required this.employeeListModel}) : super(key: key);
+class EditEmployee extends StatefulWidget {
+  final dynamic employeeid;
+  const EditEmployee({Key? key, required this.employeeid}) : super(key: key);
 
   @override
-  State<CreateEmployee> createState() => _CreateEmployeeState();
+  State<EditEmployee> createState() => _EditEmployeeState();
 }
 
-class _CreateEmployeeState extends State<CreateEmployee> {
+class _EditEmployeeState extends State<EditEmployee> {
 
 
 
@@ -191,6 +191,10 @@ class _CreateEmployeeState extends State<CreateEmployee> {
       });
     });
   }
+
+
+
+
 
   @override
   void initState() {

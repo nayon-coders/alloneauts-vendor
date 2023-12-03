@@ -117,6 +117,33 @@ class EmployeeController{
   }
 
 
+  ////show single employee data
+  static Future<EmployeeListModel> showSingleemployee(id)async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+
+    var res = await http.get(Uri.parse(AppConfig.EMPLOYEE_LIST+"/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+        }
+    );
+    return EmployeeListModel.fromJson(jsonDecode(res.body));
+  }
+
+  //delete employuee
+  static Future deleteEmployee (id)async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+
+    var res = await http.delete(Uri.parse(AppConfig.EMPLOYEE_LIST+"/$id"),
+        headers: {
+          "Authorization": "Bearer $token",
+        }
+    );
+    return res;
+  }
+
+
 
 
 }

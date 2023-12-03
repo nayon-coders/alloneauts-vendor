@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:vendor/model/authModel/loginModel.dart';
+import 'package:vendor/response.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/offers.dart';
 import 'package:vendor/view/auth/signup.dart';
@@ -46,19 +47,19 @@ class _LoginState extends State<Login> {
       body: Container(
         width: size.width,
         height: size.height,
+        padding: EdgeInsets.only(top: size.height*.10),
         decoration: BoxDecoration(
             image: DecorationImage(
                 image: AssetImage("assets/images/map-bg.png")
             )
         ),
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(50),
           child: Align(
             alignment: Alignment.center,
             child: Container(
-              width: size.width*.30,
-              padding: EdgeInsets.all(30),
-              margin: EdgeInsets.all(30),
+              width: Responsive.isDesktop(context)? size.width*.30 : Responsive.isTablet(context) ? size.width*.50 : size.width*.95,
+              padding: EdgeInsets.all(20),
+              margin: EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(5),

@@ -241,6 +241,7 @@ class _CreateEmployeeState extends State<CreateEmployee> {
     var size = MediaQuery.of(context).size;
     return Container(
       height: size.height,
+      color: Colors.white,
       padding: EdgeInsets.only(left: 50, right: 50, bottom: 40),
       margin: EdgeInsets.only(left: 20, right: 20, bottom: 10),
       child: ListView(
