@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:vendor/app_config.dart';
+import 'package:vendor/controller/rentCarController/rentCarController.dart';
+import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/view_controller/appButton.dart';
+import 'package:vendor/view_controller/appNetworkImage.dart';
 import 'package:vendor/view_controller/bigText.dart';
+import 'package:vendor/view_controller/loadingWidget.dart';
 
 import '../../../carImageJson.dart';
 import '../../../utility/app_color.dart';
@@ -19,10 +24,40 @@ class CarReports extends StatefulWidget {
 class _CarReportsState extends State<CarReports> {
   bool isAllCar = true;
   bool isAssignCar = false;
+
+  List<Car> _availableCarList = [];
+  List<Car> _assignCarList = [];
+  bool isLoading = false; 
+  Future getCarListForReports()async{
+    setState(() =>isLoading = true);
+    var res = await RentCarController.getCartListForReports();
+    //this loop for available car
+    for(var i in res!.data!.availableCar!){
+      setState(() {
+        _availableCarList.add(i);
+      });
+    }
+    //this loop for assign car
+    for(var i in res!.data!.assignedCar!){
+      setState(() {
+        _assignCarList.add(i);
+      });
+    }
+    setState(() =>isLoading = false);
+
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getCarListForReports();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
     return Container(
       padding: EdgeInsets.all(20),
       child: SingleChildScrollView(
@@ -86,7 +121,9 @@ class _CarReportsState extends State<CarReports> {
               ],
             ),
             SizedBox(height: 20,),
-            Container(
+            isLoading
+                ? Center(child: LoadingWidget(title: "Vehicel's loading..."),)
+                :Container(
               width: size.width,
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
@@ -109,8 +146,9 @@ class _CarReportsState extends State<CarReports> {
     );
   }
 
-  DataTable allCarMethod() {
-    return DataTable(
+  allCarMethod() {
+    return _availableCarList.isNotEmpty
+        ?  DataTable(
               dividerThickness:0,
               sortAscending: false,
               columns: const [
@@ -129,26 +167,47 @@ class _CarReportsState extends State<CarReports> {
                 )),
 
                 DataColumn(label: Text(
+                    'Status.',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                )),
+
+                DataColumn(label: Text(
                     'Action',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
                 )),
               ],
               rows: [
-                for(var i=0;i<CarImageJson.carImageList.length;i++)
+                for(var i=0;i<_availableCarList.length;i++)
                   DataRow(
                       color: MaterialStateColor.resolveWith((states) {
                         return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
                       }),
                       cells: [
                         DataCell(
-                            Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
+                            AppNetworkImage(url: "${AppConfig.DOMAIN}/${_availableCarList[i].images![0]}", width: 60, height: 60)
                         ),
-                        DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                        DataCell(Text('#48TFJC79',
+                        DataCell(Text('${_availableCarList[i].details!.name}')),
+                        DataCell(Text('#${_availableCarList[i].details!.plateNo}',
                           style: TextStyle(
                               fontWeight: FontWeight.w600
                           ),
                         )),
+                        DataCell(
+                          Container(
+                            padding: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+                            decoration: BoxDecoration(
+                              color: _availableCarList[i].active == 1 ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5)
+                            ),
+                            child: Text('${_availableCarList[i].active == 1 ? "Active" : "Deactivate"}',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Colors.black
+                              ),
+                            ),
+                          )
+                        ),
 
                         DataCell(
                           Row(
@@ -172,75 +231,141 @@ class _CarReportsState extends State<CarReports> {
                       ]
                   ),
               ],
-            );
+            )
+        : Container(
+            padding: EdgeInsets.all(30),
+            child: Column(
+              children: [
+                Image.asset("assets/images/not-found.jpeg",
+                  height: 100, width: 100,
+                ),
+                SizedBox(height: 10,),
+                Text("No data found",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 12,
+                  ),
+                )
+              ],
+            ),
+        ) ;
   }
 
 
   //assign car
-  DataTable assignCarMethod() {
-    return DataTable(
-      dividerThickness:0,
-      sortAscending: false,
-      columns: const [
-        DataColumn(
-            label: Text(
-                'Car',
+  assignCarMethod() {
+    return _assignCarList.isNotEmpty
+        ?  DataTable(
+          dividerThickness:0,
+          sortAscending: false,
+          columns: const [
+            DataColumn(
+                label: Text(
+                    'Car',
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+                )),
+            DataColumn(label: Text(
+                'Car Name',
                 style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
             )),
-        DataColumn(label: Text(
-            'Car Name',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
-        DataColumn(label: Text(
-            'Plate No.',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
+            DataColumn(label: Text(
+                'Plate No.',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+            )),
 
-        DataColumn(label: Text(
-            'Action',
-            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
-        )),
-      ],
-      rows: [
-        for(var i=0;i<3;i++)
-          DataRow(
-              color: MaterialStateColor.resolveWith((states) {
-                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-              }),
-              cells: [
-                DataCell(
-                    Image.network("${CarImageJson.carImageList[i]["image"]}",height: 60, width: 60,)
-                ),
-                DataCell(Text('${CarImageJson.carImageList[i]["name"]}')),
-                DataCell(Text('#48TFJC79',
-                  style: TextStyle(
-                      fontWeight: FontWeight.w600
-                  ),
-                )),
+            DataColumn(label: Text(
+                'Driver Info',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+            )),
 
-                DataCell(
-                  Row(
-                    children: [
-                      AppIconButton(
-                        icon: Icons.remove_red_eye,
-                        onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
+            DataColumn(label: Text(
+                'Status.',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+            )),
+
+            DataColumn(label: Text(
+                'Action',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold)
+            )),
+          ],
+          rows: [
+            for(var i=0;i<_assignCarList.length;i++)
+              DataRow(
+                  color: MaterialStateColor.resolveWith((states) {
+                    return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                  }),
+                  cells: [
+                    DataCell(
+                        AppNetworkImage(url: "${AppConfig.DOMAIN}/${_assignCarList[i].images![0]}", width: 60, height: 60)
+                    ),
+                    DataCell(Text('${_assignCarList[i].details!.name}')),
+                    DataCell(Text('#${_assignCarList[i].details!.plateNo}',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600
                       ),
-                      SizedBox(width: 5,),
-                      AppIconButton(
-                        icon: Icons.create_outlined,
-                        onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
-                        bgColor: Colors.amber,
+                    )),
+                    DataCell(
+                        ClipRRect(
+                            borderRadius:BorderRadius.circular(100),
+                            child: AppNetworkImage(url: "${AppConfig.DOMAIN}/${"profiles/dAMQrb88R459402IbMlKHIdHeQnNa1zwZhvaUzDr.png"}", width: 60, height: 60))
+                    ),
+                    DataCell(
+                        Container(
+                          padding: EdgeInsets.only(left: 15, right: 15, top: 5, bottom: 5),
+                          decoration: BoxDecoration(
+                              color: _assignCarList[i].active == 1 ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(5)
+                          ),
+                          child: Text('${_assignCarList[i].active == 1 ? "Active" : "Deactivate"}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w400,
+                                fontSize: 12,
+                                color: Colors.black
+                            ),
+                          ),
+                        )
+                    ),
+
+                    DataCell(
+                      Row(
+                        children: [
+                          AppIconButton(
+                            icon: Icons.remove_red_eye,
+                            onClick: ()=>Get.to(MainPage(pageIndex: 5,), transition: Transition.fadeIn),
+                          ),
+                          SizedBox(width: 5,),
+                          AppIconButton(
+                            icon: Icons.report_gmailerrorred,
+                            onClick: ()=>Get.to(MainPage(pageIndex: 8,), transition: Transition.fadeIn),
+                            bgColor: Colors.amber,
+                          ),
+                          SizedBox(width: 5,),
+
+                        ],
                       ),
-                      SizedBox(width: 5,),
 
-                    ],
-                  ),
-
-                ),
-              ]
+                    ),
+                  ]
+              ),
+          ],
+        )
+        : Container(
+      padding: EdgeInsets.all(30),
+      child: Column(
+        children: [
+          Image.asset("assets/images/not-found.jpeg",
+            height: 100, width: 100,
           ),
-      ],
-    );
+          SizedBox(height: 10,),
+          Text("No data found",
+            style: TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 12,
+            ),
+          )
+        ],
+      ),
+    ) ;
   }
 
 }
