@@ -219,7 +219,7 @@ class _CarReportsState extends State<CarReports> {
                               SizedBox(width: 5,),
                               AppIconButton(
                                 icon: Icons.report_gmailerrorred,
-                                onClick: ()=>Get.to(MainPage(pageIndex: 8,), transition: Transition.fadeIn),
+                                onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _availableCarList[i]!.details, carImage: _availableCarList[i]!.images![0],), transition: Transition.fadeIn),
                                 bgColor: Colors.amber,
                               ),
                               SizedBox(width: 5,),
@@ -307,7 +307,7 @@ class _CarReportsState extends State<CarReports> {
                     DataCell(
                         ClipRRect(
                             borderRadius:BorderRadius.circular(100),
-                            child: AppNetworkImage(url: "${AppConfig.DOMAIN}/${"profiles/dAMQrb88R459402IbMlKHIdHeQnNa1zwZhvaUzDr.png"}", width: 60, height: 60))
+                            child: AppNetworkImage(url: "${AppConfig.DOMAIN}/${_assignCarList[i]!.driver!.avatar}", width: 60, height: 60))
                     ),
                     DataCell(
                         Container(
@@ -316,7 +316,7 @@ class _CarReportsState extends State<CarReports> {
                               color: _assignCarList[i].active == 1 ? Colors.green.withOpacity(0.2) : Colors.red.withOpacity(0.2),
                               borderRadius: BorderRadius.circular(5)
                           ),
-                          child: Text('${_assignCarList[i].active == 1 ? "Active" : "Deactivate"}',
+                          child: Text(_assignCarList[i].active == 1 ? "Active" : "Deactivate",
                             style: TextStyle(
                                 fontWeight: FontWeight.w400,
                                 fontSize: 12,
@@ -336,7 +336,7 @@ class _CarReportsState extends State<CarReports> {
                           SizedBox(width: 5,),
                           AppIconButton(
                             icon: Icons.report_gmailerrorred,
-                            onClick: ()=>Get.to(MainPage(pageIndex: 8,), transition: Transition.fadeIn),
+                            onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _assignCarList[i]!.details, carImage: _assignCarList[i]!.images![0], carId: _assignCarList[i]!.id.toString(),), transition: Transition.fadeIn),
                             bgColor: Colors.amber,
                           ),
                           SizedBox(width: 5,),
