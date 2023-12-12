@@ -1,11 +1,23 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:vendor/app_config.dart';
+import 'package:vendor/controller/rentCarController/rentCarController.dart';
+import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
+import 'package:vendor/view_controller/appNetworkImage.dart';
+import 'package:vendor/view_controller/appPoup.dart';
+import 'package:vendor/view_controller/loadingWidget.dart';
 
 class AddVehiclesCost extends StatefulWidget {
-   AddVehiclesCost({
-    super.key,
+  final AssignedCarDetails? carDetails;
+  final String carImage;
+  final String carId;
+
+  AddVehiclesCost({
+    super.key,  this.carDetails, required this.carImage, required this.carId
   });
 
   @override
@@ -30,7 +42,7 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return  Expanded(
       flex: 3,
       child: Container(
         padding: EdgeInsets.all(20),
@@ -53,11 +65,9 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                   width: 250,
                   child: Column(
                     children: [
-                      Image.asset("assets/images/car1.png",
-                        height: 250,
-                      ),
+                      AppNetworkImage(url: "${AppConfig.DOMAIN}/${widget.carImage!}", width: 250, height: 250),
                       SizedBox(height: 10,),
-                      Text("2022 RVR ",
+                      Text("${widget.carDetails!.name}",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
@@ -65,7 +75,7 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                         ),
                       ),
                       SizedBox(height: 10,),
-                      Text("#TC7847JFHI8",
+                      Text("#${widget.carDetails!.plateNo!}",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 20,
@@ -75,6 +85,7 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                     ],
                   ),
                 ),
+                SizedBox(width: 20,),
                 Expanded(
                   child: Column(
                     children: [
@@ -101,6 +112,8 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                           SizedBox(width: 8,),
                           Expanded(
                             child: AppInput(
+                              onClick: ()=>_selectDate(context),
+                              readOnly: true,
                               controller: date,
                               title: "Date",
                               prefixIcon: Icons.date_range_sharp,
@@ -139,7 +152,8 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                       ),
                       SizedBox(height: 30,),
                       AppButton(
-                          onClick: (){},
+                          isLoading: isLoading,
+                          onClick: ()=>_createExpanse(),
                           text: "Save Expanse",
                           width: 150
                       )
@@ -152,5 +166,43 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
         ),
       ),
     );
+  }
+
+
+  //select date
+   Future<void> _selectDate(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+
+    if (picked != null && picked != selectedDate) {
+      date.text = DateFormat('yyyy-MM-dd').format(picked);
+
+    }
+  }
+
+
+  bool isLoading = false; 
+  _createExpanse() async{
+    setState(() =>isLoading = true);
+    var res = await RentCarController.addCarExpance(
+        carId: widget.carId!,
+        amount: amount.text,
+        date: date.text,
+        details: details.text);
+    print("status ==${res.statusCode}");
+    print("status ==${res.body}");
+
+    if(res.statusCode == 200){
+      AppPopup.appPopup(context: context, title: "Expanse Added Success", body: "Expanse added for ${widget.carDetails!.name} Car.", dialogType: DialogType.success, onOkBtn: (){});
+    }else{
+      AppPopup.appPopup(context: context, title: "Error", body: "Something went wrong", dialogType: DialogType.error, onOkBtn: (){});
+    }
+    setState(() =>isLoading = false);
   }
 }
