@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/model/carModel/singleCarModel.dart';
+import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/dashboard/dashboard.dart';
@@ -33,7 +34,12 @@ class MainPage extends StatefulWidget {
   final dynamic constructorData;
   final dynamic carId;
   final dynamic menuNumber;
-  const MainPage({Key? key, this.carId, this.pageIndex=0, this.menuNumber, this.constructorData}) : super(key: key);
+
+  //CreateReports ////
+  final AssignedCarDetails? carDetails;
+  final String? carImage;
+  //CreateReports ////
+  const MainPage({Key? key, this.carId, this.pageIndex=0, this.menuNumber, this.constructorData, this.carDetails, this.carImage}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -59,6 +65,7 @@ class _MainPageState extends State<MainPage> {
     print("main screen");
     pageCount = widget.pageIndex!;
     allPages.insert(4, EditCar(carInfo: widget.constructorData, id: widget.carId, )); //index = 4)
+    allPages.insert(8, CreateReports(carDetails: widget.carDetails, carImage: widget!.carImage, carId: widget.carId,)); //index = 4)
 
   }
 
@@ -72,7 +79,7 @@ class _MainPageState extends State<MainPage> {
     ViewSingleCar(), //index = 5
     Profile(), //index = 6
     CarReports(), //index = 7
-    CreateReports(), //index = 8
+    //come form init - CreateReports(), //index = 8
     FindTicket(), //index = 9
     AllTicket(), //index = 10
     SingleTicket(), //index = 11

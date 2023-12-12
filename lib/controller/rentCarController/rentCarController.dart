@@ -107,11 +107,13 @@ class RentCarController{
   static Future<RentRequestListModel> getRentRequest()async{
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token = _pref.getString("token");
+    print("toekn = token ${token}");
     var res = await http.get(Uri.parse(AppConfig.RENT_REQUEST),
       headers: {
         "Authorization" : "Bearer $token"
       }
     );
+    print("toekn = token ${res.body}");
 
     return RentRequestListModel.fromJson(jsonDecode(res.body));
   }
@@ -119,6 +121,7 @@ class RentCarController{
   static Future<http.Response> approveRentRequest(url)async{
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token =  _pref.getString("token");
+
     var res = await http.post(Uri.parse(AppConfig.RENT_REQUEST_APPROVE+"$url"),
       headers: {
         "Authorization": "Bearer $token"
@@ -145,14 +148,19 @@ class RentCarController{
   static Future<http.Response> addCarExpance({required String carId, required String amount, required String date, required String details})async{
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token = _pref.getString("token");
-    var data = {
-      "amount": amount,
-      "date": date,
-      "car_id": carId,
-      "details": details
-    };
+    // var data = {
+    //   "amount": "$amount",
+    //   "date": "$date",
+    //   "car_id": "$carId",
+    //   "details": "$details"
+    // };
     var res = await http.post(Uri.parse(AppConfig.ADD_EXPANCE),
-      body: jsonEncode(data),
+      body: {
+        "amount": "$amount",
+        "date": "$date",
+        "car_id": carId,
+        "details": "$details"
+      },
       headers: {
         "Authorization" : "Bearer $token"
       }
