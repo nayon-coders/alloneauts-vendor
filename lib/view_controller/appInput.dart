@@ -6,7 +6,7 @@ class AppInput extends StatelessWidget {
   const AppInput({
     Key? key,
     required this.controller, required this.title, this.prefixIcon,  this.readOnly = false,
-    required this.hintText, this.maxLine = 1
+    required this.hintText, this.maxLine = 1, this.onClick, this.onChange
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -15,6 +15,8 @@ class AppInput extends StatelessWidget {
   final IconData? prefixIcon;
   final bool readOnly;
   final int maxLine;
+  final VoidCallback? onClick;
+  final VoidCallback? onChange;
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +38,7 @@ class AppInput extends StatelessWidget {
           maxLines: maxLine,
           readOnly: readOnly,
           controller: controller,
+          onTap: onClick,
           decoration: InputDecoration(
             contentPadding: EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 5),
             border: OutlineInputBorder(
