@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view_controller/appIconButton.dart';
 
 class VehiclesCostingList extends StatelessWidget {
+  final AssignedCarDetails? carDetails;
   const VehiclesCostingList({
     super.key,
-    required this.size,
+    required this.size, this.carDetails,
   });
 
   final Size size;
