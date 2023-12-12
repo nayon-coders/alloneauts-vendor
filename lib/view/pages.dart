@@ -27,7 +27,7 @@ class AllPages{
     ViewSingleCar(), //index = 5
     Profile(), //index = 6
     CarReports(), //index = 7
-    CreateReports(), //index = 8
+    // CreateReports(), //index = 8
     FindTicket(), //index = 9
     AllTicket(), //index = 10
     SingleTicket(), //index = 11
