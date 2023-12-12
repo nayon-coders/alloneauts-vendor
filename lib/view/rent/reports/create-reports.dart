@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/rent/reports/widgets/add_vehicles_cost.dart';
 import 'package:vendor/view_controller/appButton.dart';
@@ -13,7 +14,10 @@ import 'widgets/vehiclesCostingList.dart';
 import 'widgets/vehiclesPaymentDriver.dart';
 
 class CreateReports extends StatefulWidget {
-  const CreateReports({Key? key}) : super(key: key);
+  final AssignedCarDetails? carDetails;
+  final String? carImage;
+  final String? carId;
+  const CreateReports({Key? key, this.carDetails,  this.carImage,  this.carId}) : super(key: key);
 
   @override
   State<CreateReports> createState() => _CreateReportsState();
@@ -54,7 +58,7 @@ class _CreateReportsState extends State<CreateReports> {
                       color: AppColors.green,
                     ),
                     SizedBox(width: 5,),
-                    BigText(text: "Create Report's : #TCG73758FH84"),
+                    BigText(text: "Create Report's : #${widget.carDetails!.plateNo}"),
                   ],
                 ),
                 // AppButton(
@@ -69,7 +73,7 @@ class _CreateReportsState extends State<CreateReports> {
             SizedBox(height: 20,),
             Row(
               children: [
-                AddVehiclesCost(),
+                AddVehiclesCost(carDetails: widget!.carDetails, carImage: widget.carImage!, carId: widget.carId!,),
                 SizedBox(width: 20,),
                 TotalCostIncomeWidget(dataMap: dataMap),
               ],
