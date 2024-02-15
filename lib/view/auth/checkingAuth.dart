@@ -26,21 +26,28 @@ class _CheckingAuthState extends State<CheckingAuth> {
 
   }
 
-  String? token;
+  var token;
   bool isChecking = true;
   bool isAuth = true;
   //get token
   getToken() async {
 
-    dynamic token = await SessionManager().get("token");
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    setState(() {
+      token = _pref.getString("user_id");
+    });
+
+    print("token ===== ${token}");
+
 
     if(token != null){
           // ignore: use_build_context_synchronously
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const MainPage()), (route) => false);
+       Navigator.pushNamedAndRemoveUntil(context, "/dashboard", (route) => false);
+      //Navigator.pushNamedAndRemoveUntil(context, "/verification-center", (route) => false);
           // Do something
         }else{
           // ignore: use_build_context_synchronously
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const Login()), (route) => false);
+          Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
           // Do something
         }
 

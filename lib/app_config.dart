@@ -18,12 +18,17 @@ class AppConfig{
   static String RENT_REQUEST_APPROVE = "$BASE_URL/vendor/rent/requests/"; //END POINT IS SHARED
   static String ADD_EXPANCE = "$BASE_URL/vendor/report/expense"; //END POINT IS SHARED
   static String CAR_REPORTS_LIST = "$BASE_URL/vendor/report"; //END POINT IS SHARED
+  static String SINGLE_CAR_REPORTS = "$BASE_URL/vendor/report/"; //END POINT IS SHARED
 
 
 
   //employee management
   static String CREATE_EMPLOYEE_PROFILE = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
   static String EMPLOYEE_LIST = "$BASE_URL/vendor/employee"; //END POINT IS SHARED
+
+  //payments
+  static String EDIT_PAYMENT = "$BASE_URL/vendor/payment"; //END POINT IS SHARED
+  static String GET_PAYMENT = "$BASE_URL/vendor/payments"; //END POINT IS SHARED
 
 
 

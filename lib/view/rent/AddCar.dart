@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/firebase/controller/firebase_car_controller.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
@@ -13,9 +16,11 @@ import 'dart:html' as html;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:vendor/utility/app_const.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appPoup.dart';
+import 'package:vendor/view_controller/app_snackbar.dart';
 
 import '../../view_controller/appInput.dart';
 import '../../view_controller/bigText.dart';
@@ -28,6 +33,9 @@ class AddCar extends StatefulWidget {
 }
 
 class _AddCarState extends State<AddCar> {
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
 
   List<int>? _carImage;//id = 1
   List<int>? _fh1Image; //id = 2
@@ -90,61 +98,6 @@ class _AddCarState extends State<AddCar> {
   }
 
   bool isLoading = false;
-  Future uploadImage(carInfo) async {
-    setState(() {
-      isLoading = true;
-    });
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    var token = _pref.getString("token");
-    var header = {
-      "Accept" : "Application/json",
-      "Authorization" : "Bearer $token"
-    };
-
-    var url = Uri.parse(AppConfig.ADD_CAR_FOR_RENT);
-    var request = http.MultipartRequest("POST", url);
-    request.headers.addAll(header);
-      request.files.add(http.MultipartFile.fromBytes('car_images[]',_carImage!.toList(),
-          contentType: MediaType('application', 'json'), filename: "car_image"));
-
-      request.files.add(http.MultipartFile.fromBytes('fh', _fh1Image!,
-          contentType: MediaType('application', 'json'), filename: "fh1_image"));
-
-      request.files.add(http.MultipartFile.fromBytes('insurance', _insuranceImage!,
-          contentType: MediaType('application', 'json'), filename: "insurance"));
-      request.files.add(http.MultipartFile.fromBytes('diclaration', _driverLicenceImage!,
-          contentType: MediaType('application', 'json'), filename: "diclaration"));
-
-      request.fields.addAll(carInfo);
-
-
-     var response = await request.send();
-     print("response  === ${await response.stream.bytesToString()}");
-    if (response.statusCode == 200) {
-      print("File uploaded successfully");
-      AppPopup.appPopup(
-        context: context,
-        title: "You Vehicle added success!",
-        body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
-        dialogType: DialogType.success,
-        onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
-      );
-    } else {
-      print('file upload failed');
-      AppPopup.appPopup(
-        context: context,
-        title: "Something went wrong !",
-        body: "You new Vehicle create success. You can check it from Vehicle rent->Manage Vehicle's",
-        dialogType: DialogType.error,
-        onOkBtn: ()=>Get.back()
-        //onOkBtn: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage(pageIndex: 3,))),
-      );
-    }
-      setState(() {
-        isLoading = false;
-      });
-  }
-
   final carName = TextEditingController();
   final platNo = TextEditingController();
   final make = TextEditingController();
@@ -438,28 +391,7 @@ class _AddCarState extends State<AddCar> {
                     child: CircularProgressIndicator(strokeWidth: 1, color: Colors.white,),
                   ),
                 ) : AppButton(
-                    onClick: ()async{
-                      var carInfo = {
-                        "name" : "${make.text}, ${model.text}, ${year.text}",
-                        "plate_no" : platNo.text,
-                        "price" : price.text,
-                        "vmake" : make.text.toString(),
-                        "vmodel" : model.text.toString(),
-                        "vyear" : year.text.toString(),
-                        "color" : color.text.toString(),
-                        "vcolor" : color.text.toString(),
-                        "vtrim" : trim.text.toString(),
-                        "location" : location.text.toString(),
-                        "location" : location.text.toString(),
-                        "latitude" : "23.727009",
-                        "longitude" : "90.4219455",
-                        "email" : email.text.toString(),
-                        "contact" : phone.text.toString(),
-                        "contact" : phone.text.toString(),
-                        "mileage" : maileg.text,
-                      };
-                      uploadImage(carInfo);
-                    },
+                    onClick: ()=>_addVahicles(),
                     text: "Add Vehicle",
                     width: size.width*.40
                 )
@@ -493,6 +425,61 @@ class _AddCarState extends State<AddCar> {
       // User canceled the file picking
     }
   }
+
+ void _addVahicles() async{
+    setState(() =>isLoading = true);
+   var carImage = await AppConst.uploadImageToFirebaseStorage(_unitCarImage!, "car_images");
+   var driverDiclaration = await AppConst.uploadImageToFirebaseStorage(_unitDriverLicenceImage!, "driver_licence_image");
+   var fh1 = await AppConst.uploadImageToFirebaseStorage(_unitFh1Image!, "fh1_images");
+   var insurance = await AppConst.uploadImageToFirebaseStorage(_unitInsuranceImage!, "insurance_images");
+
+   var todayDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
+
+   var carInfo = {
+     "cars" : [
+       {
+         "active_status" : true,
+         "assign_status" : false,
+         "car_info" : {
+           "name" : "${make.text}, ${model.text}, ${year.text}",
+           "plate_no" : platNo.text,
+           "price" : price.text,
+           "vmake" : make.text.toString(),
+           "vmodel" : model.text.toString(),
+           "vyear" : year.text.toString(),
+           "vcolor" : color.text.toString(),
+           "vtrim" : trim.text.toString(),
+           "location" : location.text.toString(),
+           "latitude" : "23.727009",
+           "longitude" : "90.4219455",
+           "email" : email.text.toString(),
+           "contact" : phone.text.toString(),
+           "mileage" : maileg.text,
+           "images" : {
+             "carImage" : carImage,
+             "driverDiclaration" : driverDiclaration,
+             "fh1" : fh1,
+             "insurance": insurance
+           },
+
+         },
+         "vendor_info" : {
+           "vendor_id" : "vendor_${_auth!.currentUser!.email}"
+         },
+         "assign_driver_info" : {},
+         "create_at" : todayDate
+       }
+     ]
+   };
+   bool response = await FirebaseCarRentController.addCar(data: carInfo, context: context);
+   if(response){
+     AppSnackBar.appSnackBar("Car added into your list. You can now manage your car.", Colors.green, context);
+   }else{
+     AppSnackBar.appSnackBar("Something went wrong while adding cars. Please wait or try after sometimes.", Colors.red, context);
+   }
+    setState(() =>isLoading = false);
+
+ }
 
 
 

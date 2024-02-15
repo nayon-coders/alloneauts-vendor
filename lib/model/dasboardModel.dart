@@ -30,8 +30,8 @@ class DashboardModel {
     status: json["status"],
     statusCode: json["status_code"],
     message: json["message"],
-    api: Api.fromJson(json["api"]),
-    data: Data.fromJson(json["data"]),
+    api: json["api"] == null ? null : Api.fromJson(json["api"]),
+    data: json["data"] == null ? null : Data.fromJson(json["data"]),
   );
 
   Map<String, dynamic> toJson() => {
@@ -65,177 +65,109 @@ class Api {
 }
 
 class Data {
-  final int? numberOfTotalCar;
-  final int? numberOfRentRequest;
-  final int? numberOfPendingRequest;
-  final int? numberOfRejectRequest;
-  final int? numberOfAssignDriver;
-  final List<RentRequest> rentRequests;
+  final int? totalCar;
+  final int? totalActiveCar;
+  final int? totalRequest;
+  final int? totalPendingRequest;
+  final int? assignDrivers;
+  final int? assignVehicle;
+  final int? totalTicket;
+  final int? totalExpense;
+  final int? totalEarning;
+  final int? totalRevenue;
+  final int? upcomingPay;
+  final int? duePayment;
+  final List<Report>? reports;
 
   Data({
-    this.numberOfTotalCar,
-    this.numberOfRentRequest,
-    this.numberOfPendingRequest,
-    this.numberOfRejectRequest,
-    this.numberOfAssignDriver,
-    required this.rentRequests,
+    this.totalCar,
+    this.totalActiveCar,
+    this.totalRequest,
+    this.totalPendingRequest,
+    this.assignDrivers,
+    this.assignVehicle,
+    this.totalTicket,
+    this.totalExpense,
+    this.totalEarning,
+    this.totalRevenue,
+    this.upcomingPay,
+    this.duePayment,
+    this.reports,
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    numberOfTotalCar: json["numberOfTotalCar"],
-    numberOfRentRequest: json["numberOfRentRequest"],
-    numberOfPendingRequest: json["numberOfPendingRequest"],
-    numberOfRejectRequest: json["numberOfRejectRequest"],
-    numberOfAssignDriver: json["numberOfAssignDriver"],
-    rentRequests: List<RentRequest>.from(json["rent_requests"].map((x) => RentRequest.fromJson(x))),
+    totalCar: json["total_car"],
+    totalActiveCar: json["total_active_car"],
+    totalRequest: json["total_request"],
+    totalPendingRequest: json["total_pending_request"],
+    assignDrivers: json["assign_drivers"],
+    assignVehicle: json["assign_vehicle"],
+    totalTicket: json["total_ticket"],
+    totalExpense: json["total_expense"],
+    totalEarning: json["total_earning"],
+    totalRevenue: json["total_revenue"],
+    upcomingPay: json["upcoming_pay"],
+    duePayment: json["due_payment"],
+    reports: json["reports"] == null ? [] : List<Report>.from(json["reports"]!.map((x) => Report.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "numberOfTotalCar": numberOfTotalCar,
-    "numberOfRentRequest": numberOfRentRequest,
-    "numberOfPendingRequest": numberOfPendingRequest,
-    "numberOfRejectRequest": numberOfRejectRequest,
-    "numberOfAssignDriver": numberOfAssignDriver,
-    "rent_requests": List<dynamic>.from(rentRequests.map((x) => x.toJson())),
+    "total_car": totalCar,
+    "total_active_car": totalActiveCar,
+    "total_request": totalRequest,
+    "total_pending_request": totalPendingRequest,
+    "assign_drivers": assignDrivers,
+    "assign_vehicle": assignVehicle,
+    "total_ticket": totalTicket,
+    "total_expense": totalExpense,
+    "total_earning": totalEarning,
+    "total_revenue": totalRevenue,
+    "upcoming_pay": upcomingPay,
+    "due_payment": duePayment,
+    "reports": reports == null ? [] : List<dynamic>.from(reports!.map((x) => x.toJson())),
   };
 }
 
-class RentRequest {
-  final int? requestId;
-  final String? message;
-  final String? status;
-  final Car? car;
-  final Driver? driver;
+class Report {
+  final int? year;
+  final List<Detail>? details;
 
-  RentRequest({
-    this.requestId,
-    this.message,
-    this.status,
-    this.car,
-    this.driver,
+  Report({
+    this.year,
+    this.details,
   });
 
-  factory RentRequest.fromJson(Map<String, dynamic> json) => RentRequest(
-    requestId: json["request_id"],
-    message: json["message"],
-    status: json["status"],
-    car: Car.fromJson(json["car"]),
-    driver: Driver.fromJson(json["driver"]),
+  factory Report.fromJson(Map<String, dynamic> json) => Report(
+    year: json["year"],
+    details: json["details"] == null ? [] : List<Detail>.from(json["details"]!.map((x) => Detail.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
-    "request_id": requestId,
-    "message": message,
-    "status": status,
-    "car": car?.toJson(),
-    "driver": driver?.toJson(),
+    "year": year,
+    "details": details == null ? [] : List<dynamic>.from(details!.map((x) => x.toJson())),
   };
 }
 
-class Car {
-  final int? carId;
-  final String? name;
-  final int? price;
-  final String? mileage;
-  final String? plateNo;
-  final String? vyear;
-  final String? vcolor;
-  final String? vmodel;
-  final String? vmake;
-  final String? image;
-  final Location? location;
+class Detail {
+  final String? month;
+  final int? expense;
+  final int? earnings;
 
-  Car({
-    this.carId,
-    this.name,
-    this.price,
-    this.mileage,
-    this.plateNo,
-    this.vyear,
-    this.vcolor,
-    this.vmodel,
-    this.vmake,
-    this.image,
-    this.location,
+  Detail({
+    this.month,
+    this.expense,
+    this.earnings,
   });
 
-  factory Car.fromJson(Map<String, dynamic> json) => Car(
-    carId: json["car_id"],
-    name: json["name"],
-    price: json["price"],
-    mileage: json["mileage"],
-    plateNo: json["plate_no"],
-    vyear: json["vyear"],
-    vcolor: json["vcolor"],
-    vmodel: json["vmodel"],
-    vmake: json["vmake"],
-    image: json["image"],
-    location: Location.fromJson(json["location"]),
+  factory Detail.fromJson(Map<String, dynamic> json) => Detail(
+    month: json["month"],
+    expense: json["expense"],
+    earnings: json["earnings"],
   );
 
   Map<String, dynamic> toJson() => {
-    "car_id": carId,
-    "name": name,
-    "price": price,
-    "mileage": mileage,
-    "plate_no": plateNo,
-    "vyear": vyear,
-    "vcolor": vcolor,
-    "vmodel": vmodel,
-    "vmake": vmake,
-    "image": image,
-    "location": location?.toJson(),
-  };
-}
-
-class Location {
-  final String? place;
-  final String? longitude;
-  final String? latitude;
-
-  Location({
-    this.place,
-    this.longitude,
-    this.latitude,
-  });
-
-  factory Location.fromJson(Map<String, dynamic> json) => Location(
-    place: json["place"],
-    longitude: json["longitude"],
-    latitude: json["latitude"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "place": place,
-    "longitude": longitude,
-    "latitude": latitude,
-  };
-}
-
-class Driver {
-  final dynamic name;
-  final dynamic image;
-  final String? phone;
-  final String? email;
-
-  Driver({
-    this.name,
-    this.image,
-    this.phone,
-    this.email,
-  });
-
-  factory Driver.fromJson(Map<String, dynamic> json) => Driver(
-    name: json["name"],
-    image: json["image"],
-    phone: json["phone"],
-    email: json["email"],
-  );
-
-  Map<String, dynamic> toJson() => {
-    "name": name,
-    "image": image,
-    "phone": phone,
-    "email": email,
+    "month": month,
+    "expense": expense,
+    "earnings": earnings,
   };
 }

@@ -1,5 +1,10 @@
 import 'dart:convert';
 import 'dart:typed_data';
+import 'package:vendor/utility/app_const.dart';
+import 'package:vendor/view/auth/set_password.dart';
+import 'package:vendor/view_controller/richText.dart';
+
+import '../../firebase/model/pricing_model.dart';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +15,9 @@ import 'package:vendor/view_controller/appInput.dart';
 import 'package:vendor/view_controller/bigText.dart';
 import 'dart:html' as html;
 
-import 'emailVerificationCenter.dart';
 class SignUp extends StatefulWidget {
-  final double price;
-  const SignUp({Key? key, required this.price}) : super(key: key);
+  final Monthly? pricingModel;
+  const SignUp({Key? key, this.pricingModel}) : super(key: key);
 
   @override
   State<SignUp> createState() => _SignUpState();
@@ -21,7 +25,8 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
 
-  final name = TextEditingController();
+  final fname = TextEditingController();
+  final lname = TextEditingController();
   final companyName = TextEditingController();
   final mailingAddress = TextEditingController();
   final email = TextEditingController();
@@ -125,7 +130,20 @@ class _SignUpState extends State<SignUp> {
                   SizedBox(height: 40,),
                   const BigText(text: "Welcome to AllOneAutos"),
                   SizedBox(height: 10,),
-                  const Text("Register your accout"),
+                  const Text("Register your account"),
+                  SizedBox(height: 10,),
+                  const Text("Plan",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  SizedBox(height: 10,),
+                   Text("${widget.pricingModel!.planName}",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green
+                    ),
+                  ),
                   const SizedBox(height: 40,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,7 +151,7 @@ class _SignUpState extends State<SignUp> {
                       SizedBox(
                         width: size.width*.16,
                         child: AppInput(
-                            controller: name,
+                            controller: fname,
                             title: "First Name",
                             prefixIcon: Icons.person,
                             hintText: "First Name"
@@ -142,7 +160,7 @@ class _SignUpState extends State<SignUp> {
                       SizedBox(
                         width: size.width*.16,
                         child: AppInput(
-                            controller: name,
+                            controller: lname,
                             title: "Last Name",
                             prefixIcon: Icons.person,
                             hintText: "Last Name"
@@ -164,17 +182,15 @@ class _SignUpState extends State<SignUp> {
                   AppInput(
                       controller: email,
                       title: "Email",
-                      readOnly: true,
                       prefixIcon: Icons.email_outlined,
-                      hintText: "alloneautos@gmail.com"
+                      hintText: "johon@gmail.com"
                   ),
                   SizedBox(height: 20,),
                   AppInput(
-                      controller: email,
+                      controller: phoneNumber,
                       title: "Phone Number",
-                      readOnly: true,
                       prefixIcon: Icons.phone_android,
-                      hintText: "+928495893439"
+                      hintText: "+1 **** **** **"
                   ),
 
 
@@ -200,7 +216,7 @@ class _SignUpState extends State<SignUp> {
                      SizedBox(height: 10,),
                      TextFormField(
                        maxLines: 8,
-                       controller: yearsBusiness,
+                       controller: brefDescribe,
                        decoration: InputDecoration(
                          hintText: "Brief description of the company's products/services",
                          border: OutlineInputBorder(
@@ -220,82 +236,32 @@ class _SignUpState extends State<SignUp> {
                    ],
                  ),
                   SizedBox(height: 20,),
-                  Text("How many car you have?",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: AppColors.black
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text("How many car you have?",
+                      style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 15,
+                          color: AppColors.black
+                      ),
                     ),
                   ),
                   SizedBox(height: 10,),
-                  Row(
-                    children: [
-                      buildHowManyCars(
-                        onClick: (){
-                          setState(() {
-                            selectCarListForPricing.clear();
-                            selectCarListForPricing.add("5 - 10");
-                            _value = 49;
-                          });
-                        },
-                        value: "5 - 10",
-                        color:  selectCarListForPricing.contains("5 - 10") ? AppColors.green : Colors.transparent,
-                          textColor:  selectCarListForPricing.contains("5 - 10") ? AppColors.white : AppColors.green
+                  Align(
+                      alignment: Alignment.centerLeft,
+                      child: RichTextWidget(leftText: "You can add ", rightText: "${widget.pricingModel!.maxCar}")),
+                 Align(
+                   alignment: Alignment.centerLeft,
+                   child: TextButton(
+                     onPressed: ()=>Navigator.pushNamed(context, "/pricing"),
+                    child:  Text("I you want to add more car, then upgrade your plan.",
+                      style: TextStyle(
+                        fontWeight: FontWeight.w400,
+                        fontSize: 10
                       ),
-                      SizedBox(width: 20,),
-                      buildHowManyCars(
-                          onClick: (){
-                            setState(() {
-                              selectCarListForPricing.clear();
-                              selectCarListForPricing.add("10 - 20");
-                              _value = 59;
-                            });
-                          },
-                          value: "10 - 20",
-                          color:  selectCarListForPricing.contains("10 - 20") ? AppColors.green : Colors.transparent,
-                          textColor:  selectCarListForPricing.contains("10 - 20") ? AppColors.white : AppColors.green
-                      ),
-                      SizedBox(width: 20,),
-                      buildHowManyCars(
-                          onClick: (){
-                            setState(() {
-                              selectCarListForPricing.clear();
-                              selectCarListForPricing.add("20 - 30");
-                              _value = 89;
-                            });
-                          },
-                          value: "20 - 30",
-                          color:  selectCarListForPricing.contains("20 - 30") ? AppColors.green : Colors.transparent,
-                          textColor:  selectCarListForPricing.contains("20 - 30") ? AppColors.white : AppColors.green
-                      ),
-                      SizedBox(width: 20,),
-                      buildHowManyCars(
-                          onClick: (){
-                            setState(() {
-                              selectCarListForPricing.clear();
-                              selectCarListForPricing.add("30 - 50");
-                              _value = 99;
-                            });
-                          },
-                          value: "30 - 50",
-                          color:  selectCarListForPricing.contains("30 - 50") ? AppColors.green : Colors.transparent,
-                          textColor:  selectCarListForPricing.contains("30 - 50") ? AppColors.white : AppColors.green
-                      ),
-                      SizedBox(width: 20,),
-                      buildHowManyCars(
-                          onClick: (){
-                            setState(() {
-                              selectCarListForPricing.clear();
-                              selectCarListForPricing.add("50+");
-                              _value = 129;
-                            });
-                          },
-                          value: "50+",
-                          color:  selectCarListForPricing.contains("50+") ? AppColors.green : Colors.transparent,
-                          textColor:  selectCarListForPricing.contains("50+") ? AppColors.white : AppColors.green
-                      ),
-                    ],
-                  ),
+                    )
+                   ),
+                 ),
                  //  SizedBox(height: 20,),
                  // selectCarListForPricing.isNotEmpty ? Container(
                  //    padding: EdgeInsets.all(20),
@@ -347,7 +313,7 @@ class _SignUpState extends State<SignUp> {
                     child: AppButton(
                       width: size.width*.30,
                       text: "Continue",
-                      onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailVerificationCenter())),
+                      onClick: ()=> _signupMethod()
                     ),
                   ),
                   SizedBox(height: 15,),
@@ -391,5 +357,23 @@ class _SignUpState extends State<SignUp> {
                       ),
                     ),
                   );
+  }
+
+  void _signupMethod() {
+    var data = {
+      "f_name" : fname.text,
+      "l_name" : lname.text,
+      "email" : email.text,
+      "company_name" : companyName.text,
+      "years_in_business" : yearsBusiness.text,
+      "brief_company" : brefDescribe.text,
+      "max_car": widget.pricingModel!.maxCar,
+      "selected_plan" : {
+        "max_car" :  widget.pricingModel?.maxCar,
+        "plan_name" :  widget.pricingModel?.planName,
+        "price" :  widget.pricingModel?.price,
+      },
+    };
+    Navigator.push(context, MaterialPageRoute(builder: (context)=>SetPassword(signUpData: data)));
   }
 }

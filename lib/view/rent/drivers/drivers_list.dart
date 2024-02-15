@@ -57,29 +57,84 @@ class _DriverListState extends State<DriverList> {
                 dividerThickness:0,
                 sortAscending: true,
                 columns: const [
-                  DataColumn(label: Text(
-                      'ID',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label:
+                  SizedBox(
+                    width: 20,
+                    child: Text(
+                        'ID',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
-                  DataColumn(label: Text(
-                      'Driver Name',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label:
+                  SizedBox(
+                    width: 40,
+                    child: Text(
+                        'Name',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
-                  DataColumn(label: Text(
-                      'Driver Profile',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label: SizedBox(
+                    width: 30,
+                    child: Text(
+                        'Profile',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
-                  DataColumn(label: Text(
-                      'Assign Vehicles',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label: SizedBox(
+                    width: 70,
+                    child: Text(
+                        'Address',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
-                  DataColumn(label: Text(
-                      'Status',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label: SizedBox(
+                    width: 40,
+                    child: Text(
+                        'Phone',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
-                  DataColumn(label: Text(
-                      'Acction',
-                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                  DataColumn(label: SizedBox(
+                    width: 50,
+                    child: Text(
+                        'Licence No.',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
+                  )),
+                  DataColumn(label: SizedBox(
+                    width: 50,
+                    child: Text(
+                        'TLC \nLicence No',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
+                  )),
+                  DataColumn(label: SizedBox(
+                    width: 50,
+                    child: Text(
+                        'Assign \nVehicles',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
+                  )),
+                  DataColumn(label: SizedBox(
+                    width: 40,
+                    child: Text(
+                        'Status',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
+                  )),
+                  DataColumn(label: SizedBox(
+                    width: 50,
+                    child: Text(
+                        'Return \nDate',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
+                  )),
+                  DataColumn(label: SizedBox(
+                    width: 50,
+                    child: Text(
+                        'Action',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                    ),
                   )),
                 ],
                 rows: [
@@ -89,17 +144,46 @@ class _DriverListState extends State<DriverList> {
                           return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
                         }),
                         cells: [
-                          DataCell(Text('${i+1}',  style: TextStyle(
+                          DataCell(
+                              SizedBox(
+                                child: Text('${i+1}',  style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w600
+                          ),),
+                              )),
+                          DataCell(Text('MR Driver',  style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600
+                          ),)),
+                          const DataCell(
+                            SizedBox(
+                              width: 50, height: 50,
+                              child: AppNetworkImage(
+                                url: "https://st.depositphotos.com/1017228/4720/i/450/depositphotos_47201743-stock-photo-handsome-african-man.jpg",
+                                width: 50, height: 50, boxFit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+
+                          DataCell(Text('Dhaka Moteejhile, Dhaka, Bangladesh',  style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600
                           ),)),
                           DataCell(
-                            AppNetworkImage(
-                              url: "https://st.depositphotos.com/1017228/4720/i/450/depositphotos_47201743-stock-photo-handsome-african-man.jpg",
-                              width: 50, height: 50, boxFit: BoxFit.contain,
-                            ),
-                          ),
-                          DataCell(Text('MR Driver',  style: TextStyle(
+                              TextButton(
+                                onPressed: (){},
+                                child: Text('+880 13424857839',
+                                  style: TextStyle(
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w600
+                                  ),
+                                ),
+                              )),
+                          DataCell(Text('2398920',  style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600
+                          ),)),
+                          DataCell(Text('TLC3242342',  style: TextStyle(
                               fontSize: 10,
                               fontWeight: FontWeight.w600
                           ),)),
@@ -125,7 +209,10 @@ class _DriverListState extends State<DriverList> {
                                   color: Colors.white,
                                 ),
                               ))),
-
+                          DataCell(Text('Dec 12, 2024',  style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w600
+                          ),)),
                           DataCell(
                             AppIconButton(
                               icon: Icons.edit,

@@ -177,7 +177,7 @@ class _EditCarState extends State<EditCar> {
     year.text = widget.carInfo!.details!.vyear.toString();
     model.text = widget.carInfo!.details!.vmodel.toString();
     location.text = widget.carInfo!.details!.location.toString();
-    email.text = widget.carInfo!.details!.email.toString();
+    email.text = widget.carInfo!.details!.number.toString();
     price.text = widget.carInfo!.details!.price.toString();
     trim.text = widget.carInfo!.details!.vtrim.toString();
     lat = widget.carInfo!.details!.latitude.toString();

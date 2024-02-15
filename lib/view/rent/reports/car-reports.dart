@@ -43,15 +43,32 @@ class _CarReportsState extends State<CarReports> {
         _assignCarList.add(i);
       });
     }
+
+    print("_assignCarList ${_assignCarList.length}");
     setState(() =>isLoading = false);
 
   }
+
+  Future getAssignCarListForReports()async{
+    setState(() =>isLoading = true);
+    var res = await RentCarController.getCartListForReports();
+    //this loop for assign car
+    for(var i in res!.data!.assignedCar!){
+      setState(() {
+        _assignCarList.add(i);
+      });
+    }
+    setState(() =>isLoading = false);
+
+  }
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     getCarListForReports();
+    //getAssignCarListForReports();
   }
 
 
@@ -219,7 +236,7 @@ class _CarReportsState extends State<CarReports> {
                               SizedBox(width: 5,),
                               AppIconButton(
                                 icon: Icons.report_gmailerrorred,
-                                onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _availableCarList[i]!.details, carImage: _availableCarList[i]!.images![0],), transition: Transition.fadeIn),
+                                onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _availableCarList[i]!.details, carImage: _availableCarList[i]!.images![0], id: _assignCarList[i]!.id.toString(),), transition: Transition.fadeIn),
                                 bgColor: Colors.amber,
                               ),
                               SizedBox(width: 5,),
@@ -299,7 +316,8 @@ class _CarReportsState extends State<CarReports> {
                         AppNetworkImage(url: "${AppConfig.DOMAIN}/${_assignCarList[i].images![0]}", width: 60, height: 60)
                     ),
                     DataCell(Text('${_assignCarList[i].details!.name}')),
-                    DataCell(Text('#${_assignCarList[i].details!.plateNo}',
+                    DataCell(
+                        Text('#${_assignCarList[i].details!.plateNo}',
                       style: TextStyle(
                           fontWeight: FontWeight.w600
                       ),
@@ -307,7 +325,7 @@ class _CarReportsState extends State<CarReports> {
                     DataCell(
                         ClipRRect(
                             borderRadius:BorderRadius.circular(100),
-                            child: AppNetworkImage(url: "${AppConfig.DOMAIN}/${_assignCarList[i]!.driver!.avatar}", width: 60, height: 60))
+                            child: AppNetworkImage(url: "https://cdn.dribbble.com/users/3305260/screenshots/6570213/ord_4x.jpg?resize=400x0", width: 60, height: 60))
                     ),
                     DataCell(
                         Container(
@@ -336,7 +354,7 @@ class _CarReportsState extends State<CarReports> {
                           SizedBox(width: 5,),
                           AppIconButton(
                             icon: Icons.report_gmailerrorred,
-                            onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _assignCarList[i]!.details, carImage: _assignCarList[i]!.images![0], carId: _assignCarList[i]!.id.toString(),), transition: Transition.fadeIn),
+                            onClick: ()=>Get.to(MainPage(pageIndex: 8, carDetails: _assignCarList[i]!.details, carImage: _assignCarList[i]!.images![0], id: _assignCarList[i]!.id.toString(),), transition: Transition.fadeIn),
                             bgColor: Colors.amber,
                           ),
                           SizedBox(width: 5,),

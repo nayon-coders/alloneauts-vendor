@@ -45,7 +45,6 @@ class _RentRequestListState extends State<RentRequestList> {
               if(snapshot.connectionState == ConnectionState.waiting){
                 return Center(child: LoadingWidget(title: "Request is loading..."),);
               }else if(snapshot.hasData){
-                print("snapshot.data!.data!.requests![i]!.car!.plateNo ${snapshot.data!.data!.requests![1]!.car!.name}");
                 return ListView(
                   children: [
                     Row(

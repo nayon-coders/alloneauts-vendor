@@ -5,9 +5,14 @@ import '../../../utility/app_color.dart';
 import '../../../view_controller/appButton.dart';
 import '../../../view_controller/bigText.dart';
 
-class DashboardPlanPopup extends StatelessWidget {
+class DashboardPlanPopup extends StatefulWidget {
   const DashboardPlanPopup({Key? key}) : super(key: key);
 
+  @override
+  State<DashboardPlanPopup> createState() => _DashboardPlanPopupState();
+}
+
+class _DashboardPlanPopupState extends State<DashboardPlanPopup> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;

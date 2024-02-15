@@ -7,7 +7,7 @@ class AppNetworkImage extends StatelessWidget {
   final double width;
   final double height;
   final BoxFit boxFit;
-  const AppNetworkImage({Key? key, required this.url, required this.width, required this.height, this.boxFit=BoxFit.cover}) : super(key: key);
+  const AppNetworkImage({Key? key, required this.url, this.width = double.infinity, required this.height, this.boxFit=BoxFit.cover}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +15,7 @@ class AppNetworkImage extends StatelessWidget {
       width: width,
       height: height,
       imageUrl: "$url",
+      fit: boxFit,
       placeholder: (context, url) => CircularProgressIndicator(strokeWidth: 1, color: AppColors.menuColor,),
       errorWidget: (context, url, error) => Icon(Icons.error),
     );

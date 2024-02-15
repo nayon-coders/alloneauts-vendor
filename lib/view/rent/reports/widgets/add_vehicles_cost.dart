@@ -11,6 +11,8 @@ import 'package:vendor/view_controller/appNetworkImage.dart';
 import 'package:vendor/view_controller/appPoup.dart';
 import 'package:vendor/view_controller/loadingWidget.dart';
 
+import 'vehiclesCostingList.dart';
+
 class AddVehiclesCost extends StatefulWidget {
   final AssignedCarDetails? carDetails;
   final String carImage;
@@ -26,6 +28,8 @@ class AddVehiclesCost extends StatefulWidget {
 
 class _AddVehiclesCostState extends State<AddVehiclesCost> {
   final expance = TextEditingController();
+
+  final shopName = TextEditingController();
 
   final amount = TextEditingController();
 
@@ -92,12 +96,12 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
                       Row(
                         children: [
                           Expanded(
+                            flex: 1, 
                             child: AppInput(
-                              controller: expance,
-                              title: "Car Expanse",
+                              controller: shopName,
+                              title: "Repair Shop",
                               prefixIcon: Icons.taxi_alert,
-                              hintText: "Car Expanse",
-                              readOnly: true,
+                              hintText: "Repair shop name",
                             ),
                           ),
                           SizedBox(width: 8,),
@@ -199,7 +203,8 @@ class _AddVehiclesCostState extends State<AddVehiclesCost> {
     print("status ==${res.body}");
 
     if(res.statusCode == 200){
-      AppPopup.appPopup(context: context, title: "Expanse Added Success", body: "Expanse added for ${widget.carDetails!.name} Car.", dialogType: DialogType.success, onOkBtn: (){});
+      setState(() {});
+    AppPopup.appPopup(context: context, title: "Expanse Added Success", body: "Expanse added for ${widget.carDetails!.name} Car.", dialogType: DialogType.success, onOkBtn: (){});
     }else{
       AppPopup.appPopup(context: context, title: "Error", body: "Something went wrong", dialogType: DialogType.error, onOkBtn: (){});
     }

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:vendor/model/carModel/singleCarModel.dart';
+import 'package:vendor/model/office_expanse/office_expanse.dart';
 import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/dashboard/dashboard.dart';
 import 'package:vendor/view/employ/createEmployee.dart';
+import 'package:vendor/view/office/office_expanse.dart';
+import 'package:vendor/view/office/office_expanse_list.dart';
 import 'package:vendor/view/pages.dart';
 import 'package:vendor/view/rent/AddCar.dart';
 import 'package:vendor/view/rent/reports/car-reports.dart';
@@ -32,14 +35,15 @@ import 'ticketManagement/allTicket.dart';
 class MainPage extends StatefulWidget {
   final int pageIndex;
   final dynamic constructorData;
-  final dynamic carId;
+  final dynamic id;
   final dynamic menuNumber;
+  final ExpanseList? expanseList;
 
   //CreateReports ////
   final AssignedCarDetails? carDetails;
   final String? carImage;
   //CreateReports ////
-  const MainPage({Key? key, this.carId, this.pageIndex=0, this.menuNumber, this.constructorData, this.carDetails, this.carImage}) : super(key: key);
+  const MainPage({Key? key, this.id, this.pageIndex=0, this.menuNumber, this.constructorData, this.carDetails, this.carImage, this.expanseList}) : super(key: key);
 
   @override
   State<MainPage> createState() => _MainPageState();
@@ -56,40 +60,39 @@ class _MainPageState extends State<MainPage> {
 
   //pages
   int pageCount = 0;
-
+  List allPages = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("main screen");
+    print("main screen car id === ${widget.id}");
     pageCount = widget.pageIndex!;
-    allPages.insert(4, EditCar(carInfo: widget.constructorData, id: widget.carId, )); //index = 4)
-    allPages.insert(8, CreateReports(carDetails: widget.carDetails, carImage: widget!.carImage, carId: widget.carId,)); //index = 4)
 
+    print("widget.carDetails == ${widget.carDetails}");
+    allPages.insert(0, Dashboard());
+    allPages.insert(1, RentRequestList());
+    allPages.insert(2, ManageCar());
+    allPages.insert(3, AddCar());
+    allPages.insert(4, EditCar(carInfo: widget.constructorData, id: widget.id, )); //index = 4)
+    allPages.insert(5, ViewSingleCar()); //index = 4)
+    allPages.insert(6, Profile()); //index = 4)
+    allPages.insert(7, CarReports()); //index = 4)
+    allPages.insert(7, CarReports()); //index = 4)
+    allPages.insert(8, CreateReports(carDetails: widget.carDetails, carImage: widget!.carImage, carId: widget.id,)); //index = 4)
+    allPages.insert(9, FindTicket()); //index = 4)
+    allPages.insert(10, AllTicket()); //index = 4)
+    allPages.insert(11, SingleTicket()); //index = 4)
+    allPages.insert(12, EmployManagement()); //index = 4)
+    allPages.insert(13, EmploySalaryShit()); //index = 4)
+    allPages.insert(14, SingleEmploySalary()); //index = 4)
+    allPages.insert(15, TaxManagement()); //index = 4)
+    allPages.insert(16, CreateEmployee()); //index = 4)
+    allPages.insert(17, DriverList()); //index = 4)
+    allPages.insert(18, OfficeExpanse(expanseList: widget.expanseList, index: widget.id)); //index = 4)
+    allPages.insert(19, OfficeExpanseList()); //index = 4)
   }
 
-  List allPages = [
-    Dashboard(), //index = 0
-    RentRequestList(), //index = 1
-    ManageCar(), //index = 2
-    AddCar(), //index = 3
-    //here data will be initial when page is call
-    // index 4 comes from initstate
-    ViewSingleCar(), //index = 5
-    Profile(), //index = 6
-    CarReports(), //index = 7
-    //come form init - CreateReports(), //index = 8
-    FindTicket(), //index = 9
-    AllTicket(), //index = 10
-    SingleTicket(), //index = 11
-    EmployManagement(), //index = 12
-    EmploySalaryShit(), //index = 13
-    SingleEmploySalary(), //index = 14
-    TaxManagement(), //index = 15
-    CreateEmployee(), //index = 16
-    DriverList(), //index = 17
-  ];
 
 
 
@@ -359,7 +362,7 @@ class _MainPageState extends State<MainPage> {
             },
             isSelected: selectedMenuNumber[0] == 5 ? true : false,
             onLongPress: (){},
-            title: "Employee",
+            title: "Office Manage",
             icon: Icons.report_gmailerrorred,
             content: Row(
               children: [
@@ -390,6 +393,26 @@ class _MainPageState extends State<MainPage> {
                         onClick:  (){
                           setState(() =>selectedChildMenuNumber[0]="5-2");
                           pageCount = 13; //Final ticket
+                        }
+                    ),
+                    SizedBox(height: 5,),
+                    buildChildMenu(
+                        size: size,
+                        menuNumber: "5-3",
+                        title: "Office Expanse",
+                        onClick:  (){
+                          setState(() =>selectedChildMenuNumber[0]="5-3");
+                          pageCount = 18; //Final ticket
+                        }
+                    ),
+                    SizedBox(height: 5,),
+                    buildChildMenu(
+                        size: size,
+                        menuNumber: "5-",
+                        title: "Office Expanse List",
+                        onClick:  (){
+                          setState(() =>selectedChildMenuNumber[0]="5-4");
+                          pageCount = 19; //Final ticket
                         }
                     ),
                   ],

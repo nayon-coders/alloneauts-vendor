@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/view/main_pages.dart';
 import '../../utility/app_color.dart';
-import '../../view/auth/accountVerificationCenter.dart';
+import '../../view/auth/verification_center/accountVerificationCenter.dart';
 import '../appButton.dart';
 import 'acocuntVerificationWorning.dart';
 

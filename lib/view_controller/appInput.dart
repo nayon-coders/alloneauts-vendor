@@ -6,7 +6,7 @@ class AppInput extends StatelessWidget {
   const AppInput({
     Key? key,
     required this.controller, required this.title, this.prefixIcon,  this.readOnly = false,
-    required this.hintText, this.maxLine = 1, this.onClick, this.onChange
+    required this.hintText, this.maxLine = 1, this.onClick, this.onChange, this.suffixIcon
   }) : super(key: key);
 
   final TextEditingController controller;
@@ -17,6 +17,7 @@ class AppInput extends StatelessWidget {
   final int maxLine;
   final VoidCallback? onClick;
   final VoidCallback? onChange;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +59,7 @@ class AppInput extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.w400
             ),
+           suffixIcon: suffixIcon
            // prefixIcon: Icon(prefixIcon),
           ),
           autofocus: true,

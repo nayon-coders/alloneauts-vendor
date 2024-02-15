@@ -5,7 +5,8 @@ import '../../view_controller/appButton.dart';
 import '../../view_controller/bigText.dart';
 
 class Congratulation extends StatefulWidget {
-  final String title;const Congratulation({Key? key, required this.title,}) : super(key: key);
+  final String text;
+  const Congratulation({Key? key,  this.text = "You are successfully register your account. Now wait for admin approval. Once admin approve your account, you can login your dashboard. \n Thank You. ", }) : super(key: key);
 
   @override
   State<Congratulation> createState() => _CongratulationState();
@@ -41,7 +42,12 @@ class _CongratulationState extends State<Congratulation> {
                 children: [
                   Image.asset("assets/images/logo.png", height: 100, width: 100,),
                   const SizedBox(height: 40,),
-                   Center(child: BigText(text: "${widget.title}")),
+                    Center(child: Text("${widget.text}",
+                      style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w400
+                      ),
+                    )),
                   const SizedBox(height: 40,),
                   const Icon(Icons.check_circle, size: 120, color: AppColors.green,),
                   const SizedBox(height: 30,),

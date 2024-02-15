@@ -27,12 +27,12 @@ class LoadingWidget extends StatelessWidget {
             },
           ),
         ),
-        SizedBox(height: 20,),
+        SizedBox(height: 10,),
         Center(
           child: Text("$title",
             style: TextStyle(
                 fontWeight: FontWeight.w500,
-                fontSize: 20,
+                fontSize: 16,
                 color: Colors.black
             ),
           ),

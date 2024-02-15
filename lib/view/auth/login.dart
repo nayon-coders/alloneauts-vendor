@@ -4,6 +4,7 @@ import 'dart:html';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:vendor/firebase/controller/auth_controller.dart';
 import 'package:vendor/model/authModel/loginModel.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/utility/app_color.dart';
@@ -12,6 +13,7 @@ import 'package:vendor/view/auth/signup.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appButton.dart';
 import 'package:vendor/view_controller/appInput.dart';
+import 'package:vendor/view_controller/app_snackbar.dart';
 import 'package:vendor/view_controller/bigText.dart';
 
 import '../../controller/authController/authController.dart';
@@ -128,7 +130,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 15,),
                   Center(
                     child: TextButton(
-                      onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Offers())),
+                      onPressed: ()=>Navigator.pushNamed(context, "/pricing"),
                       child: const Text("I Don't have an account. Signup."),
                     ),
                   )
@@ -146,36 +148,46 @@ class _LoginState extends State<Login> {
   bool isLoading = false;
   bool isFieldEmpty = false;
   String errorString = "";
-
-  Future _login() async{
-    setState(() =>isLoading=true);
-    if(email.text.isNotEmpty && pass.text.isNotEmpty){
-      var res = await LoginController.loginController(email: email.text, pass: pass.text);
-      if(res.statusCode == 200){
-
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Login Success."),
-          duration: Duration(milliseconds: 5000),
-          backgroundColor: Colors.green,
-        ));
-
-
-        //store login information in local storage.
-       LocalStorage.saveLoginData(loginModel: jsonDecode(res.body)!);
-
-        Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage()));
-      }else{
-        setState(() =>errorString = "Invalid Credential.");
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text("Invalid credential."),
-          duration: Duration(milliseconds: 5000),
-          backgroundColor: Colors.red,
-        ));
-      }
-    }else{
-      setState(() =>errorString = "Field must not be empty.");
-    }
-    setState(() =>isLoading=false);
+  Future _login()async{
+  setState(() => isLoading = true);
+  var res = await FirebaseAuthController.signInWithEmailAndPassword(context: context, email: email.text, password: pass.text);
+  if(res){
+    Navigator.pushNamedAndRemoveUntil(context, "/dashboard", (route) => false);
+  }else{
+    AppSnackBar.appSnackBar("Something went wrong.", Colors.red, context);
   }
+  setState(() => isLoading = false);
+}
+
+  // Future _login() async{
+  //   setState(() =>isLoading=true);
+  //   if(email.text.isNotEmpty && pass.text.isNotEmpty){
+  //     var res = await LoginController.loginController(email: email.text, pass: pass.text);
+  //     if(res.statusCode == 200){
+  //
+  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //         content: Text("Login Success."),
+  //         duration: Duration(milliseconds: 5000),
+  //         backgroundColor: Colors.green,
+  //       ));
+  //
+  //
+  //       //store login information in local storage.
+  //      LocalStorage.saveLoginData(loginModel: jsonDecode(res.body)!);
+  //
+  //       Navigator.push(context, MaterialPageRoute(builder: (context)=>MainPage()));
+  //     }else{
+  //       setState(() =>errorString = "Invalid Credential.");
+  //       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+  //         content: Text("Invalid credential."),
+  //         duration: Duration(milliseconds: 5000),
+  //         backgroundColor: Colors.red,
+  //       ));
+  //     }
+  //   }else{
+  //     setState(() =>errorString = "Field must not be empty.");
+  //   }
+  //   setState(() =>isLoading=false);
+  // }
 
 }

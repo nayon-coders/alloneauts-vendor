@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/firebase/controller/firebase_car_controller.dart';
+import 'package:vendor/firebase/model/firebase_car_model.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/view/main_pages.dart';
 import 'package:vendor/view_controller/appPoup.dart';
@@ -39,8 +41,10 @@ class _ManageCarState extends State<ManageCar> {
 
     //initial model
     _getRentCarFuture = RentCarController.getRentCarList();
+    _getAllCar = FirebaseCarRentController.getAllCar();
   }
   Future<RentCarModel>? _getRentCarFuture;
+  Future<FirebaseCarModel>? _getAllCar;
   //manage car method
 
   @override
@@ -99,8 +103,8 @@ class _ManageCarState extends State<ManageCar> {
             ],
           ),
           SizedBox(height: 10,),
-          FutureBuilder<RentCarModel>(
-              future: _getRentCarFuture,
+          FutureBuilder<FirebaseCarModel>(
+              future: _getAllCar,
               builder: (context, snapshot) {
                 print(snapshot.data);
 
@@ -115,139 +119,145 @@ class _ManageCarState extends State<ManageCar> {
                     decoration: BoxDecoration(
                         color: AppColors.white,
                     ),
-                    child: DataTable(
-                      dividerThickness:0,
-                      sortAscending: false,
-                      headingRowColor: MaterialStateProperty.all(Colors.green) ,
-                      headingTextStyle: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.white
-                      ),
-                      columns: const [
-                        DataColumn(label: Text(
-                            'Car',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Vehicle Name',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Plate No.',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Price',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Ticket',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Fine',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'TLC License',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'TLC Status',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                        DataColumn(label: Text(
-                            'Action',
-                            style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
-                        )),
-                      ],
-                      rows: [
-                        for(var i=0;i<snapshot.data!.data!.cars!.length; i++)
-                          DataRow(
-                              color: MaterialStateColor.resolveWith((states) {
-                                return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
-                              }),
-                              cells: [
-                                DataCell(
-                                    AppNetworkImage(
-                                      url: "${AppConfig.DOMAIN}/${snapshot.data!.data!.cars![i].images![0]}",
-                                      width: 50, height: 50, boxFit: BoxFit.contain,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: DataTable(
+                          dividerThickness:0,
+                          sortAscending: false,
+                          headingRowColor: MaterialStateProperty.all(Colors.green) ,
+                          headingTextStyle: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.white
+                          ),
+                          columns: const [
+                            DataColumn(label: Text(
+                                'Car',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Vehicle Name',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Plate No.',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Price',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Ticket',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Fine',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'TLC License',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'TLC Status',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                            DataColumn(label: Text(
+                                'Action',
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                            )),
+                          ],
+                          rows: [
+                            for(var i=0;i<snapshot.data!.cars!.length; i++)
+                              DataRow(
+                                  color: MaterialStateColor.resolveWith((states) {
+                                    return i.isOdd? Colors.grey.shade200 : Colors.white; //make tha magic!
+                                  }),
+                                  cells: [
+                                    DataCell(
+                                        AppNetworkImage(
+                                          url: "${snapshot.data!.cars![i]!.carInfo!.images!.carImage!}",
+                                          width: 50, height: 50, boxFit: BoxFit.contain,
+                                        ),
                                     ),
-                                ),
-                                DataCell(Text('${snapshot.data!.data!.cars![i].details!.vmake} ${snapshot.data!.data!.cars![i].details!.vmodel}, ${snapshot.data!.data!.cars![i].details!.vyear}', style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500
-                                ),)),
-                                DataCell(Text('#${snapshot.data!.data!.cars![i].details!.plateNo}',
-                                  style: TextStyle(
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w600
-                                  ),
-                                )),
-                                DataCell(Text('\$${snapshot.data!.data!.cars![i].details!.price}',style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500
-                                ),)),
-                                DataCell(
-                                    Text('0 Ticket',
+                                    DataCell(Text('${snapshot.data!.cars![i]!.carInfo!.name}', style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500
+                                    ),)),
+                                    DataCell(Text('#${snapshot.data!.cars![i]!.carInfo!.plateNo}',
                                       style: TextStyle(
                                           fontSize: 10,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.red
+                                          fontWeight: FontWeight.w600
                                       ),
                                     )),
-                                DataCell(Text('\$0 Fine',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                )),
-                                DataCell(Text('437847823498',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                )),
-                                DataCell(Container(
-                                    padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
-                                    decoration: BoxDecoration(
-                                        color: Colors.green,
-                                        borderRadius: BorderRadius.circular(5)
-                                    ),
-                                    child: Text('Active',
+                                    DataCell(Text('\$${snapshot.data!.cars![i]!.carInfo!.price}',style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w500
+                                    ),)),
+                                    DataCell(
+                                        Text('0 Ticket',
+                                          style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.red
+                                          ),
+                                        )),
+                                    DataCell(Text('\$0 Fine',
                                       style: TextStyle(
                                         fontSize: 10,
-                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
                                       ),
-                                    ))),
-                                DataCell(
-                                  Row(
-                                    children: [
-                                      AppIconButton(
-                                        icon: Icons.remove_red_eye,
-                                        onClick: ()=>ShowSingleCar(snapshot.data!, i),
+                                    )),
+                                    DataCell(Text('437847823498',
+                                      style: TextStyle(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w400,
                                       ),
-                                      SizedBox(width: 5,),
-                                      AppIconButton(
-                                        icon: Icons.edit,
-                                        onClick: ()=>Get.to(MainPage(pageIndex: 4, constructorData: snapshot.data!.data!.cars![i],), transition: Transition.fadeIn),
-                                        bgColor: Colors.amber,
+                                    )),
+                                    DataCell(Container(
+                                        padding: EdgeInsets.only(left: 7, right: 7, bottom: 3,top: 3),
+                                        decoration: BoxDecoration(
+                                            color: snapshot.data!.cars![i]!.activeStatus != null && snapshot.data!.cars![i]!.activeStatus == true ? Colors.green : Colors.red,
+                                            borderRadius: BorderRadius.circular(5)
+                                        ),
+                                        child: Text('${snapshot.data!.cars![i]!.activeStatus != null && snapshot.data!.cars![i]!.activeStatus == true ? 'Active': "Inactive"}',
+                                          style: TextStyle(
+                                            fontSize: 10,
+                                            color: Colors.white,
+                                          ),
+                                        ))),
+                                    DataCell(
+                                      Row(
+                                        children: [
+                                          AppIconButton(
+                                            icon: Icons.remove_red_eye,
+                                            onClick: ()=>ShowSingleCar(snapshot!.data!.cars![i]!.carInfo!, i),
+                                          ),
+                                          SizedBox(width: 5,),
+                                          AppIconButton(
+                                            icon: Icons.edit,
+                                            onClick: ()=>Get.to(MainPage(pageIndex: 4, constructorData: snapshot.data!.cars![i],), transition: Transition.fadeIn),
+                                            bgColor: Colors.amber,
+                                          ),
+                                          const SizedBox(width: 5,),
+                                          AppIconButton(
+                                            icon: Icons.report_gmailerrorred_rounded,
+                                            onClick: (){},
+                                            bgColor: AppColors.blue,
+                                          ),
+                                          const SizedBox(width: 5,),
+                                        ],
                                       ),
-                                      const SizedBox(width: 5,),
-                                      AppIconButton(
-                                        icon: Icons.report_gmailerrorred_rounded,
-                                        onClick: (){},
-                                        bgColor: AppColors.blue,
-                                      ),
-                                      const SizedBox(width: 5,),
-                                    ],
-                                  ),
 
-                                ),
-                              ]
-                          ),
-                      ],
+                                    ),
+                                  ]
+                              ),
+                          ],
+                        ),
+                      ),
                     ),
                   );
                 }else{
@@ -264,7 +274,7 @@ class _ManageCarState extends State<ManageCar> {
   }
 
   bool _isDeleting = false;
-  Future<void> ShowSingleCar(RentCarModel carInfo, i) async {
+  Future<void> ShowSingleCar(CarInfo carInfo, i) async {
     var size = MediaQuery.of(context).size;
     return showDialog<void>(
       context: context,
@@ -293,7 +303,7 @@ class _ManageCarState extends State<ManageCar> {
                                     color:AppColors.green
                                 ),
                                 child: Center(
-                                  child: Text("\$${carInfo.data!.cars![i].details!.price}/month*",
+                                  child: Text("\$${carInfo!.price}/month*",
                                     style: TextStyle(
                                         color: AppColors.white,
                                         fontWeight: FontWeight.w600,
@@ -305,31 +315,31 @@ class _ManageCarState extends State<ManageCar> {
 
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Plate No: ", rightText: "#${carInfo.data!.cars![i].details!.plateNo}"),
+                              RichTextWidget(leftText: "Plate No: ", rightText: "#${carInfo!.plateNo}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Make: ", rightText: "${carInfo.data!.cars![i].details!.vmake}"),
+                              RichTextWidget(leftText: "Make: ", rightText: "${carInfo!.vmake}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Model: ", rightText: "${carInfo.data!.cars![i].details!.vmodel}"),
+                              RichTextWidget(leftText: "Model: ", rightText: "${carInfo!.vmodel}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Year: ", rightText: "${carInfo.data!.cars![i].details!.vyear}"),
+                              RichTextWidget(leftText: "Year: ", rightText: "${carInfo!.vyear}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
-                              RichTextWidget(leftText: "Color: ", rightText: "${carInfo.data!.cars![i].details!.vcolor}"),
+                              RichTextWidget(leftText: "Color: ", rightText: "${carInfo!.vcolor}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
 
-                              RichTextWidget(leftText: "Location: ", rightText: "${carInfo.data!.cars![i].details!.location}"),
+                              RichTextWidget(leftText: "Location: ", rightText: "${carInfo!.location}"),
                               SizedBox(height: 10,),
                               Divider(height: 1,),
                               SizedBox(height: 10,),
@@ -346,13 +356,8 @@ class _ManageCarState extends State<ManageCar> {
                             Container(
                               height: 200,
                               padding: EdgeInsets.all(10),
-                              child: ListView.builder(
-                                itemCount: carInfo.data!.cars![i].images!.length,
-                                itemBuilder: (context, index) {
-                                  return AppNetworkImage(
-                                      url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].images![index]}", width: 220, height: 220);
-                                }
-                              )
+                              child: AppNetworkImage(
+                                  url: "${carInfo.images!.carImage}", width: 220, height: 220)
                             ),
                             SizedBox(height: 10,),
                             const Text("Documents",
@@ -367,7 +372,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                     AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.fh![0]}", width: 100, height: 50),
+                                     AppNetworkImage(url: "${carInfo!.images!.fh1}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("FH",
                                         style: TextStyle(
@@ -382,7 +387,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.insurance![0]}", width: 100, height: 50),
+                                      AppNetworkImage(url: "${carInfo!.images!.insurance}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("Insurance",
                                         style: TextStyle(
@@ -397,7 +402,7 @@ class _ManageCarState extends State<ManageCar> {
                                 Expanded(
                                   child: Column(
                                     children: [
-                                      AppNetworkImage(url: "${AppConfig.DOMAIN}/${carInfo.data!.cars![i].details!.diclaration![0]}", width: 100, height: 50),
+                                      AppNetworkImage(url: "${carInfo!.images!.driverDiclaration}", width: 100, height: 50),
                                       SizedBox(height: 5,),
                                       Text("Diclaration",
                                         style: TextStyle(
@@ -427,7 +432,6 @@ class _ManageCarState extends State<ManageCar> {
                       InkWell(
                         onTap: ()async{
                           AppPopup.appPopup(context: context, title: "You want to delete this car?", body: "Do you want to delete this car?. Remember, it never recovery..", dialogType: DialogType.warning, onOkBtn: ()async{
-                            deleteCar(carInfo.data!.cars![i].id.toString());
                           });
                         },
                         child: Container(

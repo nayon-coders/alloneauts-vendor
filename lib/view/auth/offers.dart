@@ -1,17 +1,13 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expandable/expandable.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:vendor/controller/authController/offerControllers.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/auth/signup.dart';
-import 'package:vendor/view_controller/appButton.dart';
-import 'package:http/http.dart' as http;
-import '../../app_config.dart';
-import '../../model/authModel/offerModel.dart';
+import '../../firebase/model/pricing_model.dart';
 import '../../view_controller/loadingWidget.dart';
 
 class Offers extends StatefulWidget {
@@ -25,7 +21,7 @@ class _OffersState extends State<Offers> {
 
   ScrollController scrollController = ScrollController(); // 👈 Define scrollController
 
-  Future? getDataFuture;
+  Future<PricingModel>? getDataFuture;
 
 
   bool isMonthly = true;
@@ -33,7 +29,7 @@ class _OffersState extends State<Offers> {
 
   @override
   void initState() { // 👈 create animation in initState
-    getDataFuture = getOfferData();
+    getDataFuture = _getPricing();
 
     // Future.delayed(const Duration(milliseconds: 100), () {
     //   scrollController.animateTo(scrollController.position.maxScrollExtent,
@@ -45,20 +41,14 @@ class _OffersState extends State<Offers> {
 
   Future getOfferData()async{
 
-    var response = await http.get(Uri.parse("${AppConfig.OFFERS}"),
-        headers: {
-          "Accept": "application/json"
-        }
-    );
-    print("data ==----== ${response.statusCode}");
-    print("data ==== ${response.body}");
-    if(response.statusCode == 200){
-      //return PricingModel.fromJson(jsonDecode(response.body)["data"]["pricing"]);
-      return jsonDecode(response.body)["data"]["pricing"];
-    }else{
-      return jsonDecode(response.body)["data"]["pricing"];
-    }
 
+  }
+
+  Future<PricingModel> _getPricing()async{
+    // Reference to the "users" collection
+    DocumentSnapshot pricingData = await FirebaseFirestore.instance.collection('admin').doc("admin_285962").collection("admin_pricing").doc("admin_pricing").get();
+    PricingModel pricingModel = PricingModel.fromJson(pricingData.data() as Map<String, dynamic>);
+    return pricingModel;
   }
 
 
@@ -73,7 +63,7 @@ class _OffersState extends State<Offers> {
       length: 2,
       child: Scaffold(
         //backgroundColor: AppColors.bg,
-        body: FutureBuilder(
+        body: FutureBuilder<PricingModel>(
           future: getDataFuture,
           builder: (context, snapshot){
             if(snapshot.connectionState == ConnectionState.waiting){
@@ -121,50 +111,53 @@ class _OffersState extends State<Offers> {
                             ],
                           ),
                           SizedBox(height: 40,),
-                          Center(
-                              child: RichText(
-                                  text: TextSpan(
-                                      children: [
-                                        TextSpan(
-                                            text: "Car Subscription Software",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 50,
-                                                color: AppColors.black,
-                                                fontFamily: "themeFont"
-                                            )
-                                        ),
-                                        TextSpan(
-                                            text: " Pricing ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 50,
-                                                color: AppColors.blue,
-                                                fontFamily: "themeFont"
-                                            )
-                                        ),
-                                        TextSpan(
-                                            text: "&",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 50,
-                                                color: AppColors.black,
-                                                fontFamily: "themeFont"
-                                            )
-                                        ),
-                                        TextSpan(
-                                            text: " Plans ",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 50,
-                                                color: AppColors.blue,
-                                                fontFamily: "themeFont"
-                                            )
-                                        ),
-                                      ]
-                                  )
+                          Container(
+                            
+                            child: Center(
+                                child: RichText(
+                                    text: TextSpan(
+                                        children: [
+                                          TextSpan(
+                                              text: "Car Subscription Software",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 50,
+                                                  color: AppColors.black,
+                                                  fontFamily: "themeFont"
+                                              )
+                                          ),
+                                          TextSpan(
+                                              text: " Pricing ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 50,
+                                                  color: AppColors.blue,
+                                                  fontFamily: "themeFont"
+                                              )
+                                          ),
+                                          TextSpan(
+                                              text: "&",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 50,
+                                                  color: AppColors.black,
+                                                  fontFamily: "themeFont"
+                                              )
+                                          ),
+                                          TextSpan(
+                                              text: " Plans ",
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 50,
+                                                  color: AppColors.blue,
+                                                  fontFamily: "themeFont"
+                                              )
+                                          ),
+                                        ]
+                                    )
 
-                              )
+                                )
+                            ),
                           ),
                           SizedBox(height: 5,),
                           const Center(
@@ -250,15 +243,16 @@ class _OffersState extends State<Offers> {
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data?["yearly"].length,
+                                itemCount: snapshot.data!.adminPricing!.monthly!.length,
                                 itemBuilder: (_, index){
-                                  var monthlyData = snapshot.data?["yearly"][index];
+                                  var monthlyData = snapshot.data!.adminPricing!.monthly![index];
                                   return buildSinglaMontlyPlan(
                                     size: size,
-                                    price: "${double.parse("${monthlyData?["price"]}")-20}",
-                                    title: "${monthlyData?["type"]}",
-                                    short: "${monthlyData?["short"]}",
-                                    details: "${monthlyData?["details"]}",
+                                    price: "${double.parse("${monthlyData?.price}")}",
+                                    title: "${monthlyData?.planName}",
+                                    short: "${monthlyData?.description}",
+                                    details: monthlyData!.details!.toList(),
+                                    onClick:()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp(pricingModel: monthlyData)))
                                   );
                                 },
                               ),
@@ -269,22 +263,23 @@ class _OffersState extends State<Offers> {
                                 shrinkWrap: true,
                                 scrollDirection: Axis.horizontal,
                                 physics: NeverScrollableScrollPhysics(),
-                                itemCount: snapshot.data?["yearly"].length,
+                                itemCount: snapshot.data!.adminPricing!.yearly!.length,
                                 itemBuilder: (_, index){
-                                  var yearlly = snapshot.data?["yearly"][index];
+                                  var yearlly = snapshot.data!.adminPricing!.yearly![index];
                                   return buildSinglaMontlyPlan(
                                     size: size,
-                                    price: "${yearlly?["price"]}",
-                                    title: "${yearlly?["type"]}",
-                                    short: "${yearlly?["short"]}",
-                                    details: "${yearlly?["details"]}",
+                                    price: "${yearlly!.price}",
+                                    title: "${yearlly!.planName}",
+                                    short: "${yearlly.description}",
+                                    details: yearlly!.details!.toList(),
+                                      onClick:()=> Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp(pricingModel: yearlly)))
                                   );
                                 },
                               ),
                             ),
                           ),
                           SizedBox(height: 30,),
-                          Center(
+                          const Center(
                             child: Text("'\$' indicates usage and third party charges may apply. All fees shown in USD.",
                               style: TextStyle(
                                   fontSize: 10,
@@ -472,14 +467,16 @@ class _OffersState extends State<Offers> {
     required String title,
     required String price,
     required String short,
-    required String details,
+    required List<String> details,
+    required VoidCallback onClick
 }) {
     return Container(
+
         child: Row(
           children: [
             Container(
               width: size.width*.29,
-              padding: EdgeInsets.only(left: 18, right: 18, top: 30),
+              // padding: EdgeInsets.only(left: 18, right: 18, top: 30),
               margin: EdgeInsets.only(right: 20),
               decoration: BoxDecoration(
                 color: AppColors.white,
@@ -489,13 +486,21 @@ class _OffersState extends State<Offers> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Text("$title",
-                      style: TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: "themeFont",
-                        color: AppColors.green
+                  Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: Colors.green,
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20),)
+                    ),
+                    child: Center(
+                      child: Text("$title",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: "themeFont",
+                          color: AppColors.white
+                        ),
                       ),
                     ),
                   ),
@@ -503,6 +508,7 @@ class _OffersState extends State<Offers> {
                   Center(
                     child: Text("$short",
                       textAlign: TextAlign.center,
+                      maxLines: 3,
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w400,
@@ -559,7 +565,7 @@ class _OffersState extends State<Offers> {
                   Align(
                     alignment: Alignment.center,
                     child: InkWell(
-                      onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp(price: double.parse("${price}")))),
+                      onTap: onClick,
                       child: Container(
                         width: 200,
                         height: 40,
@@ -589,7 +595,7 @@ class _OffersState extends State<Offers> {
                   Align(
                     alignment: Alignment.center,
                     child: InkWell(
-                      //onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp())),
+                      //onTap: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>SignUp(pricingModel: adminPricing,))),
                       child: Container(
                         width: 200,
                         height: 40,
@@ -608,56 +614,22 @@ class _OffersState extends State<Offers> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 30,),
-                  Column(
-                    children: [
-                      buildFeatureList(
-                        bold: "1-30",
-                        text: " Vehicles management."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Ticket",
-                          text: " management."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Unlimited",
-                          text: " team members."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Unlimited",
-                          text: " subscribers."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Ticket Notification.",
-                          text: ""
-                      ),
 
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Driver",
-                          text: " Management."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Team",
-                          text: " Management."
-                      ),
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Billing and payments",
-                          text: " Management"
-                      ),
-
-                      const SizedBox(height: 5,),
-                      buildFeatureList(
-                          bold: "Basic reporting",
-                          text: ""
-                      ),
-                    ],
+                  SizedBox(
+                    height: 275,
+                    child: Padding(
+                      padding:  EdgeInsets.all(30.0),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: details.length,
+                        itemBuilder: (_, index){
+                          return buildFeatureList(
+                              bold: "",
+                              text: "${details[index]}"
+                          );
+                        },
+                      )
+                    ),
                   )
                 ],
               ),

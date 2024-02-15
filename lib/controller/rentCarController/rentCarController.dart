@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/app_config.dart';
 import 'package:vendor/model/rentModels/car_repots_list_model.dart';
 import 'package:vendor/model/rentModels/rest_request_model.dart';
+import 'package:vendor/model/rentModels/single_car_reports_model.dart';
 import 'package:vendor/view/globals.dart' as global;
 import '../../model/rentModels/rentCarListModel.dart';
 
@@ -144,10 +145,26 @@ class RentCarController{
     return CarReportsListModel.fromJson(jsonDecode(res.body));
   }
 
+  //show single cart for reports
+  static Future<SingleCarReportsModel> getSingleCartReports({required String id})async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    var token = _pref.getString("token");
+    var res = await http.get(Uri.parse(AppConfig.SINGLE_CAR_REPORTS+"$id/show"),
+        headers: {
+          "Authorization" : "Bearer $token"
+        }
+    );
+    print("single car reports === ${res.statusCode}");
+    print("single car reports === ${res.body}");
+    return SingleCarReportsModel.fromJson(jsonDecode(res.body));
+  }
+
+
   //add cost car rent
   static Future<http.Response> addCarExpance({required String carId, required String amount, required String date, required String details})async{
     SharedPreferences _pref = await SharedPreferences.getInstance();
     var token = _pref.getString("token");
+    print("token == $token");
     // var data = {
     //   "amount": "$amount",
     //   "date": "$date",

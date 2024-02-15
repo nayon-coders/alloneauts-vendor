@@ -1,11 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/response.dart';
+import 'package:vendor/view/auth/verification_center/emialVerification.dart';
 import 'package:vendor/view_controller/appButton.dart';
 
 import '../../utility/app_color.dart';
-import '../../view/auth/accountVerificationCenter.dart';
-class AccountVerificationWorning extends StatelessWidget {
+import '../../view/auth/verification_center/accountVerificationCenter.dart';
+class AccountVerificationWorning extends StatefulWidget {
   const AccountVerificationWorning({
     Key? key,
     required this.size,
@@ -14,41 +17,121 @@ class AccountVerificationWorning extends StatelessWidget {
   final Size size;
 
   @override
+  State<AccountVerificationWorning> createState() => _AccountVerificationWorningState();
+}
+
+class _AccountVerificationWorningState extends State<AccountVerificationWorning> {
+
+  ///========= get user id ========//
+  var user_id ;
+  Future? _getuserFuture;
+  _getUserId()async{
+    SharedPreferences _pref = await SharedPreferences.getInstance();
+    setState(() {
+      user_id = _pref.getString("user_id");
+    });
+
+    var user = await FirebaseFirestore.instance.collection('vendor').doc("${user_id}").collection("profile").doc("profile").get();
+    return user;
+  }
+  ///========= get user id ========//
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _getuserFuture = _getUserId();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      width: Responsive.isDesktop(context) ? size.width*.80 : size.width,
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          color: AppColors.red.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(5)
-      ),
-      child:  Responsive.isMobile(context)
-          ? Column(
-        children: [
-          WorkingContant(size: size),
-          SizedBox(height: 10,),
-          AppButton(
-            onClick: ()=>Get.to(AccountVerificationCenter()),
-            bgColor: AppColors.red,
-            text: "Verification",
-            textSize: 10,
-            width: size.width,
-          )
-        ],
-      )
-          : Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              WorkingContant(size: size),
-              AppButton(
-                onClick: ()=>Get.to(AccountVerificationCenter()),
-                bgColor: AppColors.red,
-                text: "Verification",
-                textSize: 10,
-                width: size.width*.15,
+    return FutureBuilder(
+      future: _getuserFuture,
+      builder: (_,  snapshot){
+
+        if(snapshot.connectionState == ConnectionState.waiting){
+          return Center();
+        }else if(snapshot.hasData){
+          if(snapshot.data["verify_email"] != true){
+            return  Container(
+              width: Responsive.isDesktop(context) ? widget.size.width*.80 : widget.size.width,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color:  AppColors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(5)
+              ),
+              child:  Responsive.isMobile(context)
+                  ? Column(
+                children: [
+                  WorkingContant(size: widget.size, title: "Email verification is required.", text: "You need verify your Email. Click Verification Center to verify your account.",),
+                  SizedBox(height: 10,),
+                  AppButton(
+                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: snapshot.data["email"], user_id: user_id))),
+                    bgColor: AppColors.red,
+                    text: "Verify Email",
+                    textSize: 10,
+                    width: widget.size.width,
+                  )
+                ],
               )
-            ],
-          ),
+                  : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  WorkingContant(size: widget.size, title: "Email verification is required.", text: "You need verify your Email. Click Verification Center to verify your account.",),
+                  AppButton(
+                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: snapshot.data["email"], user_id: user_id))),
+                    bgColor: AppColors.red,
+                    text: "Verify Email",
+                    textSize: 10,
+                    width: widget.size.width*.15,
+                  )
+                ],
+              ),
+            );
+          }else if(snapshot.data["verify_account"] != true){
+            return  Container(
+              width: Responsive.isDesktop(context) ? widget.size.width*.80 : widget.size.width,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                  color:  AppColors.red.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(5)
+              ),
+              child:  Responsive.isMobile(context)
+                  ? Column(
+                children: [
+                  WorkingContant(size: widget.size, title: "Account verification is required.", text: "You need verify your account by submit some documents. Click Verification Center to verify your account.",),
+                  SizedBox(height: 10,),
+                  AppButton(
+                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: user_id,)),
+                    bgColor: AppColors.red,
+                    text: "Account Verify",
+                    textSize: 10,
+                    width: widget.size.width,
+                  )
+                ],
+              )
+                  : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  WorkingContant(size: widget.size, title: "Account verification is required.", text: "You need verify your account by submit some documents. Click Verification Center to verify your account.",),
+                  AppButton(
+                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: user_id,)),
+                    bgColor: AppColors.red,
+                    text: "Account Verify",
+                    textSize: 10,
+                    width: widget.size.width*.15,
+                  )
+                ],
+              ),
+            );
+          }else{
+            return Center();
+          }
+        }else{
+          return Center(child: Text("Someting went wrong with server."),);
+        }
+
+      },
     );
   }
 }
@@ -57,9 +140,13 @@ class WorkingContant extends StatelessWidget {
   const WorkingContant({
     Key? key,
     required this.size,
+    required this.text,
+    required this.title
   }) : super(key: key);
 
   final Size size;
+  final String text;
+  final String title;
 
   @override
   Widget build(BuildContext context) {
@@ -68,15 +155,15 @@ class WorkingContant extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: const [
-          Text('Account verification is required.',
+        children:  [
+          Text('$title',
             style: TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 color: AppColors.red
             ),
           ),
-          Text('You need verify your account by submit some documents. Click Verification Center to verify your account.',
+          Text('$text',
             style: TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.w400,
