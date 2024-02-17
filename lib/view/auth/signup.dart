@@ -368,6 +368,7 @@ class _SignUpState extends State<SignUp> {
       "years_in_business" : yearsBusiness.text,
       "brief_company" : brefDescribe.text,
       "max_car": widget.pricingModel!.maxCar,
+      "phone" : phoneNumber.text,
       "selected_plan" : {
         "max_car" :  widget.pricingModel?.maxCar,
         "plan_name" :  widget.pricingModel?.planName,

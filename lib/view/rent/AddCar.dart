@@ -8,7 +8,9 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:vendor/app_config.dart';
+import 'package:vendor/firebase/controller/auth_controller.dart';
 import 'package:vendor/firebase/controller/firebase_car_controller.dart';
+import 'package:vendor/firebase/model/profile_model.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:file_picker/file_picker.dart';
 import 'dart:typed_data';
@@ -110,6 +112,21 @@ class _AddCarState extends State<AddCar> {
   final phone = TextEditingController();
   final email = TextEditingController();
   final maileg = TextEditingController();
+
+
+  var _profileModel; // = FirebaseAuthController.getVendorInfo();
+
+
+  var vendorInfo = {};
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _profileModel = FirebaseAuthController.getVendorInfo();
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -428,12 +445,24 @@ class _AddCarState extends State<AddCar> {
 
  void _addVahicles() async{
     setState(() =>isLoading = true);
+    ProfileModel value = await FirebaseAuthController.getVendorInfo();
+    setState(() {
+      vendorInfo = {
+        "vendor_id" : value!.vendorId,
+        "vendor_name" : value!.fName! + " " + value.lName!,
+        "vendor_email" : value.email,
+        "vendor_phone" : value.phone,
+      };
+    });
+    print("vendorInfo === ${vendorInfo}");
    var carImage = await AppConst.uploadImageToFirebaseStorage(_unitCarImage!, "car_images");
    var driverDiclaration = await AppConst.uploadImageToFirebaseStorage(_unitDriverLicenceImage!, "driver_licence_image");
    var fh1 = await AppConst.uploadImageToFirebaseStorage(_unitFh1Image!, "fh1_images");
    var insurance = await AppConst.uploadImageToFirebaseStorage(_unitInsuranceImage!, "insurance_images");
 
    var todayDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
+
+   //get vendor information
 
    var carInfo = {
      "cars" : [
@@ -463,15 +492,13 @@ class _AddCarState extends State<AddCar> {
            },
 
          },
-         "vendor_info" : {
-           "vendor_id" : "vendor_${_auth!.currentUser!.email}"
-         },
+         "vendor_info" : vendorInfo,
          "assign_driver_info" : {},
          "create_at" : todayDate
        }
      ]
    };
-   bool response = await FirebaseCarRentController.addCar(data: carInfo, context: context);
+   bool response = await FirebaseCarRentController.addCar(data: carInfo, vendorInfo: vendorInfo, context: context);
    if(response){
      AppSnackBar.appSnackBar("Car added into your list. You can now manage your car.", Colors.green, context);
    }else{
