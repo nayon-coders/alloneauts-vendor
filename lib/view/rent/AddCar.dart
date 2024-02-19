@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -445,16 +446,12 @@ class _AddCarState extends State<AddCar> {
 
  void _addVahicles() async{
     setState(() =>isLoading = true);
-    ProfileModel value = await FirebaseAuthController.getVendorInfo();
-    setState(() {
-      vendorInfo = {
-        "vendor_id" : value!.vendorId,
-        "vendor_name" : value!.fName! + " " + value.lName!,
-        "vendor_email" : value.email,
-        "vendor_phone" : value.phone,
-      };
-    });
+    int id = Random().nextInt(100000);
+    print("id === $id");
+    var user_Data = await FirebaseFirestore.instance.collection('vendor').doc("vendor_${_auth.currentUser!.email}").collection("profile").doc("profile").get();
+
     print("vendorInfo === ${vendorInfo}");
+    print("vendorInfo === ${id}");
    var carImage = await AppConst.uploadImageToFirebaseStorage(_unitCarImage!, "car_images");
    var driverDiclaration = await AppConst.uploadImageToFirebaseStorage(_unitDriverLicenceImage!, "driver_licence_image");
    var fh1 = await AppConst.uploadImageToFirebaseStorage(_unitFh1Image!, "fh1_images");
@@ -463,6 +460,7 @@ class _AddCarState extends State<AddCar> {
    var todayDate = DateFormat("dd-MM-yyyy").format(DateTime.now());
 
    //get vendor information
+    print("carImage === $carImage");
 
    var carInfo = {
      "cars" : [
@@ -470,6 +468,7 @@ class _AddCarState extends State<AddCar> {
          "active_status" : true,
          "assign_status" : false,
          "car_info" : {
+            "car_id" : "car_$id",
            "name" : "${make.text}, ${model.text}, ${year.text}",
            "plate_no" : platNo.text,
            "price" : price.text,
@@ -492,13 +491,13 @@ class _AddCarState extends State<AddCar> {
            },
 
          },
-         "vendor_info" : vendorInfo,
+         "vendor_info" : user_Data.data(),
          "assign_driver_info" : {},
          "create_at" : todayDate
        }
      ]
    };
-   bool response = await FirebaseCarRentController.addCar(data: carInfo, vendorInfo: vendorInfo, context: context);
+   bool response = await FirebaseCarRentController.addCar(data: carInfo, vendorInfo: user_Data.data()!, context: context);
    if(response){
      AppSnackBar.appSnackBar("Car added into your list. You can now manage your car.", Colors.green, context);
    }else{
