@@ -130,7 +130,7 @@ class _LoginState extends State<Login> {
                   SizedBox(height: 15,),
                   Center(
                     child: TextButton(
-                      onPressed: ()=>Navigator.pushNamed(context, "/pricing"),
+                      onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>Offers()),),
                       child: const Text("I Don't have an account. Signup."),
                     ),
                   )
@@ -150,12 +150,7 @@ class _LoginState extends State<Login> {
   String errorString = "";
   Future _login()async{
   setState(() => isLoading = true);
-  var res = await FirebaseAuthController.signInWithEmailAndPassword(context: context, email: email.text, password: pass.text);
-  if(res){
-    Navigator.pushNamedAndRemoveUntil(context, "/dashboard", (route) => false);
-  }else{
-    AppSnackBar.appSnackBar("Something went wrong.", Colors.red, context);
-  }
+  await FirebaseAuthController.signInWithEmailAndPassword(context: context, email: email.text, password: pass.text);
   setState(() => isLoading = false);
 }
 

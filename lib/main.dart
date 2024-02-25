@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:get/get.dart';
@@ -55,26 +56,21 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  final _auth = FirebaseAuth.instance;
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      defaultGlobalState: true,
+      debugShowMaterialGrid: false,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.green,
           fontFamily: "themeFont"
       ),
-    // home:MainPage(pageIndex: 18,),
-      routes: {
-        '/': (context) => CheckingAuth(),
-        '/login': (context) => Login(),
-        '/pricing': (context) => Offers(),
-        '/dashboard': (context) => MainPage(),
-        '/manage-car': (context) => MainPage(pageIndex: 2,),
-        '/add-new-car': (context) => MainPage(pageIndex: 3,),
-        '/my-profile': (context) => MainPage(pageIndex: 6,),
-        '/success': (context) => Congratulation(),
-      },
-    //home: CheckingAuth(),
+    // home: Login(),
+
+    home: _auth.currentUser == null ? const Login() : const MainPage()
     );
   }
 }

@@ -46,10 +46,8 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getDashboardData = DashboardController.dashboardController();
   }
 
-   Future<DashboardModel>? getDashboardData;
 
 
 
@@ -107,115 +105,15 @@ class _DashboardState extends State<Dashboard> {
             ],
           ),
           SizedBox(height: 30,),
-          DasktopDashboardBox(
-          ),
+          DasktopDashboardBox(),
 
-
-          // Responsive.isMobile(context)
-          //     ? MobileDashboardBox(dashboardData: dashboardData)
-          //     : Responsive.isTablet(context)
-          //     ? TabDashboardBox(
-          //        dashboardData: dashboardData,
-          //        paiRentRequestReportData: paiRentRequestReportData ,
-          //      )
-          //     : DasktopDashboardBox(
-          //        dashboardData: dashboardData,
-          //        paiRentRequestReportData: paiRentRequestReportData,
-          //      ),
 
 
 
         ],
       ),
     );
-    // return FutureBuilder(
-    //   future: getDashboardData,
-    //   builder: (context, snapshot) {
-    //     print("snapshot ==== ${snapshot.data}");
-    //     if(snapshot.connectionState == ConnectionState.waiting){
-    //        return const DataLoading(text: "Preparing Dashboard");
-    //     }else if(snapshot.hasData){
-    //       var dashboardData = snapshot.data?.data;
-    //       return Container(
-    //         // height: size.height,
-    //         // width: size.width,
-    //         padding: const EdgeInsets.only(left: 20, right: 20, bottom: 30),
-    //         color: AppColors.bg,
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           mainAxisAlignment: MainAxisAlignment.start,
-    //           children: [
-    //             const DashboardPlanPopup(),
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //               children: [
-    //                 Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   mainAxisAlignment: MainAxisAlignment.start,
-    //                   children: [
-    //                     BigText(text: "Dashboard"),
-    //                     SizedBox(height: 5,),
-    //                     Text("Hi, Nayon Talukder. Welcome to Alloneautos.",
-    //                       style: TextStyle(
-    //                           fontSize: 12,
-    //                           fontWeight: FontWeight.w500,
-    //                           color: AppColors.greyText
-    //                       ),
-    //                     ),
-    //                   ],
-    //                 ),
-    //                 Container(
-    //                   padding: EdgeInsets.all(10),
-    //                   decoration: BoxDecoration(
-    //                     color: AppColors.green.withOpacity(0.2)
-    //                   ),
-    //                   child: Row(
-    //
-    //                     children: [
-    //                       Icon(Icons.download,size: 20,  color: AppColors.green),
-    //                       SizedBox(width: 8,),
-    //                       Text("Download",
-    //                         style: TextStyle(
-    //                           fontWeight: FontWeight.w500,
-    //                           fontSize: 12,
-    //                             color: AppColors.green
-    //                         ),
-    //                       )
-    //                     ],
-    //                   ),
-    //                 )
-    //               ],
-    //             ),
-    //             SizedBox(height: 30,),
-    //             DasktopDashboardBox(
-    //             ),
-    //
-    //
-    //             // Responsive.isMobile(context)
-    //            //     ? MobileDashboardBox(dashboardData: dashboardData)
-    //            //     : Responsive.isTablet(context)
-    //            //     ? TabDashboardBox(
-    //            //        dashboardData: dashboardData,
-    //            //        paiRentRequestReportData: paiRentRequestReportData ,
-    //            //      )
-    //            //     : DasktopDashboardBox(
-    //            //        dashboardData: dashboardData,
-    //            //        paiRentRequestReportData: paiRentRequestReportData,
-    //            //      ),
-    //
-    //
-    //
-    //           ],
-    //         ),
-    //       );
-    //     }else{
-    //       return DataError(onClick:  ()=>  setState(() {
-    //         getDashboardData = DashboardController.dashboardController();
-    //       }));
-    //     }
-    //
-    //   }
-    // );
+
   }
 
 

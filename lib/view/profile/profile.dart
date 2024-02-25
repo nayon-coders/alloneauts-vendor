@@ -49,16 +49,25 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-    return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-      stream: FirebaseFirestore.instance.collection("vendor").doc("vendor_${_auth.currentUser!.email}").collection("profile").doc("profile").snapshots(),
+    return StreamBuilder(
+      stream: FirebaseAuthController.getVendorProfile(),
       builder: (context, snapshot) {
         if(snapshot.connectionState == ConnectionState.waiting){
           return SizedBox(height: 400, child: Center(child: LoadingWidget(title: "Profile Loading...",),),);
         }else if(snapshot.hasData){
-          var data = snapshot.data!.data();
+          //empty list
+          List<QueryDocumentSnapshot<Map<String, dynamic>>> vendorProfile = [];
+          //check vendor email
+          for(var i in snapshot.data!.docs){
+            if(i.data()["email"] == _auth!.currentUser!.email){
+              vendorProfile.add(i);
+            }
+          }
+          QueryDocumentSnapshot<Map<String, dynamic>> data = vendorProfile[0];
+
           ///
           /// ======== Now assign data in to text editing controller
-          name.text = "${data!["f_name"]} ${data!["f_name"]}";
+          name.text = "${data!["f_name"]} ${data!["l_name"]}";
           companyName.text = data!["company_name"];
           email.text = data!["email"];
           yearsBusiness.text = data!["years_in_business"] ?? "";
@@ -132,7 +141,7 @@ class _ProfileState extends State<Profile> {
                                     suffixIcon: data!["verify_email"]
                                         ? Icon(Icons.check_circle, color: AppColors.green,)
                                         : TextButton(
-                                            onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailVerification(email: email.text, user_id: "vendor_${_auth!.currentUser!.email}"))),
+                                            onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>EmailVerification(email: email.text, user_id: "${data.id}"))),
                                             child: Text("Verify Email", style: TextStyle(color: Colors.red),),
                                     ),
                                     hintText: "alloneautos@gmail.com"
@@ -226,7 +235,7 @@ class _ProfileState extends State<Profile> {
                                       ),
                                       child: data!["business_license"] == null
                                           ? IconButton(
-                                        onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountVerificationCenter(user_id: "vendor_${_auth!.currentUser!.email}",))),
+                                        onPressed: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=>AccountVerificationCenter(user_id: data.id,))),
                                         icon: Icon(Icons.cloud_upload_rounded, color: AppColors.green, size: 100,),
                                       )
                                           : AppNetworkImage(url: data!["business_license"],height: 150, boxFit: BoxFit.contain,)

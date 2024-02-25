@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:vendor/firebase/controller/auth_controller.dart';
 import 'package:vendor/response.dart';
 import 'package:vendor/view/auth/verification_center/emialVerification.dart';
 import 'package:vendor/view_controller/appButton.dart';
@@ -23,36 +25,34 @@ class AccountVerificationWorning extends StatefulWidget {
 class _AccountVerificationWorningState extends State<AccountVerificationWorning> {
 
   ///========= get user id ========//
-  var user_id ;
-  Future? _getuserFuture;
-  _getUserId()async{
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    setState(() {
-      user_id = _pref.getString("user_id");
-    });
 
-    var user = await FirebaseFirestore.instance.collection('vendor').doc("${user_id}").collection("profile").doc("profile").get();
-    return user;
-  }
   ///========= get user id ========//
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getuserFuture = _getUserId();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getuserFuture,
+    return StreamBuilder(
+      stream: FirebaseAuthController.getVendorProfile(),
       builder: (_,  snapshot){
-
         if(snapshot.connectionState == ConnectionState.waiting){
           return Center();
         }else if(snapshot.hasData){
-          if(snapshot.data["verify_email"] != true){
+          //find current user informaton from snapshot
+          List<QueryDocumentSnapshot<Map<String, dynamic>>> data =[];
+
+
+          snapshot.data!.docs.forEach((doc) {
+            if(doc.data()["email"] == FirebaseAuth.instance.currentUser?.email){
+              data.add(doc);
+            }
+          });
+
+          if(data[0]["verify_email"] != true){
             return  Container(
               width: Responsive.isDesktop(context) ? widget.size.width*.80 : widget.size.width,
               padding: EdgeInsets.all(10),
@@ -66,7 +66,7 @@ class _AccountVerificationWorningState extends State<AccountVerificationWorning>
                   WorkingContant(size: widget.size, title: "Email verification is required.", text: "You need verify your Email. Click Verification Center to verify your account.",),
                   SizedBox(height: 10,),
                   AppButton(
-                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: snapshot.data["email"], user_id: user_id))),
+                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: data[0]["email"], user_id: data[0].id))),
                     bgColor: AppColors.red,
                     text: "Verify Email",
                     textSize: 10,
@@ -79,7 +79,7 @@ class _AccountVerificationWorningState extends State<AccountVerificationWorning>
                 children: [
                   WorkingContant(size: widget.size, title: "Email verification is required.", text: "You need verify your Email. Click Verification Center to verify your account.",),
                   AppButton(
-                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: snapshot.data["email"], user_id: user_id))),
+                    onClick: ()=>Navigator.push(context, MaterialPageRoute(builder: (context)=> EmailVerification(email: data[0]["email"], user_id: data[0].id))),
                     bgColor: AppColors.red,
                     text: "Verify Email",
                     textSize: 10,
@@ -88,7 +88,7 @@ class _AccountVerificationWorningState extends State<AccountVerificationWorning>
                 ],
               ),
             );
-          }else if(snapshot.data["verify_account"] != true){
+          }else if(data[0]["verify_account"] != true){
             return  Container(
               width: Responsive.isDesktop(context) ? widget.size.width*.80 : widget.size.width,
               padding: EdgeInsets.all(10),
@@ -102,7 +102,7 @@ class _AccountVerificationWorningState extends State<AccountVerificationWorning>
                   WorkingContant(size: widget.size, title: "Account verification is required.", text: "You need verify your account by submit some documents. Click Verification Center to verify your account.",),
                   SizedBox(height: 10,),
                   AppButton(
-                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: user_id,)),
+                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: data[0].id,)),
                     bgColor: AppColors.red,
                     text: "Account Verify",
                     textSize: 10,
@@ -115,7 +115,7 @@ class _AccountVerificationWorningState extends State<AccountVerificationWorning>
                 children: [
                   WorkingContant(size: widget.size, title: "Account verification is required.", text: "You need verify your account by submit some documents. Click Verification Center to verify your account.",),
                   AppButton(
-                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: user_id,)),
+                    onClick: ()=>Get.to(AccountVerificationCenter(user_id: data[0].id,)),
                     bgColor: AppColors.red,
                     text: "Account Verify",
                     textSize: 10,

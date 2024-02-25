@@ -35,6 +35,9 @@ class AppInput extends StatelessWidget {
         ),
         SizedBox(height: 10,),
         TextFormField(
+          onSaved: (value){
+            onChange!();
+          },
           autocorrect: true,
           maxLines: maxLine,
           readOnly: readOnly,

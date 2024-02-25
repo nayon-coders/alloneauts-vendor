@@ -7,6 +7,7 @@ import 'package:dotted_border/dotted_border.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:vendor/firebase/controller/auth_controller.dart';
 import 'package:vendor/utility/app_color.dart';
 import 'package:vendor/utility/app_const.dart';
 import 'package:vendor/view/auth/congratulation.dart';
@@ -241,7 +242,13 @@ class _AccountVerificationCenterState extends State<AccountVerificationCenter> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      AppButton(onClick: ()=>_verifyAccount(), bgColor: AppColors.green, text: "Submit for Review", width: 200, isLoading: isLoading,),
+                      AppButton(
+                        isLoading: isLoading,
+                        onClick: (){
+                        setState(()=> isLoading = true);
+                          FirebaseAuthController.accountVefiry(docId: widget.user_id, idProveUrl: idOrDrivingLicenseData!, businessProveUrl: buinessLicenseData!, context: context);
+                        setState(()=> isLoading = false);
+                      }, bgColor: AppColors.green, text: "Submit for Review", width: 200, ),
                       SizedBox(width: 10,),
                       AppButton(onClick: ()=>Navigator.pop(context), bgColor: AppColors.red, text: "Later", width: 100),
                     ],
@@ -299,21 +306,7 @@ class _AccountVerificationCenterState extends State<AccountVerificationCenter> {
 
   ///============ this is for verify documents ===================///
   bool isLoading = false;
-void _verifyAccount()async{
-  setState(() => isLoading = true);
-  var idProveUrl = await AppConst.uploadImageToFirebaseStorage(idOrDrivingLicenseData!, "vendor_profile_documents");
-  var businessProveUrl = await AppConst.uploadImageToFirebaseStorage( buinessLicenseData!, "vendor_profile_documents");
 
-  await FirebaseFirestore.instance.collection('vendor').doc(widget.user_id).collection("profile").doc("profile").update({
-    "id_prove" : "$idProveUrl",
-    "business_license" : "$businessProveUrl",
-    "verify_account" : true,
-    "admin_approve" : "Pending"
-
-  });
-  setState(() => isLoading = false);
-  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const Congratulation(text: "Your email is verifed successfully. Now You can access your functionality.",)), (route) => false);
-}
 
 
 

@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_session_manager/flutter_session_manager.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:vendor/view/auth/login.dart';
 import 'package:vendor/view/main_pages.dart';
@@ -17,41 +19,23 @@ class CheckingAuth extends StatefulWidget {
 class _CheckingAuthState extends State<CheckingAuth> {
 
   // This widget is the root of your application.
+  final _auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
 
-    getToken();
+    if(_auth.currentUser == null){
+      Get.offAll(MainPage());
+    }else{
+      Get.offAll(Login());
+
+    }
 
   }
 
-  var token;
-  bool isChecking = true;
-  bool isAuth = true;
-  //get token
-  getToken() async {
 
-    SharedPreferences _pref = await SharedPreferences.getInstance();
-    setState(() {
-      token = _pref.getString("user_id");
-    });
-
-    print("token ===== ${token}");
-
-
-    if(token != null){
-          // ignore: use_build_context_synchronously
-       Navigator.pushNamedAndRemoveUntil(context, "/dashboard", (route) => false);
-      //Navigator.pushNamedAndRemoveUntil(context, "/verification-center", (route) => false);
-          // Do something
-        }else{
-          // ignore: use_build_context_synchronously
-          Navigator.pushNamedAndRemoveUntil(context, "/login", (route) => false);
-          // Do something
-        }
-
-  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
